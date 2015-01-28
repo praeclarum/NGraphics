@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace XGraphics
 {
 	public delegate void DrawingFunc (ISurface surface);
 
-	public class Drawing : ISurface
+	public class Drawing : ISurface, IDrawable
 	{
 		bool isValid = false;
 
-		List<object> children = new List<object> ();
+		readonly List<IDrawable> children = new List<IDrawable> ();
 
-		DrawingFunc func;
+		readonly DrawingFunc func;
 
 		public int NumChildren {
 			get {
@@ -29,6 +30,12 @@ namespace XGraphics
 			this.func = func;
 		}
 
+		public void Invalidate ()
+		{
+			children.Clear ();
+			isValid = false;
+		}
+
 		public void DrawOval (Point position, Size size, Pen pen = null, Brush brush = null)
 		{
 			children.Add (new Oval (position, size, pen, brush));
@@ -42,11 +49,27 @@ namespace XGraphics
 				isValid = true;
 			}
 		}
-	}
 
-	public interface ISurface
-	{
-		void DrawOval (Point position, Size size, Pen pen = null, Brush brush = null);
+		public void Draw (ISurface s)
+		{
+			foreach (var c in children) {
+				c.Draw (s);
+			}
+		}
+
+		public override string ToString ()
+		{
+			try {
+				if (children.Count == 0)
+					return "Drawing";
+				var w =
+					children.
+					GroupBy (x => x.GetType ().Name).
+					Select (x => x.Count () + " " + x.Key);
+				return "Drawing with " + string.Join (", ", w);
+			} catch {
+				return "Drawing with errors!";
+			}
+		}
 	}
 }
-

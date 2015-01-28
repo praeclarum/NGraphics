@@ -11,10 +11,5 @@ namespace XGraphics
 			Black = new Pen ();
 		}
 	}
-
-
-	
-
-	
 }
 

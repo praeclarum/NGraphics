@@ -5,10 +5,4 @@ namespace XGraphics
 	public class Brush
 	{
 	}
-
-
-	
-
-	
 }
-

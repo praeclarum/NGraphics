@@ -25,22 +25,5 @@ namespace XGraphics
 			return string.Format (CultureInfo.InvariantCulture, "[{0}, {1}]", X, Y);
 		}
 	}
-
-	public struct Size
-	{
-		public Size (double width, double height)
-		{
-		}
-		public Size (double size)
-		{
-		}
-	}
-
-	public struct Rectangle
-	{
-		public Rectangle (Point position, Size size)
-		{
-		}
-	}
 }
 
