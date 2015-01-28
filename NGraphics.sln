@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NGraphics", "XGraphics\NGraphics.shproj", "{A85E498E-6647-4D4A-B612-8C3CC992BCFF}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NGraphics", "NGraphics\NGraphics.shproj", "{A85E498E-6647-4D4A-B612-8C3CC992BCFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGraphics.Test", "XGraphics.Test\NGraphics.Test.csproj", "{78835892-F0FE-4BB5-8B8A-AF0E8A93CDB8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGraphics.Test", "NGraphics.Test\NGraphics.Test.csproj", "{78835892-F0FE-4BB5-8B8A-AF0E8A93CDB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

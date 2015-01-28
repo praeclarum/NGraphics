@@ -37,7 +37,7 @@
     <Compile Include="PrimitivesTest.cs" />
     <Compile Include="DrawingTest.cs" />
   </ItemGroup>
-  <Import Project="..\XGraphics\NGraphics.projitems" Label="Shared" Condition="Exists('..\XGraphics\NGraphics.projitems')" />
+  <Import Project="..\NGraphics\NGraphics.projitems" Label="Shared" Condition="Exists('..\NGraphics\NGraphics.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
