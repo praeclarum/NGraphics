@@ -1,0 +1,6 @@
+.DS_Thumb
+
+bin
+obj
+packages
+*.userprefs
