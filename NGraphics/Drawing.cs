@@ -44,9 +44,9 @@ namespace NGraphics
 			isValid = false;
 		}
 
-		public void DrawOval (Point position, Size size, Pen pen = null, Brush brush = null)
+		public void DrawOval (Rectangle frame, Pen pen = null, Brush brush = null)
 		{
-			children.Add (new Oval (position, size, pen, brush));
+			children.Add (new Oval (frame, pen, brush));
 		}
 
 		void DrawIfNeeded ()

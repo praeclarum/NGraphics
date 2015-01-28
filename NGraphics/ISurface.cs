@@ -6,6 +6,14 @@ namespace NGraphics
 {
 	public interface ISurface
 	{
-		void DrawOval (Point position, Size size, Pen pen = null, Brush brush = null);
+		void DrawOval (Rectangle frame, Pen pen = null, Brush brush = null);
+	}
+
+	public static class SurfaceEx
+	{
+		public static void DrawOval (this ISurface surface, Point position, Size size, Pen pen = null, Brush brush = null)
+		{
+			surface.DrawOval (new Rectangle (position, size), pen, brush);
+		}
 	}
 }

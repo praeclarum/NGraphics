@@ -4,17 +4,20 @@ namespace NGraphics
 {
 	public class Oval : IDrawable
 	{
-		Point position;
-		Size size;
+		Rectangle frame;
 		Pen pen;
 		Brush brush;
 
-		public Oval (Point position, Size size, Pen pen = null, Brush brush = null)
+		public Oval (Rectangle frame, Pen pen = null, Brush brush = null)
 		{
-			this.position = position;
-			this.size = size;
+			this.frame = frame;
 			this.pen = pen;
 			this.brush = brush;
+		}
+
+		public Oval (Point position, Size size, Pen pen = null, Brush brush = null)
+			: this (new Rectangle (position, size), pen, brush)
+		{
 		}
 
 		public Oval (Point center, double radius)
@@ -24,7 +27,7 @@ namespace NGraphics
 
 		public void Draw (ISurface surface)
 		{
-			surface.DrawOval (position, size, pen, brush);
+			surface.DrawOval (frame, pen, brush);
 		}
 	}
 }

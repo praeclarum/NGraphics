@@ -32,10 +32,12 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PrimitivesTest.cs" />
     <Compile Include="DrawingTest.cs" />
+    <Compile Include="SystemDrawingTest.cs" />
   </ItemGroup>
   <Import Project="..\NGraphics\NGraphics.projitems" Label="Shared" Condition="Exists('..\NGraphics\NGraphics.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
