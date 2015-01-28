@@ -2,10 +2,12 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace NGraphics.SystemDrawing
+namespace NGraphics
 {
 	public class SystemDrawingPlatform : IPlatform
 	{
+		public string Name { get { return "Net"; } }
+
 		public IImageSurface CreateImageSurface (int pixelWidth, int pixelHeight, bool transparency = true)
 		{
 			var format = transparency ? PixelFormat.Format32bppPArgb : PixelFormat.Format24bppRgb;

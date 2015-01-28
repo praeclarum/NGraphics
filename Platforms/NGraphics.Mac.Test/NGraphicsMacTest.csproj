@@ -87,12 +87,6 @@
     <Compile Include="AppDelegate.designer.cs">
       <DependentUpon>AppDelegate.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\..\NGraphics.Test\ImageSurfaceTest.cs">
-      <Link>ImageSurfaceTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\NGraphics\Platform.Apple.cs">
-      <Link>Platform.Apple.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="MainWindow.xib" />
@@ -102,6 +96,19 @@
     <None Include="Info.plist" />
     <None Include="packages.config" />
   </ItemGroup>
-  <Import Project="..\..\NGraphics\NGraphics.projitems" Label="Shared" Condition="Exists('..\..\NGraphics\NGraphics.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\NGraphics.Mac\NGraphics.Mac.csproj">
+      <Project>{AB9C83C0-6DC1-4C04-A40A-677897CA22C8}</Project>
+      <Name>NGraphics.Mac</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NGraphics\NGraphics.csproj">
+      <Project>{4EA643B9-84F6-4AD4-B89E-AE230A7461B8}</Project>
+      <Name>NGraphics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NGraphics.Test\NGraphics.Test.csproj">
+      <Project>{D8259A30-0714-4160-89AF-0C644551DF3B}</Project>
+      <Name>NGraphics.Test</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

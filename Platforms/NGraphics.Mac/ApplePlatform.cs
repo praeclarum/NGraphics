@@ -1,13 +1,22 @@
 ﻿using System;
 using CoreGraphics;
 using ImageIO;
-using AppKit;
 using Foundation;
 
-namespace NGraphics.Apple
+namespace NGraphics
 {
 	public class ApplePlatform : IPlatform
 	{
+		public string Name { 
+			get { 
+				#if __IOS__
+				return "iOS"; 
+				#else
+				return "Mac";
+				#endif
+			} 
+		}
+
 		public IImageSurface CreateImageSurface (int pixelWidth, int pixelHeight, bool transparency = true)
 		{
 			var bitmapInfo = transparency ? CGImageAlphaInfo.PremultipliedFirst : CGImageAlphaInfo.None;

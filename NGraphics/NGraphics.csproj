@@ -4,12 +4,12 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{D8259A30-0714-4160-89AF-0C644551DF3B}</ProjectGuid>
+    <ProjectGuid>{4EA643B9-84F6-4AD4-B89E-AE230A7461B8}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>NGraphics.Test</RootNamespace>
-    <AssemblyName>NGraphics.Test</AssemblyName>
-    <TargetFrameworkProfile>Profile78</TargetFrameworkProfile>
+    <RootNamespace>NGraphics</RootNamespace>
+    <AssemblyName>NGraphics</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile78</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,26 +30,23 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ImageSurfaceTest.cs" />
-    <Compile Include="DrawingTest.cs" />
-    <Compile Include="PrimitivesTest.cs" />
+    <Compile Include="Brush.cs" />
+    <Compile Include="Color.cs" />
+    <Compile Include="Drawing.cs" />
+    <Compile Include="IDrawable.cs" />
+    <Compile Include="IImage.cs" />
+    <Compile Include="IPlatform.cs" />
+    <Compile Include="ISurface.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="NullPlatform.cs" />
+    <Compile Include="Oval.cs" />
+    <Compile Include="Pen.cs" />
+    <Compile Include="Point.cs" />
+    <Compile Include="Rectangle.cs" />
+    <Compile Include="Size.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NGraphics\NGraphics.csproj">
-      <Project>{4EA643B9-84F6-4AD4-B89E-AE230A7461B8}</Project>
-      <Name>NGraphics</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>

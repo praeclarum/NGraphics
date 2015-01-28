@@ -6,7 +6,7 @@ namespace NGraphics
 	{
 		public static void Error (Exception ex)
 		{
-			Console.WriteLine (ex);
+			System.Diagnostics.Debug.WriteLine ("ERROR: " + ex);
 		}
 	}
 }
