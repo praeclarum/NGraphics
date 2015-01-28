@@ -3,6 +3,9 @@ using System.Globalization;
 
 namespace XGraphics
 {
+	/// <summary>
+	/// Yet another 2D point struct. I hope you enjoy this one.
+	/// </summary>
 	public struct Point
 	{
 		public double X;

@@ -6,6 +6,11 @@ namespace XGraphics
 {
 	public delegate void DrawingFunc (ISurface surface);
 
+	/// <summary>
+	/// A drawing is a surface that remembers what was drawn onto it.
+	/// You can also give it a function that does the drawing lazily and automatically.
+	/// Drawings can be drawn to other surfaces or saved to a file.
+	/// </summary>
 	public class Drawing : ISurface, IDrawable
 	{
 		bool isValid = false;
@@ -25,12 +30,15 @@ namespace XGraphics
 			}
 		}
 
-		public Drawing (DrawingFunc func)
+		public Drawing (DrawingFunc func = null)
 		{
 			this.func = func;
 		}
 
-		public void Invalidate ()
+		/// <summary>
+		/// Clears the drawing and then lazily runs the drawing function (if any).
+		/// </summary>
+		public void Refresh ()
 		{
 			children.Clear ();
 			isValid = false;

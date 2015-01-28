@@ -28,7 +28,7 @@ namespace XGraphics.Test
 		}
 
 		[Test]
-		public void Invalidation ()
+		public void RefreshWithFunc ()
 		{
 			var num = 1;
 			var d = new Drawing (s => {
@@ -39,8 +39,26 @@ namespace XGraphics.Test
 			Assert.AreEqual (1, d.NumChildren);
 
 			num = 2;
-			d.Invalidate ();
+			d.Refresh ();
 			Assert.AreEqual (2, d.NumChildren);
+		}
+
+		[Test]
+		public void EmptyDrawing ()
+		{
+			var d = new Drawing ();
+			Assert.AreEqual (0, d.NumChildren);
+		}
+
+		[Test]
+		public void Refresh ()
+		{
+			var d = new Drawing ();
+			d.DrawOval (new Point (10, 20), new Size (30, 40), Pen.Black);
+			Assert.AreEqual (1, d.NumChildren);
+
+			d.Refresh ();
+			Assert.AreEqual (0, d.NumChildren);
 		}
 
 		[Test]
