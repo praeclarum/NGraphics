@@ -37,7 +37,10 @@
   <ItemGroup>
     <Compile Include="PrimitivesTest.cs" />
     <Compile Include="DrawingTest.cs" />
-    <Compile Include="SystemDrawingTest.cs" />
+    <Compile Include="ImageSurfaceTest.cs" />
+    <Compile Include="..\NGraphics\Platform.SystemDrawing.cs">
+      <Link>Platform.SystemDrawing.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="..\NGraphics\NGraphics.projitems" Label="Shared" Condition="Exists('..\NGraphics\NGraphics.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

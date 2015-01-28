@@ -1,8 +1,6 @@
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 
-namespace NGraphics.SystemDrawing
+namespace NGraphics
 {
 	public interface IImage //: IDrawable
 	{
