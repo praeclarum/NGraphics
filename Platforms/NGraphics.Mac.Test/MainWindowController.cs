@@ -3,6 +3,8 @@
 using Foundation;
 using AppKit;
 using System.Linq;
+using NGraphics.Test;
+using System.IO;
 
 namespace NGraphics.Mac.Test
 {
@@ -25,10 +27,16 @@ namespace NGraphics.Mac.Test
 		{
 			base.AwakeFromNib ();
 
+			var sdir = Path.GetDirectoryName (Environment.GetCommandLineArgs () [0]);
+			while (Directory.GetFiles (sdir, "NGraphics.sln").Length == 0)
+				sdir = Path.GetDirectoryName (sdir);
+			PlatformTest.ResultsDirectory = System.IO.Path.Combine (sdir, "TestResults");
+			PlatformTest.Platform = Platforms.Current;
+
 			var tat = typeof(NUnit.Framework.TestAttribute);
 			var tfat = typeof(NUnit.Framework.TestFixtureAttribute);
 
-			var types = System.Reflection.Assembly.GetExecutingAssembly ().GetTypes ();
+			var types = typeof (DrawingTest).Assembly.GetTypes ();
 			var tfts = types.Where (t => t.GetCustomAttributes (tfat, false).Length > 0);
 
 			foreach (var t in tfts) {

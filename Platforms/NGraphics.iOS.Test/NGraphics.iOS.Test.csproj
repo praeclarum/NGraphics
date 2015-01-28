@@ -24,6 +24,13 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchDebug>true</MtouchDebug>
     <MtouchProfiling>true</MtouchProfiling>
+    <MtouchI18n>
+    </MtouchI18n>
+    <EnvironmentVariables>
+      <EnvironmentVariables>
+        <Variable name="NGraphicsDir" value="$(SolutionDir)" />
+      </EnvironmentVariables>
+    </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>full</DebugType>
@@ -93,7 +100,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="MonoTouch.NUnitLite" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
@@ -104,6 +113,7 @@
   <ItemGroup>
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -118,6 +128,10 @@
     <ProjectReference Include="..\..\NGraphics.Test\NGraphics.Test.csproj">
       <Project>{D8259A30-0714-4160-89AF-0C644551DF3B}</Project>
       <Name>NGraphics.Test</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NGraphics.iOS\NGraphics.iOS.csproj">
+      <Project>{11A2EFE5-5E9E-41A1-B3D4-CD6665BD5D96}</Project>
+      <Name>NGraphics.iOS</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

@@ -28,6 +28,12 @@
     <CodeSigningKey>Mac Developer</CodeSigningKey>
     <EnableCodeSigning>false</EnableCodeSigning>
     <CreatePackage>false</CreatePackage>
+    <EnvironmentVariables>
+      <EnvironmentVariables>
+        <Variable name="NGraphicsDir" value="$(SolutionDir)" />
+      </EnvironmentVariables>
+    </EnvironmentVariables>
+    <Commandlineparameters>$(SolutionDir)</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
