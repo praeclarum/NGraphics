@@ -11,5 +11,9 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Graphics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Drawing.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Brush.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Log.cs" />
   </ItemGroup>
 </Project>

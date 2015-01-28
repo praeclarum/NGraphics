@@ -11,7 +11,7 @@ namespace XGraphics
 
 	public class Oval : Graphic
 	{
-		public Oval (Point position, Size size)
+		public Oval (Point position, Size size, Pen pen = null, Brush brush = null)
 		{
 		}
 
