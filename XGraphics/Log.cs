@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace XGraphics
+namespace NGraphics
 {
 	internal static class Log
 	{

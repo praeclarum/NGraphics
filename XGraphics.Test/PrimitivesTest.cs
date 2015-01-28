@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 
-namespace XGraphics.Test
+namespace NGraphics.Test
 {
 	[TestFixture]
 	public class PrimitivesTest

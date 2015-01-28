@@ -6,7 +6,7 @@
     <SharedGUID>{A85E498E-6647-4D4A-B612-8C3CC992BCFF}</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>XGraphics</Import_RootNamespace>
+    <Import_RootNamespace>NGraphics</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Drawing.cs" />

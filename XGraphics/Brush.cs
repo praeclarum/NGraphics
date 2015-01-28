@@ -1,6 +1,6 @@
 using System;
 
-namespace XGraphics
+namespace NGraphics
 {
 	public class Brush
 	{

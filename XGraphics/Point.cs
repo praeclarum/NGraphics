@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace XGraphics
+namespace NGraphics
 {
 	/// <summary>
 	/// Yet another 2D point struct. I hope you enjoy this one.

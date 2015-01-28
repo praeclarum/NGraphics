@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace XGraphics
+namespace NGraphics
 {
 	public delegate void DrawingFunc (ISurface surface);
 

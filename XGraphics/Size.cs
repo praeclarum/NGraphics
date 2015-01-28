@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace XGraphics
+namespace NGraphics
 {
 	public struct Size
 	{
