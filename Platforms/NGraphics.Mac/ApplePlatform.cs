@@ -17,7 +17,7 @@ namespace NGraphics
 			} 
 		}
 
-		public IImageSurface CreateImageSurface (int pixelWidth, int pixelHeight, bool transparency = true)
+		public IImageCanvas CreateImageSurface (int pixelWidth, int pixelHeight, bool transparency = true)
 		{
 			var bitmapInfo = transparency ? CGImageAlphaInfo.PremultipliedFirst : CGImageAlphaInfo.None;
 			var bitsPerComp = 8;
@@ -28,7 +28,7 @@ namespace NGraphics
 		}
 	}
 
-	public class CGBitmapContextSurface : CGContextSurface, IImageSurface
+	public class CGBitmapContextSurface : CGContextSurface, IImageCanvas
 	{
 		CGBitmapContext context;
 
@@ -70,7 +70,7 @@ namespace NGraphics
 			this.context = context;
 		}
 
-		public void DrawOval (Rectangle frame, Pen pen = null, Brush brush = null)
+		public void DrawEllipse (Rectangle frame, Pen pen = null, Brush brush = null)
 		{
 			if (pen == null && brush == null)
 				return;

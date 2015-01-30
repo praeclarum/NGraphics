@@ -6,18 +6,18 @@ namespace NGraphics
 	{
 		public string Name { get { return "Null"; } }
 
-		public IImageSurface CreateImageSurface (int pixelWidth, int pixelHeight, bool transparency = true)
+		public IImageCanvas CreateImageSurface (int pixelWidth, int pixelHeight, bool transparency = true)
 		{
 			return new NullImageSurface ();
 		}
 
-		class NullImageSurface : IImageSurface
+		class NullImageSurface : IImageCanvas
 		{
 			public IImage GetImage ()
 			{
 				return new NullImage ();
 			}
-			public void DrawOval (Rectangle frame, Pen pen = null, Brush brush = null)
+			public void DrawEllipse (Rectangle frame, Pen pen = null, Brush brush = null)
 			{
 			}
 		}

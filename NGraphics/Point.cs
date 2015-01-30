@@ -8,6 +8,8 @@ namespace NGraphics
 	/// </summary>
 	public struct Point
 	{
+		public static readonly Point Zero = new Point (0, 0);
+
 		public double X;
 		public double Y;
 		public Point (double x, double y)

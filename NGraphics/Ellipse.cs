@@ -27,7 +27,7 @@ namespace NGraphics
 
 		public void Draw (ICanvas surface)
 		{
-			surface.DrawOval (frame, pen, brush);
+			surface.DrawEllipse (frame, pen, brush);
 		}
 	}
 }

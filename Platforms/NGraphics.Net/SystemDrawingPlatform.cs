@@ -8,7 +8,7 @@ namespace NGraphics
 	{
 		public string Name { get { return "Net"; } }
 
-		public IImageSurface CreateImageSurface (int pixelWidth, int pixelHeight, bool transparency = true)
+		public IImageCanvas CreateImageSurface (int pixelWidth, int pixelHeight, bool transparency = true)
 		{
 			var format = transparency ? PixelFormat.Format32bppPArgb : PixelFormat.Format24bppRgb;
 			var bitmap = new Bitmap (pixelWidth, pixelHeight, format);
@@ -36,7 +36,7 @@ namespace NGraphics
 //		}
 	}
 
-	public class BitmapSurface : GraphicsSurface, IImageSurface
+	public class BitmapSurface : GraphicsSurface, IImageCanvas
 	{
 		Bitmap bitmap;
 
@@ -63,7 +63,7 @@ namespace NGraphics
 			graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 		}
 
-		public void DrawOval (Rectangle frame, Pen pen = null, Brush brush = null)
+		public void DrawEllipse (Rectangle frame, Pen pen = null, Brush brush = null)
 		{
 			if (brush != null) {
 				graphics.FillEllipse (brush.GetBrush (), Conversions.GetRectangle (frame));

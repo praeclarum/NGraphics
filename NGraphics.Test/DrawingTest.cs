@@ -7,72 +7,48 @@ namespace NGraphics.Test
 	public class DrawingTest
 	{
 		[Test]
-		public void Oval ()
+		public void Ellipse ()
 		{
-			var d = new Graphic (s => {
+			var d = new Drawing (new Size (50, 50), s => {
 
 				s.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Black);
 
 			});
-			Assert.AreEqual (1, d.NumChildren);
+			Assert.AreEqual (1, d.Graphic.Children.Count);
 		}
 
 		[Test]
-		public void TwoOvals ()
+		public void TwoEllipses ()
 		{
-			var d = new Graphic (s => {
+			var d = new Drawing (new Size (50, 50), s => {
 				s.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Black);
 				s.DrawEllipse (new Point (20, 30), new Size (40, 30), Pens.Black);
 			});
-			Assert.AreEqual (2, d.NumChildren);
+			Assert.AreEqual (2, d.Graphic.Children.Count);
 		}
 
 		[Test]
 		public void RefreshWithFunc ()
 		{
 			var num = 1;
-			var d = new Graphic (s => {
+			var d = new Drawing (new Size (50, 50), s => {
 				for (var i = 0; i < num; i++) {
 					s.DrawEllipse (new Point (10*i, 20), new Size (30, 40), Pens.Black);
 				}
 			});
-			Assert.AreEqual (1, d.NumChildren);
+			Assert.AreEqual (1, d.Graphic.Children.Count);
 
 			num = 2;
-			d.Refresh ();
-			Assert.AreEqual (2, d.NumChildren);
+			d.Invalidate ();
+			Assert.AreEqual (2, d.Graphic.Children.Count);
 		}
 
 		[Test]
 		public void EmptyDrawing ()
 		{
-			var d = new Graphic ();
-			Assert.AreEqual (0, d.NumChildren);
-		}
-
-		[Test]
-		public void Refresh ()
-		{
-			var d = new Graphic ();
-			d.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Black);
-			Assert.AreEqual (1, d.NumChildren);
-
-			d.Refresh ();
-			Assert.AreEqual (0, d.NumChildren);
-		}
-
-		[Test]
-		public void Circular ()
-		{
-			var d = new Graphic (s => {
-				s.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Black);
-				s.DrawEllipse (new Point (20, 30), new Size (40, 30), Pens.Black);
+			var d = new Drawing (new Size (50, 50), s => {
 			});
-
-			var d2 = new Graphic (d.Draw);
-
-			Assert.AreEqual (2, d.NumChildren);
-			Assert.AreEqual (2, d2.NumChildren);
+			Assert.AreEqual (0, d.Graphic.Children.Count);
 		}
 	}
 }
