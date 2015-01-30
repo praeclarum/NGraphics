@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace NGraphics
 {
@@ -21,7 +22,6 @@ namespace NGraphics
 			Blue = blue;
 			Alpha = alpha;
 		}
-
 		public Color (double white, double alpha)
 		{
 			Red = white;
@@ -29,14 +29,22 @@ namespace NGraphics
 			Blue = white;
 			Alpha = alpha;
 		}
+
+		public override string ToString ()
+		{
+			return string.Format (CultureInfo.InvariantCulture, "Color ({0}, {1}, {2}, {3})", Red, Green, Blue, Alpha);
+		}
 	}
 
 	public static class Colors
 	{
 		public static readonly Color Black = new Color (0, 0, 0, 1);
+		public static readonly Color Gray = new Color (0.5, 0.5, 0.5, 1);
 		public static readonly Color White = new Color (1, 1, 1, 1);
 		public static readonly Color Red = new Color (1, 0, 0, 1);
 		public static readonly Color Yellow = new Color (1, 1, 0, 1);
+		public static readonly Color Green = new Color (0, 1, 0, 1);
+		public static readonly Color Blue = new Color (0, 0, 1, 1);
 	}
 }
 
