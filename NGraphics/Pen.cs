@@ -15,8 +15,14 @@ namespace NGraphics
 
 	public class Pen
 	{
-		public readonly Color Color;
-		public readonly double Width;
+		public Color Color;
+		public double Width;
+
+		public Pen ()
+		{
+			Color = Colors.Black;
+			Width = 1;
+		}
 
 		public Pen (Color color, double width)
 		{

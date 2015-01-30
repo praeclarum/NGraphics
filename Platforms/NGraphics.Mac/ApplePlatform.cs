@@ -2,6 +2,7 @@
 using CoreGraphics;
 using ImageIO;
 using Foundation;
+using System.Linq;
 
 namespace NGraphics
 {
@@ -24,18 +25,21 @@ namespace NGraphics
 			var bytesPerRow = transparency ? 4 * pixelWidth : 3 * pixelWidth;
 			var colorSpace = CGColorSpace.CreateDeviceRGB ();
 			var bitmap = new CGBitmapContext (IntPtr.Zero, pixelWidth, pixelHeight, bitsPerComp, bytesPerRow, colorSpace, bitmapInfo);
-			return new CGBitmapContextSurface (bitmap);
+			return new CGBitmapContextCanvas (bitmap);
 		}
 	}
 
-	public class CGBitmapContextSurface : CGContextSurface, IImageCanvas
+	public class CGBitmapContextCanvas : CGContextCanvas, IImageCanvas
 	{
 		CGBitmapContext context;
 
-		public CGBitmapContextSurface (CGBitmapContext context)
+		public CGBitmapContextCanvas (CGBitmapContext context)
 			: base (context)
 		{
 			this.context = context;
+
+			this.context.TranslateCTM (0, context.Height);
+			this.context.ScaleCTM (1, -1);
 		}
 
 		public IImage GetImage ()
@@ -69,32 +73,80 @@ namespace NGraphics
 		}
 	}
 
-	public class CGContextSurface : ICanvas
+	public class CGContextCanvas : ICanvas
 	{
 		CGContext context;
 
-		public CGContextSurface (CGContext context)
+		public CGContextCanvas (CGContext context)
 		{
 			this.context = context;
+		}
+
+		CGGradient CreateGradient (LinearGradientBrush brush)
+		{
+			var n = brush.Stops.Count;
+			var locs = new nfloat [n];
+			var comps = new nfloat [4 * n];
+			for (var i = 0; i < n; i++) {
+				var s = brush.Stops [i];
+				locs [i] = (nfloat)s.Offset;
+				comps [4 * i + 0] = (nfloat)s.Color.Red;
+				comps [4 * i + 1] = (nfloat)s.Color.Green;
+				comps [4 * i + 2] = (nfloat)s.Color.Blue;
+				comps [4 * i + 3] = (nfloat)s.Color.Alpha;
+			}
+			var cs = CGColorSpace.CreateDeviceRGB ();
+			return new CGGradient (cs, comps, locs);
+		}
+
+		void DrawElement (Action add, Rect frame, Pen pen = null, Brush brush = null)
+		{
+			if (pen == null && brush == null)
+				return;
+
+			var lgb = brush as LinearGradientBrush;
+			if (lgb != null) {
+
+				var cg = CreateGradient (lgb);
+				context.SaveState ();
+				add ();
+				context.Clip ();
+				CGGradientDrawingOptions options = CGGradientDrawingOptions.DrawsBeforeStartLocation | CGGradientDrawingOptions.DrawsAfterEndLocation;
+				var size = frame.Size;
+				var start = Conversions.GetCGPoint (frame.Position + lgb.RelativeStart * size);
+				var end = Conversions.GetCGPoint (frame.Position + lgb.RelativeEnd * size);
+				context.DrawLinearGradient (cg, start, end, options);
+				context.RestoreState ();
+
+				if (pen != null) {
+					SetPen (pen);
+					add ();
+					context.StrokePath ();
+				}
+
+			} else {
+				var mode = SetPenAndBrush (pen, brush);
+
+				add ();
+				context.DrawPath (mode);
+			}
 		}
 
 		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
 		{
 			if (pen == null && brush == null)
 				return;
-			var mode = SetPenAndBrush (pen, brush);
+
 			var rect = Conversions.GetCGRect (frame);
-			context.AddRect (rect);
-			context.DrawPath (mode);
+			DrawElement (() => context.AddRect (rect), frame, pen, brush);
 		}
 		public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)
 		{
 			if (pen == null && brush == null)
 				return;
-			var mode = SetPenAndBrush (pen, brush);
+
 			var rect = Conversions.GetCGRect (frame);
-			context.AddEllipseInRect (rect);
-			context.DrawPath (mode);
+			DrawElement (() => context.AddEllipseInRect (rect), frame, pen, brush);
 		}
 
 		CGPathDrawingMode SetPenAndBrush (Pen pen, Brush brush)
@@ -130,6 +182,11 @@ namespace NGraphics
 
 	public static class Conversions
 	{
+		public static CGPoint GetCGPoint (Point point)
+		{
+			return new CGPoint ((nfloat)point.X, (nfloat)point.Y);
+		}
+
 		public static CGRect GetCGRect (Rect frame)
 		{
 			return new CGRect ((nfloat)frame.X, (nfloat)frame.Y, (nfloat)frame.Width, (nfloat)frame.Height);

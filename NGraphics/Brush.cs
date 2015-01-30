@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace NGraphics
 {
@@ -19,11 +20,28 @@ namespace NGraphics
 
 	public class SolidBrush : Brush
 	{
-		public readonly Color Color;
+		public Color Color;
+
+		public SolidBrush ()
+		{
+		}
 
 		public SolidBrush (Color color)
 		{
 			Color = color;
 		}
+	}
+
+	public class GradientStop
+	{
+		public double Offset;
+		public Color Color;
+	}
+
+	public class LinearGradientBrush : Brush
+	{
+		public Point RelativeStart;
+		public Point RelativeEnd;
+		public readonly List<GradientStop> Stops = new List<GradientStop> ();
 	}
 }

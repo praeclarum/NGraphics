@@ -10,6 +10,9 @@ namespace NGraphics
 		public double Width;
 		public double Height;
 
+		public Point Position { get { return new Point (X, Y); } }
+		public Size Size { get { return new Size (Width, Height); } }
+
 		public Rect (double x, double y, double width, double height)
 		{
 			X = x;

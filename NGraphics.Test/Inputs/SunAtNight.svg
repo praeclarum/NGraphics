@@ -3,8 +3,9 @@
     <title>SunAtNight</title>
     <description>Created with Sketch (http://www.bohemiancoding.com/sketch)</description>
     <defs>
-        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
-            <stop stop-color="#40A6FC" offset="0%"></stop>
+        <linearGradient x1="50.0504673%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#8AA1B5" offset="0%"></stop>
+            <stop stop-color="#3381CD" offset="30.0695128%"></stop>
             <stop stop-color="#0C1441" offset="100%"></stop>
         </linearGradient>
         <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
@@ -15,6 +16,6 @@
     </defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
         <rect id="Rectangle-1" fill="url(#linearGradient-1)" sketch:type="MSShapeGroup" x="0" y="0" width="877" height="635"></rect>
-        <ellipse id="Oval-1" fill="url(#linearGradient-2)" sketch:type="MSShapeGroup" cx="259.5" cy="281" rx="108.5" ry="102"></ellipse>
+        <circle id="Oval-1" stroke="#F6A623" stroke-width="6" fill="url(#linearGradient-2)" sketch:type="MSShapeGroup" cx="184" cy="198" r="102"></circle>
     </g>
 </svg>
