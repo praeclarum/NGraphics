@@ -20,8 +20,13 @@ namespace NGraphics
 		{
 		}
 
-		public Ellipse (Point center, double radius)
-			: this (center - radius, new Size (radius * 2))
+		public Ellipse (Point position, double diameter)
+			: this (position, new Size (diameter))
+		{
+		}
+
+		public Ellipse (double diameter)
+			: this (Point.Zero, new Size (diameter))
 		{
 		}
 

@@ -22,5 +22,10 @@ namespace NGraphics
 			: this (position.X, position.Y, size.Width, size.Height)
 		{
 		}
+
+		public Rectangle (Size size)
+			: this (0, 0, size.Width, size.Height)
+		{
+		}
 	}
 }
