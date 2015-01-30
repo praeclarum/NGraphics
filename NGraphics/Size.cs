@@ -25,5 +25,10 @@ namespace NGraphics
 			Width = 0;
 			Height = 0;
 		}
+
+		public override string ToString ()
+		{
+			return string.Format (CultureInfo.InvariantCulture, "Size ({0}, {1})", Width, Height);
+		}
 	}	
 }

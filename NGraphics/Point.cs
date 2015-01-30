@@ -34,7 +34,7 @@ namespace NGraphics
 		}
 		public override string ToString ()
 		{
-			return string.Format (CultureInfo.InvariantCulture, "[{0}, {1}]", X, Y);
+			return string.Format (CultureInfo.InvariantCulture, "Point ({0}, {1})", X, Y);
 		}
 	}
 }

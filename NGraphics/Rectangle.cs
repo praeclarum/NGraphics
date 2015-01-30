@@ -17,15 +17,18 @@ namespace NGraphics
 			Width = width;
 			Height = height;
 		}
-
 		public Rectangle (Point position, Size size)
 			: this (position.X, position.Y, size.Width, size.Height)
 		{
 		}
-
 		public Rectangle (Size size)
 			: this (0, 0, size.Width, size.Height)
 		{
+		}
+
+		public override string ToString ()
+		{
+			return string.Format (CultureInfo.InvariantCulture, "Rectangle ({0}, {1}, {2}, {3})", X, Y, Width, Height);
 		}
 	}
 }

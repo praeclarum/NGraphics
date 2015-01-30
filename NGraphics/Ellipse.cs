@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace NGraphics
 {
@@ -33,6 +34,11 @@ namespace NGraphics
 		public void Draw (ICanvas surface)
 		{
 			surface.DrawEllipse (frame, pen, brush);
+		}
+
+		public override string ToString ()
+		{
+			return string.Format (CultureInfo.InvariantCulture, "Ellipse ({0}, {1}, {2}, {3})", frame.X, frame.Y, frame.Width, frame.Height);
 		}
 	}
 }
