@@ -19,7 +19,7 @@ namespace NGraphics.Test
 		{
 			var p = Platform;
 			var s = p.CreateImageSurface (100, 100);
-			s.DrawOval (new Point (10, 20), new Size (30, 40), Pens.Red.WithWidth (10), Brushes.Yellow);
+			s.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Red.WithWidth (10), Brushes.Yellow);
 			var i = s.GetImage ();
 			var name = string.Format ("{0}-{1}.png", p.Name, "Oval");
 			var path = System.IO.Path.Combine (ResultsDirectory, name);

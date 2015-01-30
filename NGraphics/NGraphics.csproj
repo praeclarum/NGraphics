@@ -32,19 +32,19 @@
   <ItemGroup>
     <Compile Include="Brush.cs" />
     <Compile Include="Color.cs" />
-    <Compile Include="Drawing.cs" />
     <Compile Include="IDrawable.cs" />
     <Compile Include="IImage.cs" />
     <Compile Include="IPlatform.cs" />
-    <Compile Include="ISurface.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="NullPlatform.cs" />
-    <Compile Include="Oval.cs" />
     <Compile Include="Pen.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Rectangle.cs" />
     <Compile Include="Size.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ICanvas.cs" />
+    <Compile Include="Graphic.cs" />
+    <Compile Include="Ellipse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

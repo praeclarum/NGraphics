@@ -23,7 +23,7 @@ namespace NGraphics.Test
 		[Test]
 		public void CreateOval ()
 		{
-			var g = new Oval (new Point (10, 20), new Size (30, 40));
+			var g = new Ellipse (new Point (10, 20), new Size (30, 40));
 			Assert.NotNull (g);
 		}
 	}

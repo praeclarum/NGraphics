@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace NGraphics
 {
-	public delegate void DrawingFunc (ISurface surface);
+	public delegate void DrawingFunc (ICanvas surface);
 
 	/// <summary>
 	/// A drawing is a surface that remembers what was drawn onto it.
 	/// You can also give it a function that does the drawing lazily and automatically.
 	/// Drawings can be drawn to other surfaces or saved to a file.
 	/// </summary>
-	public class Drawing : ISurface, IDrawable
+	public class Graphic : ICanvas, IDrawable
 	{
 		bool isValid = false;
 
@@ -30,7 +30,7 @@ namespace NGraphics
 			}
 		}
 
-		public Drawing (DrawingFunc func = null)
+		public Graphic (DrawingFunc func = null)
 		{
 			this.func = func;
 		}
@@ -46,7 +46,7 @@ namespace NGraphics
 
 		public void DrawOval (Rectangle frame, Pen pen = null, Brush brush = null)
 		{
-			children.Add (new Oval (frame, pen, brush));
+			children.Add (new Ellipse (frame, pen, brush));
 		}
 
 		void DrawIfNeeded ()
@@ -58,7 +58,7 @@ namespace NGraphics
 			}
 		}
 
-		public void Draw (ISurface s)
+		public void Draw (ICanvas s)
 		{
 			foreach (var c in children) {
 				c.Draw (s);

@@ -61,7 +61,7 @@ namespace NGraphics
 		}
 	}
 
-	public class CGContextSurface : ISurface
+	public class CGContextSurface : ICanvas
 	{
 		CGContext context;
 

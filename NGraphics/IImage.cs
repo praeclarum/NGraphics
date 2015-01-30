@@ -7,7 +7,7 @@ namespace NGraphics
 		void SaveAsPng (string path);
 	}	
 
-	public interface IImageSurface : ISurface
+	public interface IImageSurface : ICanvas
 	{
 		IImage GetImage ();
 	}

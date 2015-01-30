@@ -52,7 +52,7 @@ namespace NGraphics
 		}
 	}
 
-	public class GraphicsSurface : ISurface
+	public class GraphicsSurface : ICanvas
 	{
 		readonly Graphics graphics;
 
