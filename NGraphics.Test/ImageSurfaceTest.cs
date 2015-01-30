@@ -9,22 +9,26 @@ namespace NGraphics.Test
 	{
 		public static IPlatform Platform = new NullPlatform ();
 		public static string ResultsDirectory = "";
+		public static string ResultPath (string name)
+		{
+			var path = System.IO.Path.Combine (ResultsDirectory, name + "-" + Platform.Name + ".png");
+			Debug.WriteLine (path);
+			return path;
+		}
 	}
 
 	[TestFixture]
 	public class ImageSurfaceTest : PlatformTest
 	{
 		[Test]
-		public void Oval ()
+		public void Ellipse ()
 		{
 			var p = Platform;
 			var s = p.CreateImageSurface (100, 100);
 			s.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Red.WithWidth (10), Brushes.Yellow);
 			var i = s.GetImage ();
-			var name = string.Format ("{0}-{1}.png", p.Name, "Oval");
-			var path = System.IO.Path.Combine (ResultsDirectory, name);
+			var path = ResultPath ("Ellipse");
 			i.SaveAsPng (path);
-			Debug.WriteLine (path);
 //			System.Diagnostics.Process.Start ("open", "\"" + path + "\"");
 		}
 	}

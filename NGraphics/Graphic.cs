@@ -9,12 +9,17 @@ namespace NGraphics
 		public readonly List<IDrawable> Children = new List<IDrawable> ();
 
 		public Size Size;
-		public Rectangle ViewBox;
+		public Rectangle ViewPort;
 
-		public Graphic (Size size)
+		public Graphic (Size size, Rectangle viewPort)
 		{
 			Size = size;
-			ViewBox = new Rectangle (Point.Zero, size);
+			ViewPort = viewPort;
+		}
+
+		public Graphic (Size size)
+			: this (size, new Rectangle (Point.Zero, size))
+		{
 		}
 
 		public void Draw (ICanvas s)

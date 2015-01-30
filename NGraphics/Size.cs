@@ -20,11 +20,6 @@ namespace NGraphics
 			Width = size;
 			Height = size;
 		}
-		public Size ()
-		{
-			Width = 0;
-			Height = 0;
-		}
 
 		public override string ToString ()
 		{

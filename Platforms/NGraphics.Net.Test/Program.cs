@@ -25,9 +25,12 @@ namespace NGraphics.Net.Test
 				var test = Activator.CreateInstance (t);
 				var ms = t.GetMethods ().Where (m => m.GetCustomAttributes (tat, true).Length > 0);
 				foreach (var m in ms) {
+					Console.WriteLine ("Running {0}...", m);
 					m.Invoke (test, null);
 				}
 			}
+
+			Console.WriteLine ("Done");
 		}
 	}
 }

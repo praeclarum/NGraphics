@@ -50,14 +50,22 @@ namespace NGraphics
 
 		public CGImageImage (CGImage image)
 		{
+			if (image == null)
+				throw new ArgumentNullException ("image");
 			this.image = image;
 		}
 
 		public void SaveAsPng (string path)
 		{
-			var dest = CGImageDestination.Create (NSUrl.FromFilename (path), "public.png", 1);
-			dest.AddImage (image);
-			dest.Close ();
+			if (string.IsNullOrEmpty (path))
+				throw new ArgumentException ("path");
+			using (var dest = CGImageDestination.Create (NSUrl.FromFilename (path), "public.png", 1)) {
+				if (dest == null) {
+					throw new InvalidOperationException (string.Format ("Could not create image destination {0}.", path));
+				}
+				dest.AddImage (image);
+				dest.Close ();
+			}
 		}
 	}
 

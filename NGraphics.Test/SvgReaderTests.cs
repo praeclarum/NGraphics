@@ -6,7 +6,7 @@ using System.Reflection;
 namespace NGraphics.Test
 {
 	[TestFixture]
-	public class SvgReaderTests
+	public class SvgReaderTests : PlatformTest
 	{
 		Stream OpenResource (string path)
 		{
@@ -15,19 +15,27 @@ namespace NGraphics.Test
 			return assembly.GetManifestResourceStream ("NGraphics.Test.Inputs." + path);
 		}
 
-		void Read (string path)
+		Graphic Read (string path)
 		{
-			using (var s = OpenResource ("mozilla.ellipse.svg")) {
+			using (var s = OpenResource (path)) {
 				var r = new SvgReader (new StreamReader (s));
-				Assert.IsNotNull (r);
+				Assert.GreaterOrEqual (r.Graphic.Children.Count, 0);
+				return r.Graphic;
 			}
+		}
 
+		void ReadAndDraw (string path)
+		{
+			var g = Read (path);
+			var c = Platform.CreateImageSurface ((int)Math.Ceiling (g.Size.Width), (int)Math.Ceiling (g.Size.Height), true);
+			g.Draw (c);
+			c.GetImage ().SaveAsPng (ResultPath (path));
 		}
 
 		[Test]
 		public void ReadMozillaEllipse ()
 		{
-			Read ("mozilla/ellipse.svg");
+			ReadAndDraw ("mozilla.ellipse.svg");
 		}
 	}
 }
