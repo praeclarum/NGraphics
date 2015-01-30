@@ -5,11 +5,11 @@ namespace NGraphics
 {
 	public class Ellipse : IDrawable
 	{
-		Rectangle frame;
+		Rect frame;
 		Pen pen;
 		Brush brush;
 
-		public Ellipse (Rectangle frame, Pen pen = null, Brush brush = null)
+		public Ellipse (Rect frame, Pen pen = null, Brush brush = null)
 		{
 			this.frame = frame;
 			this.pen = pen;
@@ -17,7 +17,7 @@ namespace NGraphics
 		}
 
 		public Ellipse (Point position, Size size, Pen pen = null, Brush brush = null)
-			: this (new Rectangle (position, size), pen, brush)
+			: this (new Rect (position, size), pen, brush)
 		{
 		}
 
@@ -31,14 +31,14 @@ namespace NGraphics
 		{
 		}
 
-		public void Draw (ICanvas surface)
+		public void Draw (ICanvas canvas)
 		{
-			surface.DrawEllipse (frame, pen, brush);
+			canvas.DrawEllipse (frame, pen, brush);
 		}
 
 		public override string ToString ()
 		{
-			return string.Format (CultureInfo.InvariantCulture, "Ellipse ({0}, {1}, {2}, {3})", frame.X, frame.Y, frame.Width, frame.Height);
+			return string.Format (CultureInfo.InvariantCulture, "Ellipse ({0})", frame);
 		}
 	}
 }

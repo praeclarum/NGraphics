@@ -17,7 +17,10 @@ namespace NGraphics
 			{
 				return new NullImage ();
 			}
-			public void DrawEllipse (Rectangle frame, Pen pen = null, Brush brush = null)
+			public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
+			{
+			}
+			public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)
 			{
 			}
 		}

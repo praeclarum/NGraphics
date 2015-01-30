@@ -14,7 +14,11 @@ namespace NGraphics
 			Graphic = new Graphic (size);
 		}
 
-		public void DrawEllipse (Rectangle frame, Pen pen = null, Brush brush = null)
+		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
+		{
+			Graphic.Children.Add (new Rectangle (frame, pen, brush));
+		}
+		public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)
 		{
 			Graphic.Children.Add (new Ellipse (frame, pen, brush));
 		}

@@ -33,9 +33,15 @@ namespace NGraphics.Test
 		}
 
 		[Test]
-		public void ReadMozillaEllipse ()
+		public void MozillaEllipse ()
 		{
 			ReadAndDraw ("mozilla.ellipse.svg");
+		}
+
+		[Test]
+		public void SunAtNight ()
+		{
+			ReadAndDraw ("SunAtNight.svg");
 		}
 	}
 }

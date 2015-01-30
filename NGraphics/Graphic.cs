@@ -9,16 +9,18 @@ namespace NGraphics
 		public readonly List<IDrawable> Children = new List<IDrawable> ();
 
 		public Size Size;
-		public Rectangle ViewPort;
+		public Rect ViewBox;
+		public string Title = "";
+		public string Description = "";
 
-		public Graphic (Size size, Rectangle viewPort)
+		public Graphic (Size size, Rect viewBox)
 		{
 			Size = size;
-			ViewPort = viewPort;
+			ViewBox = viewBox;
 		}
 
 		public Graphic (Size size)
-			: this (size, new Rectangle (Point.Zero, size))
+			: this (size, new Rect (Point.Zero, size))
 		{
 		}
 

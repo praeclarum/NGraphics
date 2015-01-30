@@ -39,7 +39,6 @@
     <Compile Include="NullPlatform.cs" />
     <Compile Include="Pen.cs" />
     <Compile Include="Point.cs" />
-    <Compile Include="Rectangle.cs" />
     <Compile Include="Size.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ICanvas.cs" />
@@ -48,6 +47,9 @@
     <Compile Include="GraphicCanvas.cs" />
     <Compile Include="Drawing.cs" />
     <Compile Include="SvgReader.cs" />
+    <Compile Include="Group.cs" />
+    <Compile Include="Rect.cs" />
+    <Compile Include="Rectangle.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

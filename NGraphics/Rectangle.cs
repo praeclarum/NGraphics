@@ -1,34 +1,45 @@
-using System;
+﻿using System;
 using System.Globalization;
 
 namespace NGraphics
 {
-	public struct Rectangle
+	public class Rectangle : IDrawable
 	{
-		public double X;
-		public double Y;
-		public double Width;
-		public double Height;
+		Rect frame;
+		Pen pen;
+		Brush brush;
 
-		public Rectangle (double x, double y, double width, double height)
+		public Rectangle (Rect frame, Pen pen = null, Brush brush = null)
 		{
-			X = x;
-			Y = y;
-			Width = width;
-			Height = height;
+			this.frame = frame;
+			this.pen = pen;
+			this.brush = brush;
 		}
-		public Rectangle (Point position, Size size)
-			: this (position.X, position.Y, size.Width, size.Height)
+
+		public Rectangle (Point position, Size size, Pen pen = null, Brush brush = null)
+			: this (new Rect (position, size), pen, brush)
 		{
 		}
-		public Rectangle (Size size)
-			: this (0, 0, size.Width, size.Height)
+
+		public Rectangle (Point position, double size)
+			: this (position, new Size (size))
 		{
+		}
+
+		public Rectangle (double size)
+			: this (Point.Zero, new Size (size))
+		{
+		}
+
+		public void Draw (ICanvas canvas)
+		{
+			canvas.DrawRectangle (frame, pen, brush);
 		}
 
 		public override string ToString ()
 		{
-			return string.Format (CultureInfo.InvariantCulture, "Rectangle ({0}, {1}, {2}, {3})", X, Y, Width, Height);
+			return string.Format (CultureInfo.InvariantCulture, "Rectangle ({0})", frame);
 		}
 	}
 }
+

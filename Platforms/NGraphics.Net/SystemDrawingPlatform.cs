@@ -63,7 +63,17 @@ namespace NGraphics
 			graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 		}
 
-		public void DrawEllipse (Rectangle frame, Pen pen = null, Brush brush = null)
+		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
+		{
+			if (brush != null) {
+				graphics.FillRectangle (brush.GetBrush (), Conversions.GetRectangle (frame));
+			}
+			if (pen != null) {
+				var r = Conversions.GetRectangle (frame);
+				graphics.DrawRectangle (pen.GetPen (), r.X, r.Y, r.Width, r.Height);
+			}
+		}
+		public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)
 		{
 			if (brush != null) {
 				graphics.FillEllipse (brush.GetBrush (), Conversions.GetRectangle (frame));
@@ -95,7 +105,7 @@ namespace NGraphics
 			return new System.Drawing.SolidBrush (System.Drawing.Color.White);
 		}
 
-		public static RectangleF GetRectangle (Rectangle frame)
+		public static RectangleF GetRectangle (Rect frame)
 		{
 			return new RectangleF ((float)frame.X, (float)frame.Y, (float)frame.Width, (float)frame.Height);
 		}

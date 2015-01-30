@@ -6,6 +6,6 @@ namespace NGraphics
 {
 	public interface IDrawable
 	{
-		void Draw (ICanvas surface);
+		void Draw (ICanvas canvas);
 	}
 }

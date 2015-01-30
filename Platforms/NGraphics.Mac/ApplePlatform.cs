@@ -78,7 +78,16 @@ namespace NGraphics
 			this.context = context;
 		}
 
-		public void DrawEllipse (Rectangle frame, Pen pen = null, Brush brush = null)
+		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
+		{
+			if (pen == null && brush == null)
+				return;
+			var mode = SetPenAndBrush (pen, brush);
+			var rect = Conversions.GetCGRect (frame);
+			context.AddRect (rect);
+			context.DrawPath (mode);
+		}
+		public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)
 		{
 			if (pen == null && brush == null)
 				return;
@@ -121,7 +130,7 @@ namespace NGraphics
 
 	public static class Conversions
 	{
-		public static CGRect GetCGRect (Rectangle frame)
+		public static CGRect GetCGRect (Rect frame)
 		{
 			return new CGRect ((nfloat)frame.X, (nfloat)frame.Y, (nfloat)frame.Width, (nfloat)frame.Height);
 		}

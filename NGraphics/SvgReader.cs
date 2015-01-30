@@ -17,30 +17,45 @@ namespace NGraphics
 		{
 			var doc = XDocument.Load (reader);
 			var svg = doc.Root;
+			var ns = svg.Name.Namespace;
 
 			var width = ReadNumber (svg.Attribute ("width"));
 			var height = ReadNumber (svg.Attribute ("height"));
 			var size = new Size (width, height);
 
-			var viewPort = new Rectangle (size);
-			var viewPortA = svg.Attribute ("viewPort");
-			if (viewPortA != null) {
-				viewPort = ReadRectangle (viewPortA.Value);
+			var viewBox = new Rect (size);
+			var viewBoxA = svg.Attribute ("viewBox") ?? svg.Attribute ("viewPort");
+			if (viewBoxA != null) {
+				viewBox = ReadRectangle (viewBoxA.Value);
 			}
 
-			Graphic = new Graphic (size, viewPort);
+			Graphic = new Graphic (size, viewBox);
 
-			foreach (var e in svg.Elements ())
-				AddElement (e);
+			AddElements (Graphic.Children, svg.Elements ());
 		}
 
-		void AddElement (XElement e)
+		void AddElements (IList<IDrawable> list, IEnumerable<XElement> es)
+		{
+			foreach (var e in es)
+				AddElement (list, e);
+		}
+
+		void AddElement (IList<IDrawable> list, XElement e)
 		{
 			IDrawable r = null;
 			var pen = ReadPen (e);
 			var brush = ReadBrush (e);
 			//var id = ReadString (e.Attribute ("id"));
 			switch (e.Name.LocalName) {
+			case "rect":
+				{
+					var x = ReadNumber (e.Attribute ("x"));
+					var y = ReadNumber (e.Attribute ("y"));
+					var width = ReadNumber (e.Attribute ("width"));
+					var height = ReadNumber (e.Attribute ("height"));
+					r = new Rectangle (new Point (x, y), new Size (width, height), pen, brush);
+				}
+				break;
 			case "ellipse":
 				{
 					var cx = ReadNumber (e.Attribute ("cx"));
@@ -50,20 +65,43 @@ namespace NGraphics
 					r = new Ellipse (new Point (cx - rx, cy - ry), new Size (2 * rx, 2 * ry), pen, brush);
 				}
 				break;
+			case "g":
+				{
+					var g = new Group ();
+					AddElements (g.Children, e.Elements ());
+					r = g;
+				}
+				break;
+			case "title":
+				Graphic.Title = ReadString (e);
+				break;
+			case "description":
+				Graphic.Description = ReadString (e);
+				break;
+			case "defs":
+				// Already read in earlier pass
+				break;
 			default:
-				throw new NotImplementedException ();
+				throw new NotSupportedException ("SVG element \"" + e.Name.LocalName + "\" is not supported");
 			}
 
 			if (r != null) {
-				Graphic.Children.Add (r);
+				list.Add (r);
 			}
+		}
+
+		string ReadString (XElement e, string defaultValue = "")
+		{
+			if (e == null)
+				return defaultValue;
+			return e.Value ?? defaultValue;
 		}
 
 		string ReadString (XAttribute a, string defaultValue = "")
 		{
 			if (a == null)
 				return defaultValue;
-			return a.Value;
+			return a.Value ?? defaultValue;
 		}
 
 		Pen ReadPen (XElement e)
@@ -83,22 +121,30 @@ namespace NGraphics
 			return ReadNumber (a.Value);
 		}
 
-		double ReadNumber (string s)
+		double ReadNumber (string raw)
 		{
-			if (s == null)
+			if (string.IsNullOrWhiteSpace (raw))
 				return 0;
+
+			var s = raw.Trim ();
+			var m = 1.0;
+
+			if (s.EndsWith ("px")) {
+				s = s.Substring (0, s.Length - 2);
+			}
+
 			double v;
 			if (!double.TryParse (s, NumberStyles.Float, icult, out v)) {
 				v = 0;
 			}
-			return v;
+			return m * v;
 		}
 
 		static readonly char[] WS = new char[] { ' ', '\t', '\n', '\r' };
 
-		Rectangle ReadRectangle (string s)
+		Rect ReadRectangle (string s)
 		{
-			var r = new Rectangle ();
+			var r = new Rect ();
 			var p = s.Split (WS, StringSplitOptions.RemoveEmptyEntries);
 			if (p.Length > 0)
 				r.X = ReadNumber (p [0]);
