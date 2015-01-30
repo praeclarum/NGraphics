@@ -46,6 +46,8 @@
     <Compile Include="Graphic.cs" />
     <Compile Include="Ellipse.cs" />
     <Compile Include="GraphicCanvas.cs" />
+    <Compile Include="Drawing.cs" />
+    <Compile Include="SvgReader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

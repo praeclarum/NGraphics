@@ -35,6 +35,7 @@
     <Compile Include="PrimitivesTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GraphicCanvasTests.cs" />
+    <Compile Include="SvgReaderTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -53,5 +54,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+    <Folder Include="Inputs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Inputs\mozilla\ellipse.svg" />
+    <EmbeddedResource Include="Inputs\SunAtNight.svg" />
   </ItemGroup>
 </Project>
