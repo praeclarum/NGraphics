@@ -122,6 +122,7 @@ namespace NGraphics
 			case "g":
 				{
 					var g = new Group ();
+					g.Transform = ReadTransform (ReadString (e.Attribute ("transform")));
 					AddElements (g.Children, e.Elements ());
 					r = g;
 				}
@@ -145,6 +146,38 @@ namespace NGraphics
 			if (r != null) {
 				list.Add (r);
 			}
+		}
+
+		Transform ReadTransform (string raw)
+		{
+			if (string.IsNullOrWhiteSpace (raw))
+				return null;
+
+			var s = raw.Trim ();
+
+			var calls = s.Split (new[]{ ')' }, StringSplitOptions.RemoveEmptyEntries);
+
+			Transform t = null;
+
+			foreach (var c in calls) {
+				var args = c.Split (new[]{ '(', ',', ' ', '\t', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+				Transform nt = null;
+				switch (args [0]) {
+				case "translate":
+					nt = new Translate (new Size (ReadNumber (args [1]), ReadNumber (args [2])), t);
+					break;
+				case "rotate":
+					nt = new Rotate (ReadNumber (args [1]) * Math.PI / 180.0, t);
+					break;
+				default:
+					throw new NotSupportedException ("Can't transform " + args[0]);
+				}
+				if (nt != null) {
+					t = nt;
+				}
+			}
+
+			return t;
 		}
 
 		static readonly char[] WSC = new char[] { ',', ' ', '\t', '\n', '\r' };

@@ -6,6 +6,10 @@ namespace NGraphics
 {
 	public interface ICanvas
 	{
+		void SaveState();
+		void Transform (Transform transform);
+		void RestoreState ();
+
 		void DrawPath (IEnumerable<PathCommand> commands, Pen pen = null, Brush brush = null);
 		void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null);
 		void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null);

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 
 namespace NGraphics
 {
@@ -58,12 +59,30 @@ namespace NGraphics
 	public class GraphicsSurface : ICanvas
 	{
 		readonly Graphics graphics;
+		readonly Stack<GraphicsState> stateStack = new Stack<GraphicsState> ();
 
 		public GraphicsSurface (Graphics graphics)
 		{
 			this.graphics = graphics;
 
-			graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+			graphics.SmoothingMode = SmoothingMode.HighQuality;
+		}
+
+		public void SaveState ()
+		{
+			var s = graphics.Save ();
+			stateStack.Push (s);
+		}
+		public void Transform (Transform transform)
+		{
+			throw new NotImplementedException ();
+		}
+		public void RestoreState ()
+		{
+			if (stateStack.Count > 0) {
+				var s = stateStack.Pop ();
+				graphics.Restore (s);
+			}
 		}
 
 		public void DrawPath (IEnumerable<PathCommand> commands, Pen pen = null, Brush brush = null)

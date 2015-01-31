@@ -8,10 +8,20 @@ namespace NGraphics
 	{
 		public readonly List<IDrawable> Children = new List<IDrawable> ();
 
-		public void Draw (ICanvas surface)
+		public Transform Transform;
+
+		public void Draw (ICanvas canvas)
 		{
+			var t = Transform;
+			if (t != null) {
+				canvas.SaveState ();
+				canvas.Transform (t);
+			}
 			foreach (var c in Children) {
-				c.Draw (surface);
+				c.Draw (canvas);
+			}
+			if (t != null) {
+				canvas.RestoreState ();
 			}
 		}
 	}

@@ -82,11 +82,39 @@ namespace NGraphics
 
 	public class CGContextCanvas : ICanvas
 	{
-		CGContext context;
+		readonly CGContext context;
 
 		public CGContextCanvas (CGContext context)
 		{
 			this.context = context;
+		}
+
+		public void SaveState ()
+		{
+			context.SaveState ();
+		}
+		public void Transform (Transform transform)
+		{
+			var t = transform;
+			while (t != null) {
+				var rt = t as Rotate;
+				if (rt != null) {
+					context.RotateCTM ((nfloat)rt.Angle);
+					t = t.Previous;
+					continue;
+				}
+				var tt = t as Translate;
+				if (tt != null) {
+					context.TranslateCTM ((nfloat)tt.Size.Width, (nfloat)tt.Size.Height);
+					t = t.Previous;
+					continue;
+				}
+				throw new NotSupportedException ("Transform " + t);
+			}
+		}
+		public void RestoreState ()
+		{
+			context.RestoreState ();
 		}
 
 		CGGradient CreateGradient (LinearGradientBrush brush)
@@ -158,6 +186,7 @@ namespace NGraphics
 							bb = new Rect (p, Size.Zero);
 						else
 							bb = bb.Union (p);
+						nbb++;
 						continue;
 					}
 					var lt = c as LineTo;
@@ -168,6 +197,7 @@ namespace NGraphics
 							bb = new Rect (p, Size.Zero);
 						else
 							bb = bb.Union (p);
+						nbb++;
 						continue;
 					}
 					var cp = c as ClosePath;

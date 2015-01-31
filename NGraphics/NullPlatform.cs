@@ -18,6 +18,15 @@ namespace NGraphics
 			{
 				return new NullImage ();
 			}
+			public void SaveState ()
+			{
+			}
+			public void Transform (Transform transform)
+			{
+			}
+			public void RestoreState ()
+			{
+			}
 			public void DrawPath (IEnumerable<PathCommand> commands, Pen pen = null, Brush brush = null)
 			{
 			}

@@ -14,6 +14,18 @@ namespace NGraphics
 			Graphic = new Graphic (size);
 		}
 
+		public void SaveState ()
+		{
+			throw new NotImplementedException ();
+		}
+		public void Transform (Transform transform)
+		{
+			throw new NotImplementedException ();
+		}
+		public void RestoreState ()
+		{
+			throw new NotImplementedException ();
+		}
 		public void DrawPath (IEnumerable<PathCommand> commands, Pen pen = null, Brush brush = null)
 		{
 			Graphic.Children.Add (new Path (commands, pen, brush));
