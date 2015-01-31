@@ -31,7 +31,7 @@ namespace NGraphics.Test
 			var g = Read (path);
 			var c = Platform.CreateImageCanvas (g.Size);
 			g.Draw (c);
-			c.GetImage ().SaveAsPng (ResultPath (path));
+			c.GetImage ().SaveAsPng (GetPath (path));
 		}
 
 		[Test]

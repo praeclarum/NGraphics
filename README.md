@@ -29,7 +29,7 @@ canvas.DrawPath (new PathOp[] {
 canvas.GetImage ().SaveAsPng ("Example1.png");
 ```
 
-<img src="TestResults/Example1.png" width="100" height="100" />
+<img src="TestResults/Example1-Mac.png" width="100" height="100" />
 
 `Platforms.Current.CreateImageCanvas` is just our tricky way to get a platform-specific `ICanvas` that we can rendered on. `IImageCanvases` are special because you can call `GetImage` to get an image of the drawing when you are done. We use a `scale` of 2 to render retina graphics.
 

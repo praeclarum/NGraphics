@@ -43,13 +43,13 @@ namespace NGraphics
 	public class Rotate : Transform
 	{
 		/// <summary>
-		/// The angle in radians.
+		/// The angle in degrees.
 		/// </summary>
 		public double Angle;
 		/// <summary>
 		/// Initializes a new instance of the <see cref="NGraphics.Rotate"/> class.
 		/// </summary>
-		/// <param name="angle">Angle in radians</param>
+		/// <param name="angle">Angle in degrees</param>
 		/// <param name="previous">Previous.</param>
 		public Rotate (double angle, Transform previous = null)
 			: base (previous)
@@ -58,7 +58,7 @@ namespace NGraphics
 		}
 		protected override string ToCode ()
 		{
-			return string.Format (CultureInfo.InvariantCulture, "rotate({0})", Angle * 180 / Math.PI);
+			return string.Format (CultureInfo.InvariantCulture, "rotate({0})", Angle);
 		}
 	}
 

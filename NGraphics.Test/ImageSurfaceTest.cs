@@ -15,8 +15,11 @@ namespace NGraphics.Test
 		public static IPlatform Platform = new NullPlatform ();
 
 		public static string ResultsDirectory = "";
-		public static string ResultPath (string name)
+		public static string GetPath (string filename)
 		{
+			var name = (filename.EndsWith (".png")) ?
+				System.IO.Path.GetFileNameWithoutExtension (filename) :
+				filename;
 			var path = System.IO.Path.Combine (ResultsDirectory, name + "-" + Platform.Name + ".png");
 			Debug.WriteLine (path);
 			return path;
@@ -33,7 +36,7 @@ namespace NGraphics.Test
 			var s = p.CreateImageCanvas (new Size (100));
 			s.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Red.WithWidth (10), Brushes.Yellow);
 			var i = s.GetImage ();
-			var path = ResultPath ("Ellipse");
+			var path = GetPath ("Ellipse");
 			i.SaveAsPng (path);
 //			System.Diagnostics.Process.Start ("open", "\"" + path + "\"");
 		}

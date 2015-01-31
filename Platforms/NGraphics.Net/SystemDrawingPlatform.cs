@@ -16,7 +16,7 @@ namespace NGraphics
 			var pixelHeight = (int)Math.Ceiling (size.Height * scale);
 			var format = transparency ? PixelFormat.Format32bppPArgb : PixelFormat.Format24bppRgb;
 			var bitmap = new Bitmap (pixelWidth, pixelHeight, format);
-			return new BitmapSurface (bitmap);
+			return new BitmapSurface (bitmap, scale);
 		}
 	}
 
@@ -43,11 +43,15 @@ namespace NGraphics
 	public class BitmapSurface : GraphicsSurface, IImageCanvas
 	{
 		Bitmap bitmap;
+		readonly double scale;
 
-		public BitmapSurface (Bitmap bitmap)
+		public BitmapSurface (Bitmap bitmap, double scale = 1.0)
 			: base (Graphics.FromImage (bitmap))
 		{
 			this.bitmap = bitmap;
+			this.scale = scale;
+
+			graphics.ScaleTransform ((float)scale, (float)scale);
 		}
 
 		public IImage GetImage ()
@@ -58,7 +62,7 @@ namespace NGraphics
 
 	public class GraphicsSurface : ICanvas
 	{
-		readonly Graphics graphics;
+		protected readonly Graphics graphics;
 		readonly Stack<GraphicsState> stateStack = new Stack<GraphicsState> ();
 
 		public GraphicsSurface (Graphics graphics)
@@ -75,7 +79,29 @@ namespace NGraphics
 		}
 		public void Transform (Transform transform)
 		{
-			throw new NotImplementedException ();
+			var t = transform;
+			var stack = new Stack<Transform> ();
+			while (t != null) {
+				stack.Push (t);
+				t = t.Previous;
+			}
+			while (stack.Count > 0) {
+				t = stack.Pop ();
+
+				var rt = t as Rotate;
+				if (rt != null) {
+					graphics.RotateTransform ((float)rt.Angle);
+					t = t.Previous;
+					continue;
+				}
+				var tt = t as Translate;
+				if (tt != null) {
+					graphics.TranslateTransform ((float)tt.Size.Width, (float)tt.Size.Height);
+					t = t.Previous;
+					continue;
+				}
+				throw new NotSupportedException ("Transform " + t);
+			}
 		}
 		public void RestoreState ()
 		{
@@ -87,11 +113,62 @@ namespace NGraphics
 
 		public void DrawText (Point point, string text, Pen pen = null, Brush brush = null)
 		{
-			throw new NotImplementedException ();
+			if (brush == null)
+				return;
+			var font = new Font ("Georgia", 16);
+			var sz = graphics.MeasureString (text, font);
+			var fr = new Rect (point, new Size (sz.Width, sz.Height));
+			graphics.DrawString (text, font, Conversions.GetBrush (brush, fr), Conversions.ToPointF (point));
 		}
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 		{
-			throw new NotImplementedException ();
+			using (var path = new GraphicsPath ()) {
+
+				Rect bb = new Rect ();
+				var nbb = 0;
+
+				var position = Point.Zero;
+
+				foreach (var op in ops) {
+					var mt = op as MoveTo;
+					if (mt != null) {
+						var p = mt.Point;
+						position = p;
+						if (nbb == 0)
+							bb = new Rect (p, Size.Zero);
+						else
+							bb = bb.Union (p);
+						nbb++;
+						continue;
+					}
+					var lt = op as LineTo;
+					if (lt != null) {
+						var p = lt.Point;
+						path.AddLine (Conversions.ToPointF (position), Conversions.ToPointF (p));
+						position = p;
+						if (nbb == 0)
+							bb = new Rect (p, Size.Zero);
+						else
+							bb = bb.Union (p);
+						nbb++;
+						continue;
+					}
+					var cp = op as ClosePath;
+					if (cp != null) {
+						path.CloseFigure ();
+						continue;
+					}
+				}
+
+				var frame = bb;
+				if (brush != null) {
+					graphics.FillPath (brush.GetBrush (frame), path);
+				}
+				if (pen != null) {
+					var r = Conversions.GetRectangle (frame);
+					graphics.DrawPath (pen.GetPen (), path);
+				}
+			}
 		}
 		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
 		{

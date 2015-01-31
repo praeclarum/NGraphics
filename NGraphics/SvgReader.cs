@@ -179,7 +179,7 @@ namespace NGraphics
 					}
 					break;
 				case "rotate":
-					var a = ReadNumber (args [1]) * Math.PI / 180.0;
+					var a = ReadNumber (args [1]);
 					if (args.Length >= 4) {
 						var x = ReadNumber (args [2]);
 						var y = ReadNumber (args [3]);

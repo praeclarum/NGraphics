@@ -22,7 +22,7 @@ namespace NGraphics.Test
 				new ClosePath ()
 			}, brush: Brushes.Gray);
 
-			canvas.GetImage ().SaveAsPng ("Example1.png");
+			canvas.GetImage ().SaveAsPng (GetPath ("Example1.png"));
 		}
 	}
 }
