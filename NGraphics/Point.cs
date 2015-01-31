@@ -19,6 +19,14 @@ namespace NGraphics
 			Y = y;
 		}
 
+		public Point ReflectedAround (Point point)
+		{
+			// this = point + d
+			// this' = point - d
+			var d = this - point;
+			return point - d;
+		}
+
 		public static Point operator * (Point a, Size v)
 		{
 			return new Point (a.X * v.Width, a.Y * v.Height);

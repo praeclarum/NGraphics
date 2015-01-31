@@ -6,6 +6,7 @@ namespace NGraphics
 {
 	public abstract class PathOp
 	{
+		public abstract Point GetContinueCurveControlPoint ();
 	}
 	public class MoveTo : PathOp
 	{
@@ -17,6 +18,11 @@ namespace NGraphics
 		public MoveTo (double x, double y)
 			: this (new Point (x, y))
 		{
+		}
+
+		public override Point GetContinueCurveControlPoint ()
+		{
+			return Point;
 		}
 	}
 	public class LineTo : PathOp
@@ -30,6 +36,10 @@ namespace NGraphics
 			: this (new Point (x, y))
 		{
 		}
+		public override Point GetContinueCurveControlPoint ()
+		{
+			return Point;
+		}
 	}
 	public class CurveTo : PathOp
 	{
@@ -42,9 +52,17 @@ namespace NGraphics
 			Control2 = control2;
 			Point = point;
 		}
+		public override Point GetContinueCurveControlPoint ()
+		{
+			return Control2.ReflectedAround (Point);
+		}
 	}
 	public class ClosePath : PathOp
 	{
+		public override Point GetContinueCurveControlPoint ()
+		{
+			throw new NotSupportedException ();
+		}
 	}
 
 	public class Path : Element
@@ -91,6 +109,18 @@ namespace NGraphics
 
 		public void CurveTo (Point control1, Point control2, Point point)
 		{
+			Add (new CurveTo (control1, control2, point));
+		}
+
+		public void ContinueCurveTo (Point control2, Point point)
+		{
+			if (Operations.Count == 0) {
+				throw new InvalidOperationException ("Cannot continue a curve until the path has begun with another operation.");
+			}
+			if (IsClosed)
+				return;
+			var prev = Operations [Operations.Count - 1];
+			var control1 = prev.GetContinueCurveControlPoint ();
 			Add (new CurveTo (control1, control2, point));
 		}
 

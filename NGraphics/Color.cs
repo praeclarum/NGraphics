@@ -62,6 +62,8 @@ namespace NGraphics
 		{
 			names ["black"] = Colors.Black;
 			names ["white"] = Colors.White;
+			names ["transparent"] = Colors.Clear;
+			names ["clear"] = Colors.Clear;
 			names ["red"] = Colors.Red;
 			names ["orange"] = Colors.Orange;
 		}

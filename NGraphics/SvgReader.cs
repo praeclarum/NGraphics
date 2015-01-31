@@ -377,6 +377,11 @@ namespace NGraphics
 					var pt = new Point (ReadNumber (args [i + 4]), ReadNumber (args [i + 5]));
 					p.CurveTo (c1, c2, pt);
 					i += 6;
+				} else if (op == "S" && i + 3 < n) {
+					var c  = new Point (ReadNumber (args [i]), ReadNumber (args [i + 1]));
+					var pt = new Point (ReadNumber (args [i + 2]), ReadNumber (args [i + 3]));
+					p.ContinueCurveTo (c, pt);
+					i += 4;
 				} else if (op == "z" || op == "Z") {
 					p.Close ();
 				} else {

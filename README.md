@@ -78,7 +78,7 @@ What would a graphics library be without a `Color` class? Well, this one is a st
 
 Normally you will use the RGBA constructor of color: `new Color (r, g, b, a)` where each value can range from 0 to 1.
 
-If you're not normal, you might prefer web notation: `new Color ("#BEEFEE")`.
+If you're not normal, you might prefer the web notation: `new Color ("#BEEFEE")`.
 
 
 
@@ -87,7 +87,7 @@ If you're not normal, you might prefer web notation: `new Color ("#BEEFEE")`.
 Sometimes it's nice to hang onto the graphical elements themselves so that you can change them later, or perhaps cache them from an expensive-to-compute draw operation, or maybe you just want to sing to them. Whatever your needs, NGraphics exposes the following graphical elements:
 
 * `Rectangles` are best used for drawing rectangles.
-* `Elliposes` can also be used to draw ovals and circles.
+* `Ellipses` can also be used to draw ovals and circles.
 * `Paths` can draw anything that you can imagine, and more. Lines, curves, turtles, they're all for the taking.
 
 

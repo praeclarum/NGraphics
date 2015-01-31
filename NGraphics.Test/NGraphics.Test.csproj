@@ -65,5 +65,7 @@
     <EmbeddedResource Include="Inputs\MocastIcon.svg" />
     <EmbeddedResource Include="Inputs\mozilla\path.svg" />
     <EmbeddedResource Include="Inputs\mozilla\transform.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\BezierCurves1.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\BezierCurves2.svg" />
   </ItemGroup>
 </Project>

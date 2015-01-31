@@ -153,11 +153,27 @@ namespace NGraphics
 						nbb++;
 						continue;
 					}
-					var cp = op as ClosePath;
+                    var ct = op as CurveTo;
+                    if (ct != null) {
+                        var p = ct.Point;
+                        var c1 = ct.Control1;
+                        var c2 = ct.Control2;
+                        path.AddBezier (Conversions.ToPointF (position), Conversions.ToPointF (c1),
+                            Conversions.ToPointF (c2), Conversions.ToPointF (p));
+                        position = p;
+                        if (nbb == 0)
+                            bb = new Rect (p, Size.Zero);
+                        bb = bb.Union (p).Union (c1).Union (c2);
+                        nbb++;
+                        continue;
+                    }
+                    var cp = op as ClosePath;
 					if (cp != null) {
 						path.CloseFigure ();
 						continue;
 					}
+
+					throw new NotSupportedException ("Path Op " + op);
 				}
 
 				var frame = bb;

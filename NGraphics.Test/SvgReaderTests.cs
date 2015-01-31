@@ -57,6 +57,18 @@ namespace NGraphics.Test
 		}
 
 		[Test]
+		public void MozillaBezierCurves1 ()
+		{
+			ReadAndDraw ("mozilla.BezierCurves1.svg");
+		}
+
+		[Test]
+		public void MozillaBezierCurves2 ()
+		{
+			ReadAndDraw ("mozilla.BezierCurves2.svg");
+		}
+
+		[Test]
 		public void SunAtNight ()
 		{
 			ReadAndDraw ("SunAtNight.svg");
