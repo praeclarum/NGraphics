@@ -36,6 +36,35 @@ canvas.GetImage ().SaveAsPng ("Example1.png");
 Paths are drawn using standard turtle graphics.
 
 
+## Pens and Brushes
+
+When drawing, you have a choice of pens to stroke the object with or brushes to fill it with.
+
+Anyway.
+
+`Pens` can be any *color* and any *width*.
+
+`Brushes` can be solid colors or trippy multi-color gradients (linear and radial!)
+
+
+## Colors
+
+What would a graphics library be without a `Color` class? Well, this one is a struct. Colors are light-weight, have fun with them.
+
+Normally you will use the RGBA constructor of color: `new Color (r, g, b, a)` where each value can range from 0 to 1.
+
+If you're not normal, you might prefer web notation: `new Color ("#BEEFEE")`.
+
+
+
+## Retained Mode
+
+Sometimes it's nice to hang onto the graphical elements themselves so that you can change them later, or perhaps cache them from an expensive-to-compute draw operation, or maybe you just want to sing to them. Whatever your needs, NGraphics exposes the following graphical elements:
+
+* `Rectangles` are best used for drawing rectangles.
+* `Elliposes` can also be used to draw ovals and circles.
+* `Paths` can draw anything that you can imagine, and more.
+
 ## Support
 
 
