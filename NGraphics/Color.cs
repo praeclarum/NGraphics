@@ -46,7 +46,9 @@ namespace NGraphics
 	{
 		public static readonly Color Clear = new Color (0, 0, 0, 0);
 		public static readonly Color Black = new Color (0, 0, 0, 1);
+		public static readonly Color DarkGray = new Color (0.25, 0.25, 0.25, 1);
 		public static readonly Color Gray = new Color (0.5, 0.5, 0.5, 1);
+		public static readonly Color LightGray = new Color (0.75, 0.75, 0.75, 1);
 		public static readonly Color White = new Color (1, 1, 1, 1);
 		public static readonly Color Red = new Color (1, 0, 0, 1);
 		public static readonly Color Orange = new Color (1, 0xA5/255.0, 0, 1);

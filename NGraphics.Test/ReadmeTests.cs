@@ -24,6 +24,24 @@ namespace NGraphics.Test
 
 			canvas.GetImage ().SaveAsPng (GetPath ("Example1.png"));
 		}
+
+		[Test]
+		public void PenWidths ()
+		{
+			var canvas = Platforms.Current.CreateImageCanvas (new Size (120*5, 120), scale: 2);
+
+			canvas.Translate (20, 20);
+			for (var i = 0; i < 5; i++) {
+				canvas.DrawEllipse (
+					new Rect (new Size (80)),
+					pen: Pens.DarkGray.WithWidth (1 << i),
+					brush: Brushes.LightGray);
+				canvas.Translate (120, 0);
+			}
+
+			canvas.GetImage ().SaveAsPng (GetPath ("PenWidths.png"));
+		}
 	}
+
 }
 

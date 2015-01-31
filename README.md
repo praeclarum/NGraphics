@@ -30,7 +30,7 @@ canvas.DrawPath (new PathOp[] {
 	new ClosePath ()
 }, brush: Brushes.Gray);
 
-canvas.GetImage ().SaveAsPng ("Example1.png");
+canvas.GetImage ().SaveAsPng (GetPath ("Example1.png"));
 ```
 
 <img src="TestResults/Example1-Mac.png" width="100" height="100" />
@@ -48,6 +48,24 @@ When drawing, you have a choice of pens to stroke the object with or brushes to 
 Anyway.
 
 `Pens` can be any *color* and any *width*.
+
+```csharp
+var canvas = Platforms.Current.CreateImageCanvas (new Size (120*5, 120), scale: 2);
+
+canvas.Translate (20, 20);
+for (var i = 0; i < 5; i++) {
+	canvas.DrawEllipse (
+		new Rect (new Size (80)),
+		pen: Pens.DarkGray.WithWidth (1 << i),
+		brush: Brushes.LightGray);
+	canvas.Translate (120, 0);
+}
+
+canvas.GetImage ().SaveAsPng (GetPath ("PenWidths.png"));
+```
+
+<img src="TestResults/PenWidths-Mac.png" width="600" height="120" />
+
 
 `Brushes` can be solid colors or trippy multi-color gradients (linear and radial!)
 
