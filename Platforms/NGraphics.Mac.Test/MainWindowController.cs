@@ -46,6 +46,8 @@ namespace NGraphics.Mac.Test
 					m.Invoke (test, null);
 				}
 			}
+
+			NSApplication.SharedApplication.Terminate (this);
 		}
 
 		public new MainWindow Window {
