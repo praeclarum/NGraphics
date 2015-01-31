@@ -1,11 +1,15 @@
 # NGraphics
 
-NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode rendering to fast and high quality native renderers.
+NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode rendering using high quality native renderers.
+
+You can use it for cross platform rendering of UI widgets. Or as the basis for graphically rich interactive views. Or maybe you just want an easy way to import and export SVG and PNG files. Either way, I'm sure you'll find something interesting here.
+
 
 
 ## Installation
 
 Install it from nuget.
+
 
 
 ## Getting Started
@@ -31,9 +35,10 @@ canvas.GetImage ().SaveAsPng ("Example1.png");
 
 <img src="TestResults/Example1-Mac.png" width="100" height="100" />
 
-`Platforms.Current.CreateImageCanvas` is just our tricky way to get a platform-specific `ICanvas` that we can rendered on. `IImageCanvases` are special because you can call `GetImage` to get an image of the drawing when you are done. We use a `scale` of 2 to render retina graphics.
+`Platforms.Current.CreateImageCanvas` is just our tricky way to get a platform-specific `ICanvas` that we can rendered on. `IImageCanvases` are special because you can call `GetImage` to get an image of the drawing when you are done. We use a `scale` of 2 to render retina graphics and keep this README looking good.
 
 Paths are drawn using standard turtle graphics.
+
 
 
 ## Pens and Brushes
@@ -45,6 +50,8 @@ Anyway.
 `Pens` can be any *color* and any *width*.
 
 `Brushes` can be solid colors or trippy multi-color gradients (linear and radial!)
+
+There is no multi-layering within elements, so you will have to draw them a few times with different brushes to get complex effects.
 
 
 ## Colors
@@ -63,17 +70,8 @@ Sometimes it's nice to hang onto the graphical elements themselves so that you c
 
 * `Rectangles` are best used for drawing rectangles.
 * `Elliposes` can also be used to draw ovals and circles.
-* `Paths` can draw anything that you can imagine, and more.
+* `Paths` can draw anything that you can imagine, and more. Lines, curves, turtles, they're all for the taking.
 
-## Support
-
-
-* iOS (Xamarin) using CoreGraphics
-* Mac (Xamarin) using CoreGraphics
-* .NET 4.5 using System.Drawing
-
-
-## Retained Mode
 
 ```charp
 var circle = new Ellipse (new Rectangle (Point.Zero, new Size (10)));
@@ -81,3 +79,17 @@ var circle = new Ellipse (new Rectangle (Point.Zero, new Size (10)));
 ICanvas canvas = ...;
 circle.Draw (canvas);
 ```
+
+## Platforms
+
+
+* iOS (Xamarin) using CoreGraphics
+* Mac (Xamarin) using CoreGraphics
+* .NET 4.5 using System.Drawing
+
+
+
+## License
+
+MIT
+
