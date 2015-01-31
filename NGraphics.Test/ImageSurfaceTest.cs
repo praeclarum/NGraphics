@@ -24,7 +24,7 @@ namespace NGraphics.Test
 		public void Ellipse ()
 		{
 			var p = Platform;
-			var s = p.CreateImageSurface (100, 100);
+			var s = p.CreateImageCanvas (new Size (100));
 			s.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Red.WithWidth (10), Brushes.Yellow);
 			var i = s.GetImage ();
 			var path = ResultPath ("Ellipse");

@@ -18,25 +18,29 @@ namespace NGraphics
 			} 
 		}
 
-		public IImageCanvas CreateImageSurface (int pixelWidth, int pixelHeight, bool transparency = true)
+		public IImageCanvas CreateImageCanvas (Size size, double scale = 1.0, bool transparency = true)
 		{
+			var pixelWidth = (int)Math.Ceiling (size.Width * scale);
+			var pixelHeight = (int)Math.Ceiling (size.Height * scale);
 			var bitmapInfo = transparency ? CGImageAlphaInfo.PremultipliedFirst : CGImageAlphaInfo.None;
 			var bitsPerComp = 8;
 			var bytesPerRow = transparency ? 4 * pixelWidth : 3 * pixelWidth;
 			var colorSpace = CGColorSpace.CreateDeviceRGB ();
 			var bitmap = new CGBitmapContext (IntPtr.Zero, pixelWidth, pixelHeight, bitsPerComp, bytesPerRow, colorSpace, bitmapInfo);
-			return new CGBitmapContextCanvas (bitmap);
+			return new CGBitmapContextCanvas (bitmap, scale);
 		}
 	}
 
 	public class CGBitmapContextCanvas : CGContextCanvas, IImageCanvas
 	{
 		CGBitmapContext context;
+		readonly double scale;
 
-		public CGBitmapContextCanvas (CGBitmapContext context)
+		public CGBitmapContextCanvas (CGBitmapContext context, double scale)
 			: base (context)
 		{
 			this.context = context;
+			this.scale = scale;
 
 			this.context.TranslateCTM (0, context.Height);
 			this.context.ScaleCTM (1, -1);
@@ -44,19 +48,21 @@ namespace NGraphics
 
 		public IImage GetImage ()
 		{
-			return new CGImageImage (this.context.ToImage ());
+			return new CGImageImage (this.context.ToImage (), scale);
 		}
 	}
 
 	public class CGImageImage : IImage
 	{
 		CGImage image;
+		readonly double scale;
 
-		public CGImageImage (CGImage image)
+		public CGImageImage (CGImage image, double scale)
 		{
 			if (image == null)
 				throw new ArgumentNullException ("image");
 			this.image = image;
+			this.scale = scale;
 		}
 
 		public void SaveAsPng (string path)

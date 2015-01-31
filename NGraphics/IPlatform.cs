@@ -7,7 +7,7 @@ namespace NGraphics
 	public interface IPlatform
 	{
 		string Name { get; }
-		IImageCanvas CreateImageSurface (int pixelWidth, int pixelHeight, bool transparency = true);
+		IImageCanvas CreateImageCanvas (Size size, double scale = 1.0, bool transparency = true);
 	}
 }
 

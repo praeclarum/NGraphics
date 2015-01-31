@@ -27,7 +27,7 @@ namespace NGraphics.Test
 		void ReadAndDraw (string path)
 		{
 			var g = Read (path);
-			var c = Platform.CreateImageSurface ((int)Math.Ceiling (g.Size.Width), (int)Math.Ceiling (g.Size.Height), true);
+			var c = Platform.CreateImageCanvas (g.Size);
 			g.Draw (c);
 			c.GetImage ().SaveAsPng (ResultPath (path));
 		}

@@ -8,8 +8,10 @@ namespace NGraphics
 	{
 		public string Name { get { return "Net"; } }
 
-		public IImageCanvas CreateImageSurface (int pixelWidth, int pixelHeight, bool transparency = true)
+		public IImageCanvas CreateImageCanvas (Size size, double scale = 1.0, bool transparency = true)
 		{
+			var pixelWidth = (int)Math.Ceiling (size.Width * scale);
+			var pixelHeight = (int)Math.Ceiling (size.Height * scale);
 			var format = transparency ? PixelFormat.Format32bppPArgb : PixelFormat.Format24bppRgb;
 			var bitmap = new Bitmap (pixelWidth, pixelHeight, format);
 			return new BitmapSurface (bitmap);

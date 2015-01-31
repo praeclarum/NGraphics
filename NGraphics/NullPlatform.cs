@@ -6,7 +6,7 @@ namespace NGraphics
 	{
 		public string Name { get { return "Null"; } }
 
-		public IImageCanvas CreateImageSurface (int pixelWidth, int pixelHeight, bool transparency = true)
+		public IImageCanvas CreateImageCanvas (Size size, double scale, bool transparency = true)
 		{
 			return new NullImageSurface ();
 		}
