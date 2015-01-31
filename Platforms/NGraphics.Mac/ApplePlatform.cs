@@ -43,8 +43,9 @@ namespace NGraphics
 			this.context = context;
 			this.scale = scale;
 
+			var nscale = (nfloat)scale;
 			this.context.TranslateCTM (0, context.Height);
-			this.context.ScaleCTM (1, -1);
+			this.context.ScaleCTM (nscale, -nscale);
 		}
 
 		public IImage GetImage ()
@@ -179,7 +180,7 @@ namespace NGraphics
 			}
 		}
 
-		public void DrawPath (IEnumerable<PathCommand> commands, Pen pen = null, Brush brush = null)
+		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 		{
 			if (pen == null && brush == null)
 				return;
@@ -189,8 +190,8 @@ namespace NGraphics
 				Rect bb = new Rect ();
 				var nbb = 0;
 
-				foreach (var c in commands) {
-					var mt = c as MoveTo;
+				foreach (var op in ops) {
+					var mt = op as MoveTo;
 					if (mt != null) {
 						var p = mt.Point;
 						context.MoveTo ((nfloat)p.X, (nfloat)p.Y);
@@ -201,7 +202,7 @@ namespace NGraphics
 						nbb++;
 						continue;
 					}
-					var lt = c as LineTo;
+					var lt = op as LineTo;
 					if (lt != null) {
 						var p = lt.Point;
 						context.AddLineToPoint ((nfloat)p.X, (nfloat)p.Y);
@@ -212,7 +213,7 @@ namespace NGraphics
 						nbb++;
 						continue;
 					}
-					var cp = c as ClosePath;
+					var cp = op as ClosePath;
 					if (cp != null) {
 						context.ClosePath ();
 						continue;

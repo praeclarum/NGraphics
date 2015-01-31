@@ -7,7 +7,7 @@ namespace NGraphics
 	{
 		public string Name { get { return "Null"; } }
 
-		public IImageCanvas CreateImageCanvas (Size size, double scale, bool transparency = true)
+		public IImageCanvas CreateImageCanvas (Size size, double scale = 1.0, bool transparency = true)
 		{
 			return new NullImageSurface ();
 		}
@@ -30,7 +30,7 @@ namespace NGraphics
 			public void DrawText (Point point, string text, Pen pen = null, Brush brush = null)
 			{
 			}
-			public void DrawPath (IEnumerable<PathCommand> commands, Pen pen = null, Brush brush = null)
+			public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 			{
 			}
 			public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)

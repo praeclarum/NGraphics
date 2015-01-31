@@ -89,7 +89,7 @@ namespace NGraphics
 		{
 			throw new NotImplementedException ();
 		}
-		public void DrawPath (IEnumerable<PathCommand> commands, Pen pen = null, Brush brush = null)
+		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 		{
 			throw new NotImplementedException ();
 		}

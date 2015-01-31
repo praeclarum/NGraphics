@@ -4,26 +4,34 @@ using System.Collections.Generic;
 
 namespace NGraphics
 {
-	public abstract class PathCommand
+	public abstract class PathOp
 	{
 	}
-	public class MoveTo : PathCommand
+	public class MoveTo : PathOp
 	{
 		public Point Point;
 		public MoveTo (Point point)
 		{
 			Point = point;
 		}
+		public MoveTo (double x, double y)
+			: this (new Point (x, y))
+		{
+		}
 	}
-	public class LineTo : PathCommand
+	public class LineTo : PathOp
 	{
 		public Point Point;
 		public LineTo (Point point)
 		{
 			Point = point;
 		}
+		public LineTo (double x, double y)
+			: this (new Point (x, y))
+		{
+		}
 	}
-	public class CurveTo : PathCommand
+	public class CurveTo : PathOp
 	{
 		public Point Control1;
 		public Point Control2;
@@ -35,24 +43,24 @@ namespace NGraphics
 			Point = point;
 		}
 	}
-	public class ClosePath : PathCommand
+	public class ClosePath : PathOp
 	{
 	}
 
 	public class Path : Element
 	{
-		public readonly List<PathCommand> Commands = new List<PathCommand> ();
+		public readonly List<PathOp> Operations = new List<PathOp> ();
 
 		public bool IsClosed {
 			get {
-				return Commands.Count > 0 && Commands [Commands.Count - 1] is ClosePath;
+				return Operations.Count > 0 && Operations [Operations.Count - 1] is ClosePath;
 			}
 		}
 
-		public Path (IEnumerable<PathCommand> commands, Pen pen = null, Brush brush = null)
+		public Path (IEnumerable<PathOp> operations, Pen pen = null, Brush brush = null)
 			: base (pen, brush)
 		{
-			Commands.AddRange (commands);
+			Operations.AddRange (operations);
 		}
 		public Path (Pen pen = null, Brush brush = null)
 			: base (pen, brush)
@@ -61,14 +69,14 @@ namespace NGraphics
 
 		protected override void DrawElement (ICanvas canvas)
 		{
-			canvas.DrawPath (Commands, Pen, Brush);
+			canvas.DrawPath (Operations, Pen, Brush);
 		}
 
-		void Add (PathCommand cmd)
+		void Add (PathOp op)
 		{
 			if (IsClosed)
 				return;
-			Commands.Add (cmd);
+			Operations.Add (op);
 		}
 
 		public void MoveTo (Point point)
@@ -93,7 +101,7 @@ namespace NGraphics
 
 		public override string ToString ()
 		{
-			return string.Format (CultureInfo.InvariantCulture, "Path ([...])");
+			return string.Format (CultureInfo.InvariantCulture, "Path ([{0}])", Operations.Count);
 		}
 	}
 }

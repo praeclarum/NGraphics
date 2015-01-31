@@ -214,36 +214,36 @@ namespace NGraphics
 			while (i < n) {
 				var a = args[i];
 				//
-				// Get the command
+				// Get the operation
 				//
-				var cmd = "";
+				var op = "";
 				if (a.Length == 1) {
-					cmd = a;
+					op = a;
 					i++;
 				} else {
-					cmd = a.Substring (0, 1);
+					op = a.Substring (0, 1);
 					args [i] = a.Substring (1);
 				}
 
 				//
 				// Execute
 				//
-				if (cmd == "M" && i + 1 < n) {
+				if (op == "M" && i + 1 < n) {
 					p.MoveTo (new Point (ReadNumber (args [i]), ReadNumber (args [i + 1])));
 					i += 2;
-				} else if (cmd == "L" && i + 1 < n) {
+				} else if (op == "L" && i + 1 < n) {
 					p.LineTo (new Point (ReadNumber (args [i]), ReadNumber (args [i + 1])));
 					i += 2;
-				} else if (cmd == "C" && i + 5 < n) {
+				} else if (op == "C" && i + 5 < n) {
 					var c1 = new Point (ReadNumber (args [i]), ReadNumber (args [i + 1]));
 					var c2 = new Point (ReadNumber (args [i + 2]), ReadNumber (args [i + 3]));
 					var pt = new Point (ReadNumber (args [i + 4]), ReadNumber (args [i + 5]));
 					p.CurveTo (c1, c2, pt);
 					i += 6;
-				} else if (cmd == "z" || cmd == "Z") {
+				} else if (op == "z" || op == "Z") {
 					p.Close ();
 				} else {
-					throw new NotSupportedException ("Path Command = " + cmd);
+					throw new NotSupportedException ("Path Operation " + op);
 				}
 			}
 		}
