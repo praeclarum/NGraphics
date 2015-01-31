@@ -25,6 +25,7 @@ namespace NGraphics.iOS.Test
 
 			PlatformTest.ResultsDirectory = System.IO.Path.Combine (Environment.GetEnvironmentVariable ("NGraphicsDir"), "TestResults");
 			PlatformTest.Platform = Platforms.Current;
+			Environment.CurrentDirectory = PlatformTest.ResultsDirectory;
 
 			foreach (var t in tfts) {
 				var test = Activator.CreateInstance (t);

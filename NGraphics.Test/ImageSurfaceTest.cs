@@ -7,7 +7,13 @@ namespace NGraphics.Test
 {
 	public class PlatformTest
 	{
+		public static class Platforms
+		{
+			public static IPlatform Current { get { return PlatformTest.Platform; } }
+		}
+
 		public static IPlatform Platform = new NullPlatform ();
+
 		public static string ResultsDirectory = "";
 		public static string ResultPath (string name)
 		{

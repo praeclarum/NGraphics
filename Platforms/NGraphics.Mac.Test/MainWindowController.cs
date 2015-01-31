@@ -32,6 +32,7 @@ namespace NGraphics.Mac.Test
 				sdir = System.IO.Path.GetDirectoryName (sdir);
 			PlatformTest.ResultsDirectory = System.IO.Path.Combine (sdir, "TestResults");
 			PlatformTest.Platform = Platforms.Current;
+			Environment.CurrentDirectory = PlatformTest.ResultsDirectory;
 
 			var tat = typeof(NUnit.Framework.TestAttribute);
 			var tfat = typeof(NUnit.Framework.TestFixtureAttribute);
