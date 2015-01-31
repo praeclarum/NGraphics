@@ -62,5 +62,6 @@
     <EmbeddedResource Include="Inputs\SunAtNight.svg" />
     <EmbeddedResource Include="Inputs\MocastIcon.svg" />
     <EmbeddedResource Include="Inputs\mozilla\path.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\transform.svg" />
   </ItemGroup>
 </Project>

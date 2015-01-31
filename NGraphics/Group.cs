@@ -4,24 +4,19 @@ using System.Collections.Generic;
 
 namespace NGraphics
 {
-	public class Group : IDrawable
+	public class Group : Element
 	{
 		public readonly List<IDrawable> Children = new List<IDrawable> ();
 
-		public Transform Transform;
+		public Group ()
+			: base (null, null)
+		{			
+		}
 
-		public void Draw (ICanvas canvas)
+		protected override void DrawElement (ICanvas canvas)
 		{
-			var t = Transform;
-			if (t != null) {
-				canvas.SaveState ();
-				canvas.Transform (t);
-			}
 			foreach (var c in Children) {
 				c.Draw (canvas);
-			}
-			if (t != null) {
-				canvas.RestoreState ();
 			}
 		}
 	}

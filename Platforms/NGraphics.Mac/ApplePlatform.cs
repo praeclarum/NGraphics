@@ -96,7 +96,14 @@ namespace NGraphics
 		public void Transform (Transform transform)
 		{
 			var t = transform;
+			var stack = new Stack<Transform> ();
 			while (t != null) {
+				stack.Push (t);
+				t = t.Previous;
+			}
+			while (stack.Count > 0) {
+				t = stack.Pop ();
+
 				var rt = t as Rotate;
 				if (rt != null) {
 					context.RotateCTM ((nfloat)rt.Angle);
@@ -132,6 +139,11 @@ namespace NGraphics
 			}
 			var cs = CGColorSpace.CreateDeviceRGB ();
 			return new CGGradient (cs, comps, locs);
+		}
+
+		public void DrawText (Point point, string text, Pen pen = null, Brush brush = null)
+		{
+			context.ShowTextAtPoint ((nfloat)point.X, (nfloat)point.Y, text);
 		}
 
 		void DrawElement (Func<Rect> add, Pen pen = null, Brush brush = null)

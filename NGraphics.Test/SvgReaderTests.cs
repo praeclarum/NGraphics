@@ -47,6 +47,12 @@ namespace NGraphics.Test
 		}
 
 		[Test]
+		public void MozillaTransform ()
+		{
+			ReadAndDraw ("mozilla.transform.svg");
+		}
+
+		[Test]
 		public void SunAtNight ()
 		{
 			ReadAndDraw ("SunAtNight.svg");

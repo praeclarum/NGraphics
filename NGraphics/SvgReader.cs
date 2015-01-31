@@ -75,7 +75,7 @@ namespace NGraphics
 
 		void AddElement (IList<IDrawable> list, XElement e)
 		{
-			IDrawable r = null;
+			Element r = null;
 			var pen = ReadPen (e);
 			var brush = ReadBrush (e);
 			if (pen == null && brush == null) {
@@ -83,6 +83,14 @@ namespace NGraphics
 			}
 			//var id = ReadString (e.Attribute ("id"));
 			switch (e.Name.LocalName) {
+			case "text":
+				{
+					var x = ReadNumber (e.Attribute ("x"));
+					var y = ReadNumber (e.Attribute ("y"));
+					var text = e.Value.Trim ();
+					r = new Text (new Point (x, y), text, pen, brush);
+				}
+				break;
 			case "rect":
 				{
 					var x = ReadNumber (e.Attribute ("x"));
@@ -122,7 +130,6 @@ namespace NGraphics
 			case "g":
 				{
 					var g = new Group ();
-					g.Transform = ReadTransform (ReadString (e.Attribute ("transform")));
 					AddElements (g.Children, e.Elements ());
 					r = g;
 				}
@@ -144,6 +151,7 @@ namespace NGraphics
 			}
 
 			if (r != null) {
+				r.Transform = ReadTransform (ReadString (e.Attribute ("transform")));
 				list.Add (r);
 			}
 		}
@@ -164,10 +172,24 @@ namespace NGraphics
 				Transform nt = null;
 				switch (args [0]) {
 				case "translate":
-					nt = new Translate (new Size (ReadNumber (args [1]), ReadNumber (args [2])), t);
+					if (args.Length >= 3) {
+						nt = new Translate (new Size (ReadNumber (args [1]), ReadNumber (args [2])), t);
+					} else if (args.Length >= 2) {
+						nt = new Translate (new Size (ReadNumber (args [1]), 0), t);
+					}
 					break;
 				case "rotate":
-					nt = new Rotate (ReadNumber (args [1]) * Math.PI / 180.0, t);
+					var a = ReadNumber (args [1]) * Math.PI / 180.0;
+					if (args.Length >= 4) {
+						var x = ReadNumber (args [2]);
+						var y = ReadNumber (args [3]);
+						var t1 = new Translate (new Size (x, y), t);
+						var t2 = new Rotate (a, t1);
+						var t3 = new Translate (new Size (-x, -y), t2);
+						nt = t3;
+					} else {
+						nt = new Rotate (a, t);
+					}
 					break;
 				default:
 					throw new NotSupportedException ("Can't transform " + args[0]);

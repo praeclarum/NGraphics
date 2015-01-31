@@ -52,6 +52,8 @@
     <Compile Include="Rectangle.cs" />
     <Compile Include="Path.cs" />
     <Compile Include="Transform.cs" />
+    <Compile Include="Text.cs" />
+    <Compile Include="Element.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

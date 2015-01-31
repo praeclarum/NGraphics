@@ -85,6 +85,10 @@ namespace NGraphics
 			}
 		}
 
+		public void DrawText (Point point, string text, Pen pen = null, Brush brush = null)
+		{
+			throw new NotImplementedException ();
+		}
 		public void DrawPath (IEnumerable<PathCommand> commands, Pen pen = null, Brush brush = null)
 		{
 			throw new NotImplementedException ();

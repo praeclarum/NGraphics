@@ -39,11 +39,8 @@ namespace NGraphics
 	{
 	}
 
-	public class Path : IDrawable
+	public class Path : Element
 	{
-		Pen pen;
-		Brush brush;
-
 		public readonly List<PathCommand> Commands = new List<PathCommand> ();
 
 		public bool IsClosed {
@@ -53,20 +50,18 @@ namespace NGraphics
 		}
 
 		public Path (IEnumerable<PathCommand> commands, Pen pen = null, Brush brush = null)
+			: base (pen, brush)
 		{
 			Commands.AddRange (commands);
-			this.pen = pen;
-			this.brush = brush;
 		}
 		public Path (Pen pen = null, Brush brush = null)
+			: base (pen, brush)
 		{
-			this.pen = pen;
-			this.brush = brush;
 		}
 
-		public void Draw (ICanvas canvas)
+		protected override void DrawElement (ICanvas canvas)
 		{
-			canvas.DrawPath (Commands, pen, brush);
+			canvas.DrawPath (Commands, Pen, Brush);
 		}
 
 		void Add (PathCommand cmd)
