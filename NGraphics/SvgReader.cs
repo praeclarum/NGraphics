@@ -126,6 +126,9 @@ namespace NGraphics
 					r = g;
 				}
 				break;
+			case "use":
+				// Ignore multi layer for now
+				break;
 			case "title":
 				Graphic.Title = ReadString (e);
 				break;
@@ -176,6 +179,12 @@ namespace NGraphics
 				} else if (cmd == "L" && i + 1 < n) {
 					p.LineTo (new Point (ReadNumber (args [i]), ReadNumber (args [i + 1])));
 					i += 2;
+				} else if (cmd == "C" && i + 5 < n) {
+					var c1 = new Point (ReadNumber (args [i]), ReadNumber (args [i + 1]));
+					var c2 = new Point (ReadNumber (args [i + 2]), ReadNumber (args [i + 3]));
+					var pt = new Point (ReadNumber (args [i + 4]), ReadNumber (args [i + 5]));
+					p.CurveTo (c1, c2, pt);
+					i += 6;
 				} else if (cmd == "z" || cmd == "Z") {
 					p.Close ();
 				} else {
@@ -240,6 +249,8 @@ namespace NGraphics
 					switch (defE.Name.LocalName) {
 					case "linearGradient":
 						return CreateLinearGradientBrush (defE);
+					case "radialGradient":
+						return CreateRadialGradientBrush (defE);
 					default:
 						throw new NotSupportedException ("Fill " + defE.Name);
 					}
@@ -251,10 +262,23 @@ namespace NGraphics
 			throw new NotSupportedException ("Fill " + fill);
 		}
 
+		RadialGradientBrush CreateRadialGradientBrush (XElement e)
+		{
+			var b = new RadialGradientBrush ();
+
+			b.RelativeCenter.X = ReadNumber (e.Attribute ("cx"));
+			b.RelativeCenter.Y = ReadNumber (e.Attribute ("cy"));
+			b.RelativeFocus.X = ReadNumber (e.Attribute ("fx"));
+			b.RelativeFocus.Y = ReadNumber (e.Attribute ("fy"));
+			b.RelativeRadius = ReadNumber (e.Attribute ("r"));
+
+			ReadStops (e, b.Stops);
+
+			return b;
+		}
+
 		LinearGradientBrush CreateLinearGradientBrush (XElement e)
 		{
-			var ns = e.Name.Namespace;
-
 			var b = new LinearGradientBrush ();
 
 			b.RelativeStart.X = ReadNumber (e.Attribute ("x1"));
@@ -262,16 +286,21 @@ namespace NGraphics
 			b.RelativeEnd.X = ReadNumber (e.Attribute ("x2"));
 			b.RelativeEnd.Y = ReadNumber (e.Attribute ("y2"));
 
+			ReadStops (e, b.Stops);
+
+			return b;
+		}
+
+		void ReadStops (XElement e, List<GradientStop> stops)
+		{
+			var ns = e.Name.Namespace;
 			foreach (var se in e.Elements (ns + "stop")) {
 				var s = new GradientStop ();
 				s.Offset = ReadNumber (se.Attribute ("offset"));
 				s.Color = ReadColor (se, "stop-color");
-				b.Stops.Add (s);
+				stops.Add (s);
 			}
-
-			b.Stops.Sort ((x, y) => x.Offset.CompareTo (y.Offset));
-
-			return b;
+			stops.Sort ((x, y) => x.Offset.CompareTo (y.Offset));
 		}
 
 		Color ReadColor (XElement e, string attrib)

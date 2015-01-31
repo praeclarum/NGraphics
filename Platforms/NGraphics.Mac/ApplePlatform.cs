@@ -152,7 +152,7 @@ namespace NGraphics
 				foreach (var c in commands) {
 					var mt = c as MoveTo;
 					if (mt != null) {
-						var p = mt.AbsolutePoint;
+						var p = mt.Point;
 						context.MoveTo ((nfloat)p.X, (nfloat)p.Y);
 						if (nbb == 0)
 							bb = new Rect (p, Size.Zero);
@@ -162,7 +162,7 @@ namespace NGraphics
 					}
 					var lt = c as LineTo;
 					if (lt != null) {
-						var p = lt.AbsolutePoint;
+						var p = lt.Point;
 						context.AddLineToPoint ((nfloat)p.X, (nfloat)p.Y);
 						if (nbb == 0)
 							bb = new Rect (p, Size.Zero);

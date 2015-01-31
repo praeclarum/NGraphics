@@ -38,6 +38,14 @@ namespace NGraphics
 		public Color Color;
 	}
 
+	public class RadialGradientBrush : Brush
+	{
+		public Point RelativeCenter;
+		public Point RelativeFocus;
+		public double RelativeRadius;
+		public readonly List<GradientStop> Stops = new List<GradientStop> ();
+	}
+
 	public class LinearGradientBrush : Brush
 	{
 		public Point RelativeStart;

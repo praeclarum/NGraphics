@@ -9,22 +9,31 @@ namespace NGraphics
 	}
 	public class MoveTo : PathCommand
 	{
-		public Point AbsolutePoint;
-		public MoveTo (Point absolutePoint)
+		public Point Point;
+		public MoveTo (Point point)
 		{
-			AbsolutePoint = absolutePoint;
+			Point = point;
 		}
 	}
 	public class LineTo : PathCommand
 	{
-		public Point AbsolutePoint;
-		public LineTo (Point absolutePoint)
+		public Point Point;
+		public LineTo (Point point)
 		{
-			AbsolutePoint = absolutePoint;
+			Point = point;
 		}
 	}
 	public class CurveTo : PathCommand
 	{
+		public Point Control1;
+		public Point Control2;
+		public Point Point;
+		public CurveTo (Point control1, Point control2, Point point)
+		{
+			Control1 = control1;
+			Control2 = control2;
+			Point = point;
+		}
 	}
 	public class ClosePath : PathCommand
 	{
@@ -75,6 +84,11 @@ namespace NGraphics
 		public void LineTo (Point point)
 		{
 			Add (new LineTo (point));
+		}
+
+		public void CurveTo (Point control1, Point control2, Point point)
+		{
+			Add (new CurveTo (control1, control2, point));
 		}
 
 		public void Close ()
