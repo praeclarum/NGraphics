@@ -15,32 +15,48 @@ namespace NGraphics
 		public Graphic Graphic { get; private set; }
 
 		readonly Dictionary<string, XElement> defs = new Dictionary<string, XElement> ();
-		readonly XNamespace ns;
+//		readonly XNamespace ns;
 
 		public SvgReader (System.IO.TextReader reader)
 		{
-			var doc = XDocument.Load (reader);
+			Read (XDocument.Load (reader));
+		}
+
+		void Read (XDocument doc)
+		{
 			var svg = doc.Root;
-			ns = svg.Name.Namespace;
+			var ns = svg.Name.Namespace;
 
 			//
 			// Find the defs (gradients)
 			//
-			foreach (var d in svg.Descendants (ns + "defs").SelectMany (x => x.Elements ())) {
-				defs [ReadString (d.Attribute ("id")).Trim ()] = d;
+			foreach (var d in svg.Descendants ()) {
+				var idA = d.Attribute ("id");
+				if (idA != null) {
+					defs [ReadString (idA).Trim ()] = d;
+				}
 			}
 
 			//
 			// Get the dimensions
 			//
-			var width = ReadNumber (svg.Attribute ("width"));
-			var height = ReadNumber (svg.Attribute ("height"));
+			var widthA = svg.Attribute ("width");
+			var heightA = svg.Attribute ("height");
+			var width = ReadNumber (widthA);
+			var height = ReadNumber (heightA);
 			var size = new Size (width, height);
 
 			var viewBox = new Rect (size);
 			var viewBoxA = svg.Attribute ("viewBox") ?? svg.Attribute ("viewPort");
 			if (viewBoxA != null) {
 				viewBox = ReadRectangle (viewBoxA.Value);
+			}
+
+			if (widthA != null && widthA.Value.Contains ("%")) {
+				size.Width *= viewBox.Width;
+			}
+			if (heightA != null && heightA.Value.Contains ("%")) {
+				size.Height *= viewBox.Height;
 			}
 
 			//
@@ -93,6 +109,16 @@ namespace NGraphics
 					r = new Ellipse (new Point (cx - rr, cy - rr), new Size (2 * rr, 2 * rr), pen, brush);
 				}
 				break;
+			case "path":
+				{
+					var dA = e.Attribute ("d");
+					if (dA != null && !string.IsNullOrWhiteSpace (dA.Value)) {
+						var p = new Path (pen, brush);
+						ReadPath (p, dA.Value);
+						r = p;
+					}
+				}
+				break;
 			case "g":
 				{
 					var g = new Group ();
@@ -118,6 +144,46 @@ namespace NGraphics
 			}
 		}
 
+		static readonly char[] WSC = new char[] { ',', ' ', '\t', '\n', '\r' };
+
+		void ReadPath (Path p, string pathDescriptor)
+		{
+			var args = pathDescriptor.Split (WSC, StringSplitOptions.RemoveEmptyEntries);
+
+			var i = 0;
+			var n = args.Length;
+
+			while (i < n) {
+				var a = args[i];
+				//
+				// Get the command
+				//
+				var cmd = "";
+				if (a.Length == 1) {
+					cmd = a;
+					i++;
+				} else {
+					cmd = a.Substring (0, 1);
+					args [i] = a.Substring (1);
+				}
+
+				//
+				// Execute
+				//
+				if (cmd == "M" && i + 1 < n) {
+					p.MoveTo (new Point (ReadNumber (args [i]), ReadNumber (args [i + 1])));
+					i += 2;
+				} else if (cmd == "L" && i + 1 < n) {
+					p.LineTo (new Point (ReadNumber (args [i]), ReadNumber (args [i + 1])));
+					i += 2;
+				} else if (cmd == "z" || cmd == "Z") {
+					p.Close ();
+				} else {
+					throw new NotSupportedException ("Path Command = " + cmd);
+				}
+			}
+		}
+
 		string ReadString (XElement e, string defaultValue = "")
 		{
 			if (e == null)
@@ -140,10 +206,9 @@ namespace NGraphics
 
 			var p = new Pen ();
 
-			if (stroke [0] == '#' && stroke.Length == 7) {
-				p.Color = ReadColor (stroke);
-			} else {
-				throw new NotSupportedException ("Stroke " + stroke);
+			Color color;
+			if (Colors.TryParse (stroke, out color)) {
+				p.Color = color;
 			}
 
 			var strokeWidthA = e.Attribute ("stroke-width");
@@ -161,6 +226,11 @@ namespace NGraphics
 			var fill = ReadString (e.Attribute ("fill"), "none").Trim ();
 			if (fill == "none" || string.IsNullOrEmpty (fill))
 				return null;
+
+			Color color;
+			if (Colors.TryParse (fill, out color)) {
+				return new SolidBrush (color);
+			}
 
 			var urlM = fillUrlRe.Match (fill);
 			if (urlM.Success) {
@@ -183,6 +253,8 @@ namespace NGraphics
 
 		LinearGradientBrush CreateLinearGradientBrush (XElement e)
 		{
+			var ns = e.Name.Namespace;
+
 			var b = new LinearGradientBrush ();
 
 			b.RelativeStart.X = ReadNumber (e.Attribute ("x1"));
@@ -213,7 +285,7 @@ namespace NGraphics
 		Color ReadColor (string raw)
 		{
 			if (string.IsNullOrWhiteSpace (raw))
-				return Colors.Black;
+				return Colors.Clear;
 
 			var s = raw.Trim ();
 

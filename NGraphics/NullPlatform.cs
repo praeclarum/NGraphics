@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace NGraphics
 {
@@ -16,6 +17,9 @@ namespace NGraphics
 			public IImage GetImage ()
 			{
 				return new NullImage ();
+			}
+			public void DrawPath (IEnumerable<PathCommand> commands, Pen pen = null, Brush brush = null)
+			{
 			}
 			public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
 			{

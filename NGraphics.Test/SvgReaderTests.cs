@@ -20,6 +20,8 @@ namespace NGraphics.Test
 			using (var s = OpenResource (path)) {
 				var r = new SvgReader (new StreamReader (s));
 				Assert.GreaterOrEqual (r.Graphic.Children.Count, 0);
+				Assert.Greater (r.Graphic.Size.Width, 1);
+				Assert.Greater (r.Graphic.Size.Height, 1);
 				return r.Graphic;
 			}
 		}
@@ -39,9 +41,21 @@ namespace NGraphics.Test
 		}
 
 		[Test]
+		public void MozillaPath ()
+		{
+			ReadAndDraw ("mozilla.path.svg");
+		}
+
+		[Test]
 		public void SunAtNight ()
 		{
 			ReadAndDraw ("SunAtNight.svg");
+		}
+
+		[Test]
+		public void MocastIcon ()
+		{
+			ReadAndDraw ("MocastIcon.svg");
 		}
 	}
 }

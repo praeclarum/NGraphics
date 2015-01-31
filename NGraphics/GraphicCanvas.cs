@@ -14,6 +14,10 @@ namespace NGraphics
 			Graphic = new Graphic (size);
 		}
 
+		public void DrawPath (IEnumerable<PathCommand> commands, Pen pen = null, Brush brush = null)
+		{
+			Graphic.Children.Add (new Path (commands, pen, brush));
+		}
 		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
 		{
 			Graphic.Children.Add (new Rectangle (frame, pen, brush));

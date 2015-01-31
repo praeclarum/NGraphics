@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Collections.Generic;
 
 namespace NGraphics
 {
@@ -65,6 +66,10 @@ namespace NGraphics
 			graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 		}
 
+		public void DrawPath (IEnumerable<PathCommand> commands, Pen pen = null, Brush brush = null)
+		{
+			throw new NotImplementedException ();
+		}
 		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
 		{
 			if (brush != null) {

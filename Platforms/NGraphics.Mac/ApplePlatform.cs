@@ -3,6 +3,7 @@ using CoreGraphics;
 using ImageIO;
 using Foundation;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace NGraphics
 {
@@ -105,7 +106,7 @@ namespace NGraphics
 			return new CGGradient (cs, comps, locs);
 		}
 
-		void DrawElement (Action add, Rect frame, Pen pen = null, Brush brush = null)
+		void DrawElement (Func<Rect> add, Pen pen = null, Brush brush = null)
 		{
 			if (pen == null && brush == null)
 				return;
@@ -115,7 +116,7 @@ namespace NGraphics
 
 				var cg = CreateGradient (lgb);
 				context.SaveState ();
-				add ();
+				var frame = add ();
 				context.Clip ();
 				CGGradientDrawingOptions options = CGGradientDrawingOptions.DrawsBeforeStartLocation | CGGradientDrawingOptions.DrawsAfterEndLocation;
 				var size = frame.Size;
@@ -138,21 +139,67 @@ namespace NGraphics
 			}
 		}
 
+		public void DrawPath (IEnumerable<PathCommand> commands, Pen pen = null, Brush brush = null)
+		{
+			if (pen == null && brush == null)
+				return;
+
+			DrawElement (() => {
+
+				Rect bb = new Rect ();
+				var nbb = 0;
+
+				foreach (var c in commands) {
+					var mt = c as MoveTo;
+					if (mt != null) {
+						var p = mt.AbsolutePoint;
+						context.MoveTo ((nfloat)p.X, (nfloat)p.Y);
+						if (nbb == 0)
+							bb = new Rect (p, Size.Zero);
+						else
+							bb = bb.Union (p);
+						continue;
+					}
+					var lt = c as LineTo;
+					if (lt != null) {
+						var p = lt.AbsolutePoint;
+						context.AddLineToPoint ((nfloat)p.X, (nfloat)p.Y);
+						if (nbb == 0)
+							bb = new Rect (p, Size.Zero);
+						else
+							bb = bb.Union (p);
+						continue;
+					}
+					var cp = c as ClosePath;
+					if (cp != null) {
+						context.ClosePath ();
+						continue;
+					}
+				}
+
+				return bb;
+
+			}, pen, brush);
+		}
 		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
 		{
 			if (pen == null && brush == null)
 				return;
 
-			var rect = Conversions.GetCGRect (frame);
-			DrawElement (() => context.AddRect (rect), frame, pen, brush);
+			DrawElement (() => {
+				context.AddRect (Conversions.GetCGRect (frame));
+				return frame;
+			}, pen, brush);
 		}
 		public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)
 		{
 			if (pen == null && brush == null)
 				return;
 
-			var rect = Conversions.GetCGRect (frame);
-			DrawElement (() => context.AddEllipseInRect (rect), frame, pen, brush);
+			DrawElement (() => {
+				context.AddEllipseInRect (Conversions.GetCGRect (frame));
+				return frame;
+			}, pen, brush);
 		}
 
 		CGPathDrawingMode SetPenAndBrush (Pen pen, Brush brush)

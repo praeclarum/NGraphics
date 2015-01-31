@@ -9,9 +9,9 @@ namespace NGraphics.Net.Test
 	{
 		public static void Main (string[] args)
 		{
-			var sdir = Path.GetDirectoryName (Environment.GetCommandLineArgs () [0]);
+			var sdir = System.IO.Path.GetDirectoryName (Environment.GetCommandLineArgs () [0]);
 			while (Directory.GetFiles (sdir, "NGraphics.sln").Length == 0)
-				sdir = Path.GetDirectoryName (sdir);
+				sdir = System.IO.Path.GetDirectoryName (sdir);
 			PlatformTest.ResultsDirectory = System.IO.Path.Combine (sdir, "TestResults");
 			PlatformTest.Platform = Platforms.Current;
 
