@@ -34,6 +34,10 @@ namespace NGraphics
 		{
 			Size = size;
 		}
+		public Translate (double dx, double dy, Transform previous = null)
+			: this (new Size (dx, dy), previous)
+		{			
+		}
 		protected override string ToCode ()
 		{
 			return string.Format (CultureInfo.InvariantCulture, "translate({0}, {1})", Size.Width, Size.Height);

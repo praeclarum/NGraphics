@@ -107,7 +107,7 @@ namespace NGraphics
 
 				var rt = t as Rotate;
 				if (rt != null) {
-					context.RotateCTM ((nfloat)rt.Angle);
+					context.RotateCTM ((nfloat)(rt.Angle * Math.PI / 180));
 					t = t.Previous;
 					continue;
 				}

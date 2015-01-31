@@ -10,7 +10,11 @@ namespace NGraphics.Test
 	{
 		Stream OpenResource (string path)
 		{
-			var assembly = typeof (SvgReaderTests).GetTypeInfo ().Assembly;
+			if (string.IsNullOrEmpty (path))
+				throw new ArgumentException ("path");
+			var ty = typeof(SvgReaderTests);
+			var ti = ty.GetTypeInfo ();
+			var assembly = ti.Assembly;
 			var resources = assembly.GetManifestResourceNames ();
 			return assembly.GetManifestResourceStream ("NGraphics.Test.Inputs." + path);
 		}
