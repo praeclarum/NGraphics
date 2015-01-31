@@ -31,6 +31,11 @@ namespace NGraphics
 			Alpha = alpha;
 		}
 
+		public Color WithAlpha (double alpha)
+		{
+			return new Color (Red, Green, Blue, alpha);
+		}
+
 		public override string ToString ()
 		{
 			return string.Format (CultureInfo.InvariantCulture, "Color ({0}, {1}, {2}, {3})", Red, Green, Blue, Alpha);

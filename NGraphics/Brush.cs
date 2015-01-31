@@ -24,6 +24,7 @@ namespace NGraphics
 
 		public SolidBrush ()
 		{
+			Color = Colors.Black;
 		}
 
 		public SolidBrush (Color color)

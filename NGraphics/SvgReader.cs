@@ -75,13 +75,25 @@ namespace NGraphics
 
 		void AddElement (IList<IDrawable> list, XElement e)
 		{
+			//
+			// Style
+			//
 			Element r = null;
-			var pen = ReadPen (e);
-			var brush = ReadBrush (e);
+			Pen pen = null;
+			Brush brush = null;
+			ApplyStyle (e.Attributes ().ToDictionary (k => k.Name.LocalName, v => v.Value), ref pen, ref brush);
+			var style = ReadString (e.Attribute ("style"));
+			if (!string.IsNullOrWhiteSpace (style)) {
+				ApplyStyle (style, ref pen, ref brush);
+			}
 			if (pen == null && brush == null) {
 				brush = Brushes.Black;
 			}
 			//var id = ReadString (e.Attribute ("id"));
+
+			//
+			// Elements
+			//
 			switch (e.Name.LocalName) {
 			case "text":
 				{
@@ -154,6 +166,131 @@ namespace NGraphics
 				r.Transform = ReadTransform (ReadString (e.Attribute ("transform")));
 				list.Add (r);
 			}
+		}
+
+		Regex keyValueRe = new Regex (@"\s*(\w+)\s*:\s*(.*)");
+
+		void ApplyStyle (string style, ref Pen pen, ref Brush brush)
+		{
+			var d = new Dictionary<string, string> ();
+			var kvs = style.Split (new[]{ ';' }, StringSplitOptions.RemoveEmptyEntries);
+			foreach (var kv in kvs) {
+				var m = keyValueRe.Match (kv);
+				if (m.Success) {
+					var k = m.Groups [1].Value;
+					var v = m.Groups [2].Value;
+					d [k] = v;
+				}
+			}
+			ApplyStyle (d, ref pen, ref brush);
+		}
+
+		string GetString (Dictionary<string, string> style, string name, string defaultValue = "")
+		{
+			string v;
+			if (style.TryGetValue (name, out v))
+				return v;
+			return defaultValue;
+		}
+
+		Regex fillUrlRe = new Regex (@"url\s*\(\s*#([^\)]+)\)");
+
+		void ApplyStyle (Dictionary<string, string> style, ref Pen pen, ref Brush brush)
+		{
+			//
+			// Pen
+			//
+			var stroke = GetString (style, "stroke").Trim ();
+			if (string.IsNullOrEmpty (stroke)) {
+				// No change
+			} else if (stroke == "none") {
+				pen = null;
+			} else {
+				if (pen == null)
+					pen = new Pen ();
+				Color color;
+				if (Colors.TryParse (stroke, out color)) {
+					if (pen.Color.Alpha == 1)
+						pen.Color = color;
+					else
+						pen.Color = color.WithAlpha (pen.Color.Alpha);
+				}
+			}
+
+			//
+			// Pen attributes
+			//
+			var strokeWidth = GetString (style, "stroke-width");
+			if (!string.IsNullOrWhiteSpace (strokeWidth)) {
+				if (pen == null)
+					pen = new Pen ();
+				pen.Width = ReadNumber (strokeWidth);
+			}
+
+			var strokeOpacity = GetString (style, "stroke-opacity");
+			if (!string.IsNullOrWhiteSpace (strokeOpacity)) {
+				if (pen == null)
+					pen = new Pen ();
+				pen.Color = pen.Color.WithAlpha (ReadNumber (strokeOpacity));
+			}
+
+			//
+			// Brush
+			//
+			var fill = GetString (style, "fill").Trim ();
+			if (string.IsNullOrEmpty (fill)) {
+				// No change
+			} else if (fill == "none") {
+				brush = null;
+			} else {
+				Color color;
+				if (Colors.TryParse (fill, out color)) {
+					var sb = brush as SolidBrush;
+					if (sb == null) {
+						brush = new SolidBrush (color);
+					} else {
+						if (sb.Color.Alpha == 1)
+							sb.Color = color;
+						else
+							sb.Color = color.WithAlpha (pen.Color.Alpha);
+					}
+				} else {
+					var urlM = fillUrlRe.Match (fill);
+					if (urlM.Success) {
+						var id = urlM.Groups [1].Value.Trim ();
+						XElement defE;
+						if (defs.TryGetValue (id, out defE)) {
+							switch (defE.Name.LocalName) {
+							case "linearGradient":
+								brush = CreateLinearGradientBrush (defE);
+								break;
+							case "radialGradient":
+								brush = CreateRadialGradientBrush (defE);
+								break;
+							default:
+								throw new NotSupportedException ("Fill " + defE.Name);
+							}
+						} else {
+							throw new Exception ("Invalid fill url reference: " + id);
+						}
+					} else {
+						throw new NotSupportedException ("Fill " + fill);
+					}
+				}
+			}
+
+			//
+			// Brush attributes
+			//
+			var fillOpacity = GetString (style, "fill-opacity");
+			if (!string.IsNullOrWhiteSpace (fillOpacity)) {
+				if (brush == null)
+					brush = new SolidBrush ();
+				var sb = brush as SolidBrush;
+				if (sb != null)
+					sb.Color = sb.Color.WithAlpha (ReadNumber (fillOpacity));
+			}
+
 		}
 
 		Transform ReadTransform (string raw)
@@ -260,61 +397,6 @@ namespace NGraphics
 			if (a == null)
 				return defaultValue;
 			return a.Value ?? defaultValue;
-		}
-
-		Pen ReadPen (XElement e)
-		{
-			var stroke = ReadString (e.Attribute ("stroke"), "none").Trim ();
-			if (stroke == "none" || string.IsNullOrEmpty (stroke))
-				return null;
-
-			var p = new Pen ();
-
-			Color color;
-			if (Colors.TryParse (stroke, out color)) {
-				p.Color = color;
-			}
-
-			var strokeWidthA = e.Attribute ("stroke-width");
-			if (strokeWidthA != null) {
-				p.Width = ReadNumber (strokeWidthA);
-			}
-
-			return p;
-		}
-
-		Regex fillUrlRe = new Regex (@"url\s*\(\s*#([^\)]+)\)");
-
-		Brush ReadBrush (XElement e)
-		{
-			var fill = ReadString (e.Attribute ("fill"), "none").Trim ();
-			if (fill == "none" || string.IsNullOrEmpty (fill))
-				return null;
-
-			Color color;
-			if (Colors.TryParse (fill, out color)) {
-				return new SolidBrush (color);
-			}
-
-			var urlM = fillUrlRe.Match (fill);
-			if (urlM.Success) {
-				var id = urlM.Groups [1].Value.Trim ();
-				XElement defE;
-				if (defs.TryGetValue (id, out defE)) {
-					switch (defE.Name.LocalName) {
-					case "linearGradient":
-						return CreateLinearGradientBrush (defE);
-					case "radialGradient":
-						return CreateRadialGradientBrush (defE);
-					default:
-						throw new NotSupportedException ("Fill " + defE.Name);
-					}
-				} else {
-					throw new Exception ("Invalid fill url reference: " + id);
-				}
-			}
-
-			throw new NotSupportedException ("Fill " + fill);
 		}
 
 		RadialGradientBrush CreateRadialGradientBrush (XElement e)
