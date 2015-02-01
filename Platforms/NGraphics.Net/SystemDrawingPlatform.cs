@@ -114,7 +114,13 @@ namespace NGraphics
 					t = t.Previous;
 					continue;
 				}
-				throw new NotSupportedException ("Transform " + t);
+                var st = t as Scale;
+                if (st != null) {
+                    graphics.ScaleTransform ((float)st.Size.Width, (float)st.Size.Height);
+                    t = t.Previous;
+                    continue;
+                }
+                throw new NotSupportedException ("Transform " + t);
 			}
 		}
 		public void RestoreState ()
