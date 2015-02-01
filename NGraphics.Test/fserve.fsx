@@ -2,25 +2,26 @@
 // Quick little file upload server
 
 open System
+open System.IO
 open System.Net
 
-let cwd = Environment.CurrentDirectory
+// Serve from arg or from cwd
+let args = fsi.CommandLineArgs
+let cwd = if args.Length > 1 then Path.GetFullPath args.[1] else Environment.CurrentDirectory
 
 let server = new HttpListener ()
 server.Prefixes.Add ("http://*:1234/")
 server.Start ()
-printfn "Running at %O" (Seq.head server.Prefixes)
+printfn "Serving %s at %O" cwd (Seq.head server.Prefixes)
 
 while true do
     try
         let c = server.GetContext ()
         let partialPath = c.Request.Url.AbsolutePath.Substring 1
-        let path = System.IO.Path.Combine (cwd, partialPath)
+        let path = Path.Combine (cwd, partialPath)
         match c.Request.HttpMethod with
         | "POST" ->
-            let partialPath = c.Request.Url.AbsolutePath.Substring 1
-            let path = System.IO.Path.Combine (cwd, partialPath)
-            use f = System.IO.File.OpenWrite path
+            use f = File.OpenWrite path
             c.Request.InputStream.CopyTo (f)
             f.Flush ()
             printfn "POSTED %s" path
@@ -28,10 +29,12 @@ while true do
             c.Response.Close ()
         | "GET" ->
             c.Response.StatusCode <- 200
-            let w = new System.IO.StreamWriter (c.Response.OutputStream)
+            let w = new StreamWriter (c.Response.OutputStream)
             w.WriteLine ("Hello from fserve: {0}", path)
             w.Flush ()
             c.Response.Close ()
-        | x -> failwithf "Huh? %s" x
+        | x ->
+            c.Response.StatusCode <- 405
+            c.Response.Close ()
     with ex ->
         printfn "WHOOPS %O" ex

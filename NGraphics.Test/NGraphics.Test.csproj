@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="fserve.fsx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NGraphics\NGraphics.csproj">
