@@ -6,20 +6,22 @@ namespace NGraphics
 {
 	public class Text : Element
 	{
-		public Point Point;
+		public Rect Frame;
 		public string String;
+		public TextAlignment Alignment;
+		public Font Font;
 
-		public Text (Point point, string text, Pen pen = null, Brush brush = null)
+		public Text (string text, Rect frame, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 			: base (pen, brush)
 		{
-			Point = point;
 			String = text;
+			Frame = frame;
+			Alignment = alignment;
 		}
 
 		protected override void DrawElement (ICanvas canvas)
 		{
-			canvas.DrawText (Point, String, Pen, Brush);
+			canvas.DrawText (String, Frame, Alignment, Pen, Brush);
 		}
 	}
-
 }

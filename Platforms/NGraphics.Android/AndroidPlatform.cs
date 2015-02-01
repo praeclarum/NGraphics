@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Android.Graphics;
+using Android.Text;
 
 namespace NGraphics
 {
@@ -100,9 +101,15 @@ namespace NGraphics
 			graphics.Restore ();
 		}
 
-		Paint GetFontPaint ()
+		TextPaint GetFontPaint (TextAlignment alignment)
 		{
-			return new Paint (PaintFlags.AntiAlias);
+			var paint = new TextPaint (PaintFlags.AntiAlias);
+			paint.TextAlign = Paint.Align.Left;
+			if (alignment == TextAlignment.Center)
+				paint.TextAlign = Paint.Align.Left;
+			else if (alignment == TextAlignment.Right)
+				paint.TextAlign = Paint.Align.Right;
+			return paint;
 		}
 		Paint GetPenPaint (Pen pen)
 		{
@@ -177,21 +184,33 @@ namespace NGraphics
 			throw new NotSupportedException ("Brush " + brush);
 		}
 
-		public void DrawText (Point point, string text, Pen pen = null, Brush brush = null)
+		public void DrawText (string text, Rect frame, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
 			if (brush == null)
 				return;
 
-			var paint = GetFontPaint ();
+			if (frame.Width < double.MaxValue) {
+				var paint = GetFontPaint (alignment);
 
-			var w = paint.MeasureText (text);
-			var fm = paint.GetFontMetrics ();
-			var h = fm.Ascent + fm.Descent;
-			var fr = new Rect (point, new Size (w, h));
+				var align = global::Android.Text.Layout.Alignment.AlignNormal;
+				if (alignment == TextAlignment.Center)
+					align = global::Android.Text.Layout.Alignment.AlignCenter;
+				else if (alignment == TextAlignment.Right)
+					align = global::Android.Text.Layout.Alignment.AlignOpposite;
 
-			AddBrushPaint (paint, brush, fr);
+				var sl = new global::Android.Text.StaticLayout (text, paint, (int)Math.Floor (frame.Width), align, 1, 0, false);
 
-			graphics.DrawText (text, (float)point.X, (float)point.Y, paint);
+				sl.Draw (graphics);
+			}
+//			else {
+//				var paint = GetFontPaint ();
+//				var w = paint.MeasureText (text);
+//				var fm = paint.GetFontMetrics ();
+//				var h = fm.Ascent + fm.Descent;
+//				var fr = new Rect (point, new Size (w, h));
+//				AddBrushPaint (paint, brush, fr);
+//				graphics.DrawText (text, (float)point.X, (float)point.Y, paint);
+//			}
 		}
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 		{

@@ -26,7 +26,7 @@ namespace NGraphics
 		{
 			throw new NotImplementedException ();
 		}
-		public void DrawText (Point point, string text, Pen pen = null, Brush brush = null)
+		public void DrawText (string text, Rect frame, TextAlignment align = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
 			throw new NotImplementedException ();
 		}

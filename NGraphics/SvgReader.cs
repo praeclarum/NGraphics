@@ -102,7 +102,7 @@ namespace NGraphics
 					var x = ReadNumber (e.Attribute ("x"));
 					var y = ReadNumber (e.Attribute ("y"));
 					var text = e.Value.Trim ();
-					r = new Text (new Point (x, y), text, pen, brush);
+					r = new Text (text, new Rect (new Point (x, y), new Size (double.MaxValue, double.MaxValue)), TextAlignment.Left, pen, brush);
 				}
 				break;
 			case "rect":

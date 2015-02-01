@@ -1,0 +1,6 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="100px" height="50px">
+  <text x="10"  y="20" 
+        transform="rotate(30 20,40)">
+    SVG Text Rotation example
+  </text>
+</svg>

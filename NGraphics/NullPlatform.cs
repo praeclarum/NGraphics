@@ -27,7 +27,7 @@ namespace NGraphics
 			public void RestoreState ()
 			{
 			}
-			public void DrawText (Point point, string text, Pen pen = null, Brush brush = null)
+			public void DrawText (string text, Rect frame, TextAlignment align = TextAlignment.Left, Pen pen = null, Brush brush = null)
 			{
 			}
 			public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)

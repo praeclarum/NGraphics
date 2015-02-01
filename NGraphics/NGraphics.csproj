@@ -54,6 +54,7 @@
     <Compile Include="Transform.cs" />
     <Compile Include="Text.cs" />
     <Compile Include="Element.cs" />
+    <Compile Include="Font.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

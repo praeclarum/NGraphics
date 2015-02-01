@@ -1,5 +1,6 @@
 ﻿using System;
 using CoreGraphics;
+using CoreText;
 using ImageIO;
 using Foundation;
 using System.Linq;
@@ -88,6 +89,7 @@ namespace NGraphics
 		public CGContextCanvas (CGContext context)
 		{
 			this.context = context;
+			context.TextMatrix = CGAffineTransform.MakeScale (1, -1);
 		}
 
 		public void SaveState ()
@@ -142,9 +144,25 @@ namespace NGraphics
 			return new CGGradient (cs, comps, locs);
 		}
 
-		public void DrawText (Point point, string text, Pen pen = null, Brush brush = null)
+		public void DrawText (string text, Rect frame, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
-			context.ShowTextAtPoint ((nfloat)point.X, (nfloat)point.Y, text);
+			SetBrush (brush);
+
+			context.SelectFont ("Georgia", 16, CGTextEncoding.MacRoman);
+			context.ShowTextAtPoint ((nfloat)frame.X, (nfloat)frame.Y, text);
+
+
+			using (var atext = new NSMutableAttributedString (text)) {
+
+				atext.AddAttributes (new CTStringAttributes {
+					ForegroundColor = new CGColor (1, 0, 0, 1),
+				}, new NSRange (0, text.Length));
+
+				using (var ct = new CTFramesetter (atext))
+				using (var path = CGPath.FromRect (Conversions.GetCGRect (frame)))
+				using (var tframe = ct.GetFrame (new NSRange (0, atext.Length), path, null))
+					tframe.Draw (context);
+			}
 		}
 
 		void DrawElement (Func<Rect> add, Pen pen = null, Brush brush = null)

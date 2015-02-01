@@ -67,5 +67,9 @@
     <EmbeddedResource Include="Inputs\mozilla\transform.svg" />
     <EmbeddedResource Include="Inputs\mozilla\BezierCurves1.svg" />
     <EmbeddedResource Include="Inputs\mozilla\BezierCurves2.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\Text1.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\Text2.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\Text3.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\Text4.svg" />
   </ItemGroup>
 </Project>
