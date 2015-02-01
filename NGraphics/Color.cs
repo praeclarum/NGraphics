@@ -4,12 +4,13 @@ using System.Collections.Generic;
 
 namespace NGraphics
 {
+	[System.Runtime.InteropServices.StructLayout (System.Runtime.InteropServices.LayoutKind.Sequential)]
 	public struct Color
 	{
+		public readonly byte A;
 		public readonly byte R;
 		public readonly byte G;
 		public readonly byte B;
-		public readonly byte A;
 
 		public double Red { get { return R / 255.0; } }
 		public double Green { get { return G / 255.0; } }

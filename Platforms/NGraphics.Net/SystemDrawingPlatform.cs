@@ -18,6 +18,20 @@ namespace NGraphics
 			var bitmap = new Bitmap (pixelWidth, pixelHeight, format);
 			return new BitmapSurface (bitmap, scale);
 		}
+
+		public IImage CreateImage (Color[,] colors, double scale = 1.0)
+		{
+			var pixelWidth = colors.GetLength (0);
+			var pixelHeight = colors.GetLength (1);
+			var format = PixelFormat.Format32bppArgb;
+			Bitmap bitmap;
+			unsafe {
+				fixed (Color *c = colors) {
+					bitmap = new Bitmap (pixelWidth, pixelHeight, pixelWidth*4, format, new IntPtr (c));
+				}
+			}
+			return new BitmapImage (bitmap);
+		}
 	}
 
 	public class BitmapImage : IImage

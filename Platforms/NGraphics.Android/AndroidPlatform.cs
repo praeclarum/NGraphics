@@ -16,6 +16,11 @@ namespace NGraphics
 			var bitmap = Bitmap.CreateBitmap (pixelWidth, pixelHeight, Bitmap.Config.Argb8888);
 			return new BitmapCanvas (bitmap, scale);
 		}
+
+		public IImage CreateImage (Color[,] colors, double scale = 1.0)
+		{
+			throw new NotImplementedException ();
+		}
 	}
 
 	public class BitmapImage : IImage

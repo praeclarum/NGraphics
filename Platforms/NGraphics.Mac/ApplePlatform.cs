@@ -31,6 +31,37 @@ namespace NGraphics
 			var bitmap = new CGBitmapContext (IntPtr.Zero, pixelWidth, pixelHeight, bitsPerComp, bytesPerRow, colorSpace, bitmapInfo);
 			return new CGBitmapContextCanvas (bitmap, scale);
 		}
+
+		public IImage CreateImage (Color[,] colors, double scale = 1.0)
+		{
+			var pixelWidth = (nint)colors.GetLength (0);
+			var pixelHeight = (nint)colors.GetLength (1);
+			var bitmapInfo = CGImageAlphaInfo.PremultipliedFirst;
+			var bitsPerComp = 8;
+			var bytesPerRow = 4 * pixelWidth;
+			var colorSpace = CGColorSpace.CreateDeviceRGB ();
+			var bitmap = new CGBitmapContext (IntPtr.Zero, pixelWidth, pixelHeight, bitsPerComp, bytesPerRow, colorSpace, bitmapInfo);
+			var data = bitmap.Data;
+			unsafe {
+				fixed (Color *c = colors) {
+					var n = pixelWidth * pixelHeight;
+					var s = (byte*)c;
+					var d = (byte*)data;
+					while (n-- > 0) {
+						var a = *s++;
+						var r = *s++;
+						var g = *s++;
+						var b = *s++;
+						*d++ = a;
+						*d++ = (byte)((r * a) >> 8);
+						*d++ = (byte)((g * a) >> 8);
+						*d++ = (byte)((b * a) >> 8);
+					}
+				}
+			}
+			var image = bitmap.ToImage (); 
+			return new CGImageImage (image, scale);
+		}
 	}
 
 	public class CGBitmapContextCanvas : CGContextCanvas, IImageCanvas
