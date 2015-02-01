@@ -69,12 +69,6 @@ namespace NGraphics
 	{
 		public readonly List<PathOp> Operations = new List<PathOp> ();
 
-		public bool IsClosed {
-			get {
-				return Operations.Count > 0 && Operations [Operations.Count - 1] is ClosePath;
-			}
-		}
-
 		public Path (IEnumerable<PathOp> operations, Pen pen = null, Brush brush = null)
 			: base (pen, brush)
 		{
@@ -92,8 +86,6 @@ namespace NGraphics
 
 		void Add (PathOp op)
 		{
-			if (IsClosed)
-				return;
 			Operations.Add (op);
 		}
 
@@ -117,8 +109,6 @@ namespace NGraphics
 			if (Operations.Count == 0) {
 				throw new InvalidOperationException ("Cannot continue a curve until the path has begun with another operation.");
 			}
-			if (IsClosed)
-				return;
 			var prev = Operations [Operations.Count - 1];
 			var control1 = prev.GetContinueCurveControlPoint ();
 			Add (new CurveTo (control1, control2, point));

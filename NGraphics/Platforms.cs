@@ -18,6 +18,8 @@ namespace NGraphics
 					current = new ApplePlatform ();
 					#elif __IOS__
 					current = new ApplePlatform ();
+					#elif __ANDROID__
+					current = new AndroidPlatform ();
 					#else
 					current = new SystemDrawingPlatform ();
 					#endif

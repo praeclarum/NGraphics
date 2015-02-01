@@ -101,9 +101,14 @@ circle.Draw (canvas);
 ## Platforms
 
 
+* Android (Xamarin) using Android.Graphics
+	- `CanvasCanvas` wraps a `Android.Graphics.Canvas`
 * iOS (Xamarin) using CoreGraphics
+	- `CGContextCanvas` wraps a `CoreGraphics.CGContext`
 * Mac (Xamarin) using CoreGraphics
+	- `CGContextCanvas` wraps a `CoreGraphics.CGContext`
 * .NET 4.5 using System.Drawing
+	- `GraphicsCanvas` wraps a `System.Drawing.Graphics`
 
 
 
