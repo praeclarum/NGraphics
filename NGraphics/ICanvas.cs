@@ -26,6 +26,10 @@ namespace NGraphics
 		{
 			canvas.Transform (new Rotate (angle));
 		}
+		public static void Scale (this ICanvas canvas, double sx, double sy)
+		{
+			canvas.Transform (new Scale (sx, sy));
+		}
 
 		public static void DrawRectangle (this ICanvas canvas, double x, double y, double width, double height, Pen pen = null, Brush brush = null)
 		{

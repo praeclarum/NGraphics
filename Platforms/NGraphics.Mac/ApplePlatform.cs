@@ -110,13 +110,16 @@ namespace NGraphics
 				var rt = t as Rotate;
 				if (rt != null) {
 					context.RotateCTM ((nfloat)(rt.Angle * Math.PI / 180));
-					t = t.Previous;
 					continue;
 				}
 				var tt = t as Translate;
 				if (tt != null) {
 					context.TranslateCTM ((nfloat)tt.Size.Width, (nfloat)tt.Size.Height);
-					t = t.Previous;
+					continue;
+				}
+				var st = t as Scale;
+				if (st != null) {
+					context.ScaleCTM ((nfloat)st.Size.Width, (nfloat)st.Size.Height);
 					continue;
 				}
 				throw new NotSupportedException ("Transform " + t);

@@ -44,6 +44,24 @@ namespace NGraphics
 		}
 	}
 
+	public class Scale : Transform
+	{
+		public Size Size;
+		public Scale (Size size, Transform previous = null)
+			: base (previous)
+		{
+			Size = size;
+		}
+		public Scale (double dx, double dy, Transform previous = null)
+			: this (new Size (dx, dy), previous)
+		{			
+		}
+		protected override string ToCode ()
+		{
+			return string.Format (CultureInfo.InvariantCulture, "scale({0}, {1})", Size.Width, Size.Height);
+		}
+	}
+
 	public class Rotate : Transform
 	{
 		/// <summary>

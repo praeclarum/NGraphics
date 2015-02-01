@@ -24,11 +24,33 @@ namespace NGraphics
 		{
 		}
 
-		public void Draw (ICanvas s)
+		public void Draw (ICanvas canvas)
 		{
-			foreach (var c in Children) {
-				c.Draw (s);
+			canvas.SaveState ();
+
+			//
+			// Scale the viewBox into the size
+			//
+			var sx = 1.0;
+			if (ViewBox.Width > 0) {
+				sx = Size.Width / ViewBox.Width;
 			}
+			var sy = 1.0;
+			if (ViewBox.Height > 0) {
+				sy = Size.Height / ViewBox.Height;
+			}
+
+			canvas.Scale (sx, sy);
+			canvas.Translate (-ViewBox.X, -ViewBox.Y);
+
+			//
+			// Draw
+			//
+			foreach (var c in Children) {
+				c.Draw (canvas);
+			}
+
+			canvas.RestoreState ();
 		}
 
 		public static Graphic LoadSvg (System.IO.TextReader reader)
