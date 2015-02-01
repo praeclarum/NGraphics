@@ -10,7 +10,7 @@ namespace NGraphics
 		void Transform (Transform transform);
 		void RestoreState ();
 
-		void DrawText (string text, Rect frame, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null);
+		void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null);
 		void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null);
 		void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null);
 		void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null);

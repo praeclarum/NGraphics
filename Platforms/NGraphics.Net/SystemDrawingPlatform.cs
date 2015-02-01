@@ -111,15 +111,15 @@ namespace NGraphics
 			}
 		}
 
-		public void DrawText (string text, Rect frame, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
+		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
 			if (brush == null)
 				return;
-			var font = new System.Drawing.Font ("Georgia", 16);
-			var sz = graphics.MeasureString (text, font);
+			var sdfont = new System.Drawing.Font ("Georgia", 16);
+			var sz = graphics.MeasureString (text, sdfont);
 			var point = frame.Position;
 			var fr = new Rect (point, new Size (sz.Width, sz.Height));
-			graphics.DrawString (text, font, Conversions.GetBrush (brush, fr), Conversions.ToPointF (point));
+			graphics.DrawString (text, sdfont, Conversions.GetBrush (brush, fr), Conversions.ToPointF (point));
 		}
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 		{

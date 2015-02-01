@@ -184,7 +184,7 @@ namespace NGraphics
 			throw new NotSupportedException ("Brush " + brush);
 		}
 
-		public void DrawText (string text, Rect frame, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
+		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
 			if (brush == null)
 				return;

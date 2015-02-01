@@ -147,7 +147,7 @@ namespace NGraphics
 			return new CGGradient (cs, comps, locs);
 		}
 
-		public void DrawText (string text, Rect frame, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
+		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
 			SetBrush (brush);
 

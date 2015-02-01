@@ -21,7 +21,7 @@ namespace NGraphics
 
 		protected override void DrawElement (ICanvas canvas)
 		{
-			canvas.DrawText (String, Frame, Alignment, Pen, Brush);
+			canvas.DrawText (String, Frame, Font, Alignment, Pen, Brush);
 		}
 	}
 }
