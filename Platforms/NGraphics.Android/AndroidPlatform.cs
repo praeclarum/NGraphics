@@ -151,6 +151,29 @@ namespace NGraphics
 				return;
 			}
 
+			var rgb = brush as RadialGradientBrush;
+			if (rgb != null) {
+				var n = rgb.Stops.Count;
+				var locs = new float [n];
+				var comps = new int [n];
+				for (var i = 0; i < n; i++) {
+					var s = rgb.Stops [i];
+					locs [i] = (float)s.Offset;
+					comps [i] = s.Color.Argb;
+				}
+				var p1 = bb.Position + rgb.RelativeCenter * bb.Size;
+				var r = rgb.RelativeRadius * bb.Size;
+				var rg = new RadialGradient (
+					(float)p1.X, (float)p1.Y,
+					(float)r.Max,
+					comps,
+					locs,
+					Shader.TileMode.Clamp);
+
+				paint.SetShader (rg);
+				return;
+			}
+
 			throw new NotSupportedException ("Brush " + brush);
 		}
 

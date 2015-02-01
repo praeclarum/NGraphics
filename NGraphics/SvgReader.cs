@@ -64,16 +64,16 @@ namespace NGraphics
 			//
 			Graphic = new Graphic (size, viewBox);
 
-			AddElements (Graphic.Children, svg.Elements ());
+			AddElements (Graphic.Children, svg.Elements (), null, null);
 		}
 
-		void AddElements (IList<IDrawable> list, IEnumerable<XElement> es)
+		void AddElements (IList<IDrawable> list, IEnumerable<XElement> es, Pen inheritPen, Brush inheritBrush)
 		{
 			foreach (var e in es)
-				AddElement (list, e);
+				AddElement (list, e, inheritPen, inheritBrush);
 		}
 
-		void AddElement (IList<IDrawable> list, XElement e)
+		void AddElement (IList<IDrawable> list, XElement e, Pen inheritPen, Brush inheritBrush)
 		{
 			//
 			// Style
@@ -86,6 +86,8 @@ namespace NGraphics
 			if (!string.IsNullOrWhiteSpace (style)) {
 				ApplyStyle (style, ref pen, ref brush);
 			}
+			pen = pen ?? inheritPen;
+			brush = brush ?? inheritBrush;
 			if (pen == null && brush == null) {
 				brush = Brushes.Black;
 			}
@@ -142,12 +144,22 @@ namespace NGraphics
 			case "g":
 				{
 					var g = new Group ();
-					AddElements (g.Children, e.Elements ());
+					AddElements (g.Children, e.Elements (), pen, brush);
 					r = g;
 				}
 				break;
 			case "use":
-				// Ignore multi layer for now
+				{
+					var href = ReadString (e.Attributes ().FirstOrDefault (x => x.Name.LocalName == "href"));
+					if (!string.IsNullOrWhiteSpace (href)) {
+						XElement useE;
+						if (defs.TryGetValue (href.Trim ().Replace ("#", ""), out useE)) {
+							var useList = new List<IDrawable> ();
+							AddElement (useList, useE, pen, brush);
+							r = useList.OfType<Element> ().FirstOrDefault ();
+						}
+					}
+				}
 				break;
 			case "title":
 				Graphic.Title = ReadString (e);

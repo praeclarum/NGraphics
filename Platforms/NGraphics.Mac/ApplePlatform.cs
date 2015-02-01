@@ -125,13 +125,13 @@ namespace NGraphics
 			context.RestoreState ();
 		}
 
-		CGGradient CreateGradient (LinearGradientBrush brush)
+		CGGradient CreateGradient (IList<GradientStop> stops)
 		{
-			var n = brush.Stops.Count;
+			var n = stops.Count;
 			var locs = new nfloat [n];
 			var comps = new nfloat [4 * n];
 			for (var i = 0; i < n; i++) {
-				var s = brush.Stops [i];
+				var s = stops [i];
 				locs [i] = (nfloat)s.Offset;
 				comps [4 * i + 0] = (nfloat)s.Color.Red;
 				comps [4 * i + 1] = (nfloat)s.Color.Green;
@@ -154,8 +154,7 @@ namespace NGraphics
 
 			var lgb = brush as LinearGradientBrush;
 			if (lgb != null) {
-
-				var cg = CreateGradient (lgb);
+				var cg = CreateGradient (lgb.Stops);
 				context.SaveState ();
 				var frame = add ();
 				context.Clip ();
@@ -165,14 +164,27 @@ namespace NGraphics
 				var end = Conversions.GetCGPoint (frame.Position + lgb.RelativeEnd * size);
 				context.DrawLinearGradient (cg, start, end, options);
 				context.RestoreState ();
+				brush = null;
+			}
 
-				if (pen != null) {
-					SetPen (pen);
-					add ();
-					context.StrokePath ();
-				}
+			var rgb = brush as RadialGradientBrush;
+			if (rgb != null) {
+				var cg = CreateGradient (rgb.Stops);
+				context.SaveState ();
+				var frame = add ();
+				context.Clip ();
+				CGGradientDrawingOptions options = CGGradientDrawingOptions.DrawsBeforeStartLocation | CGGradientDrawingOptions.DrawsAfterEndLocation;
+				var size = frame.Size;
+				var start = Conversions.GetCGPoint (frame.Position + rgb.RelativeCenter * size);
+				var r = (nfloat)(rgb.RelativeRadius * size).Max;
+				var end = Conversions.GetCGPoint (frame.Position + rgb.RelativeFocus * size);
+				context.DrawRadialGradient (cg, start, 0, end, r, options);
+				context.RestoreState ();
+				brush = null;
+			}
 
-			} else {
+			if (pen != null || brush != null)
+			{
 				var mode = SetPenAndBrush (pen, brush);
 
 				add ();

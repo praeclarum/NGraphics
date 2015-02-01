@@ -10,6 +10,9 @@ namespace NGraphics
 		public double Width;
 		public double Height;
 
+		public double Max { get { return Math.Max (Width, Height); } }
+		public double Min { get { return Math.Min (Width, Height); } }
+
 		public Size (double width, double height)
 		{
 			Width = width;
@@ -19,6 +22,19 @@ namespace NGraphics
 		{
 			Width = size;
 			Height = size;
+		}
+
+		public static Size operator * (Size a, double v)
+		{
+			return new Size (a.Width * v, a.Height * v);
+		}
+		public static Size operator * (double v, Size a)
+		{
+			return new Size (a.Width * v, a.Height * v);
+		}
+		public static Size operator / (Size a, double v)
+		{
+			return new Size (a.Width / v, a.Height / v);
 		}
 
 		public override string ToString ()
