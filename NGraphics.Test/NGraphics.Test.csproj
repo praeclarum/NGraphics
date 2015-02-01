@@ -73,5 +73,6 @@
     <EmbeddedResource Include="Inputs\mozilla\Text2.svg" />
     <EmbeddedResource Include="Inputs\mozilla\Text3.svg" />
     <EmbeddedResource Include="Inputs\mozilla\Text4.svg" />
+    <EmbeddedResource Include="Inputs\Smile.svg" />
   </ItemGroup>
 </Project>

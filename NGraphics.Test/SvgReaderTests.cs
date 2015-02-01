@@ -93,6 +93,12 @@ namespace NGraphics.Test
 		}
 
 		[Test]
+		public void Smile ()
+		{
+			ReadAndDraw ("Smile.svg");
+		}
+
+		[Test]
 		public void SunAtNight ()
 		{
 			ReadAndDraw ("SunAtNight.svg");

@@ -210,6 +210,23 @@ namespace NGraphics
 		void ApplyStyle (Dictionary<string, string> style, ref Pen pen, ref Brush brush)
 		{
 			//
+			// Pen attributes
+			//
+			var strokeWidth = GetString (style, "stroke-width");
+			if (!string.IsNullOrWhiteSpace (strokeWidth)) {
+				if (pen == null)
+					pen = new Pen ();
+				pen.Width = ReadNumber (strokeWidth);
+			}
+
+			var strokeOpacity = GetString (style, "stroke-opacity");
+			if (!string.IsNullOrWhiteSpace (strokeOpacity)) {
+				if (pen == null)
+					pen = new Pen ();
+				pen.Color = pen.Color.WithAlpha (ReadNumber (strokeOpacity));
+			}
+
+			//
 			// Pen
 			//
 			var stroke = GetString (style, "stroke").Trim ();
@@ -230,20 +247,15 @@ namespace NGraphics
 			}
 
 			//
-			// Pen attributes
+			// Brush attributes
 			//
-			var strokeWidth = GetString (style, "stroke-width");
-			if (!string.IsNullOrWhiteSpace (strokeWidth)) {
-				if (pen == null)
-					pen = new Pen ();
-				pen.Width = ReadNumber (strokeWidth);
-			}
-
-			var strokeOpacity = GetString (style, "stroke-opacity");
-			if (!string.IsNullOrWhiteSpace (strokeOpacity)) {
-				if (pen == null)
-					pen = new Pen ();
-				pen.Color = pen.Color.WithAlpha (ReadNumber (strokeOpacity));
+			var fillOpacity = GetString (style, "fill-opacity");
+			if (!string.IsNullOrWhiteSpace (fillOpacity)) {
+				if (brush == null)
+					brush = new SolidBrush ();
+				var sb = brush as SolidBrush;
+				if (sb != null)
+					sb.Color = sb.Color.WithAlpha (ReadNumber (fillOpacity));
 			}
 
 			//
@@ -290,19 +302,6 @@ namespace NGraphics
 					}
 				}
 			}
-
-			//
-			// Brush attributes
-			//
-			var fillOpacity = GetString (style, "fill-opacity");
-			if (!string.IsNullOrWhiteSpace (fillOpacity)) {
-				if (brush == null)
-					brush = new SolidBrush ();
-				var sb = brush as SolidBrush;
-				if (sb != null)
-					sb.Color = sb.Color.WithAlpha (ReadNumber (fillOpacity));
-			}
-
 		}
 
 		Transform ReadTransform (string raw)
