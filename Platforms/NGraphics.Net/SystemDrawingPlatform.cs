@@ -212,7 +212,7 @@ namespace NGraphics
 	{
 		public static System.Drawing.Color GetColor (this Color color)
 		{
-			return System.Drawing.Color.FromArgb (color.AlphaByte, color.RedByte, color.GreenByte, color.BlueByte);
+			return System.Drawing.Color.FromArgb (color.A, color.R, color.G, color.B);
 		}
 
 		public static System.Drawing.Pen GetPen (this Pen pen)

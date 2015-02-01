@@ -115,7 +115,7 @@ namespace NGraphics
 		{
 			var paint = new Paint (PaintFlags.AntiAlias);
 			paint.SetStyle (Paint.Style.Stroke);
-			paint.SetARGB (pen.Color.AlphaByte, pen.Color.RedByte, pen.Color.GreenByte, pen.Color.BlueByte);
+			paint.SetARGB (pen.Color.A, pen.Color.R, pen.Color.G, pen.Color.B);
 			paint.StrokeWidth = (float)pen.Width;
 			return paint;
 		}
@@ -131,7 +131,7 @@ namespace NGraphics
 
 			var sb = brush as SolidBrush;
 			if (sb != null) {
-				paint.SetARGB (sb.Color.AlphaByte, sb.Color.RedByte, sb.Color.GreenByte, sb.Color.BlueByte);
+				paint.SetARGB (sb.Color.A, sb.Color.R, sb.Color.G, sb.Color.B);
 				return;
 			}
 
@@ -297,7 +297,7 @@ namespace NGraphics
 	{
 		public static System.Drawing.Color GetColor (this Color color)
 		{
-			return System.Drawing.Color.FromArgb (color.AlphaByte, color.RedByte, color.GreenByte, color.BlueByte);
+			return System.Drawing.Color.FromArgb (color.A, color.R, color.G, color.B);
 		}
 
 		public static PointF ToPointF (Point point)

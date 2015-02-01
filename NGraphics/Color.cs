@@ -6,40 +6,50 @@ namespace NGraphics
 {
 	public struct Color
 	{
-		public readonly double Red;
-		public readonly double Green;
-		public readonly double Blue;
-		public readonly double Alpha;
+		public readonly byte R;
+		public readonly byte G;
+		public readonly byte B;
+		public readonly byte A;
 
-		public int RedByte { get { return (int)(Red * 255 + 0.5); } }
-		public int GreenByte { get { return (int)(Green * 255 + 0.5); } }
-		public int BlueByte { get { return (int)(Blue * 255 + 0.5); } }
-		public int AlphaByte { get { return (int)(Alpha * 255 + 0.5); } }
+		public double Red { get { return R / 255.0; } }
+		public double Green { get { return G / 255.0; } }
+		public double Blue { get { return B / 255.0; } }
+		public double Alpha { get { return A / 255.0; } }
 
 		public int Argb {
 			get {
-				return (AlphaByte << 24) | (RedByte << 16) | (GreenByte << 8) | BlueByte;
+				return (A << 24) | (R << 16) | (G << 8) | B;
 			}
+		}
+
+		Color (byte r, byte g, byte b, byte a)
+		{
+			R = r;
+			G = g;
+			B = b;
+			A = a;
 		}
 
 		public Color (double red, double green, double blue, double alpha)
 		{
-			Red = red;
-			Green = green;
-			Blue = blue;
-			Alpha = alpha;
+			R = (byte)(Math.Min (255, Math.Max (0, (int)(red * 255 + 0.5))));
+			G = (byte)(Math.Min (255, Math.Max (0, (int)(green * 255 + 0.5))));
+			B = (byte)(Math.Min (255, Math.Max (0, (int)(blue * 255 + 0.5))));
+			A = (byte)(Math.Min (255, Math.Max (0, (int)(alpha * 255 + 0.5))));
 		}
 		public Color (double white, double alpha)
 		{
-			Red = white;
-			Green = white;
-			Blue = white;
-			Alpha = alpha;
+			var W = (byte)(Math.Min (255, Math.Max (0, (int)(white * 255 + 0.5))));
+			R = W;
+			G = W;
+			B = W;
+			A = (byte)(Math.Min (255, Math.Max (0, (int)(alpha * 255 + 0.5))));
 		}
 
 		public Color WithAlpha (double alpha)
 		{
-			return new Color (Red, Green, Blue, alpha);
+			var a = (byte)(Math.Min (255, Math.Max (0, (int)(alpha * 255 + 0.5))));
+			return new Color (R, G, B, a);
 		}
 
 		public override string ToString ()
