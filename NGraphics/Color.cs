@@ -16,6 +16,12 @@ namespace NGraphics
 		public int BlueByte { get { return (int)(Blue * 255 + 0.5); } }
 		public int AlphaByte { get { return (int)(Alpha * 255 + 0.5); } }
 
+		public int Argb {
+			get {
+				return (AlphaByte << 24) | (RedByte << 16) | (GreenByte << 8) | BlueByte;
+			}
+		}
+
 		public Color (double red, double green, double blue, double alpha)
 		{
 			Red = red;

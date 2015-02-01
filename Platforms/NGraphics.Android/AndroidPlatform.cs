@@ -12,7 +12,6 @@ namespace NGraphics
 		{
 			var pixelWidth = (int)Math.Ceiling (size.Width * scale);
 			var pixelHeight = (int)Math.Ceiling (size.Height * scale);
-//			var format = transparency ? PixelFormat.Format32bppPArgb : PixelFormat.Format24bppRgb;
 			var bitmap = Bitmap.CreateBitmap (pixelWidth, pixelHeight, Bitmap.Config.Argb8888);
 			return new BitmapCanvas (bitmap, scale);
 		}
@@ -21,12 +20,12 @@ namespace NGraphics
 	public class BitmapImage : IImage
 	{
 		readonly Bitmap bitmap;
-		readonly double scale;
+//		readonly double scale;
 
 		public BitmapImage (Bitmap bitmap, double scale = 1.0)
 		{
 			this.bitmap = bitmap;
-			this.scale = scale;
+//			this.scale = scale;
 		}
 
 		public void SaveAsPng (string path)
@@ -35,11 +34,6 @@ namespace NGraphics
 				bitmap.Compress (Bitmap.CompressFormat.Png, 100, f);
 			}
 		}
-
-//		public void Draw (ISurface surface)
-//		{
-//			surface.DrawImage ();
-//		}
 	}
 
 	public class BitmapCanvas : CanvasCanvas, IImageCanvas
@@ -58,7 +52,7 @@ namespace NGraphics
 
 		public IImage GetImage ()
 		{
-			return new BitmapImage (bitmap);
+			return new BitmapImage (bitmap, scale);
 		}
 	}
 
@@ -136,7 +130,25 @@ namespace NGraphics
 
 			var lgb = brush as LinearGradientBrush;
 			if (lgb != null) {
+				var n = lgb.Stops.Count;
+				var locs = new float [n];
+				var comps = new int [n];
+				for (var i = 0; i < n; i++) {
+					var s = lgb.Stops [i];
+					locs [i] = (float)s.Offset;
+					comps [i] = s.Color.Argb;
+				}
+				var p1 = bb.Position + lgb.RelativeStart * bb.Size;
+				var p2 = bb.Position + lgb.RelativeEnd * bb.Size;
+				var lg = new LinearGradient (
+					(float)p1.X, (float)p1.Y,
+					(float)p2.X, (float)p2.Y,
+					comps,
+					locs,
+					Shader.TileMode.Clamp);
 
+				paint.SetShader (lg);
+				return;
 			}
 
 			throw new NotSupportedException ("Brush " + brush);
