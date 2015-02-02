@@ -2,7 +2,7 @@
 
 <img src="TestResults/Icon-Mac.png" width="64" height="64" style="float:left;margin-right:1em" />
 
-NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode rendering using high quality native renderers.
+NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode graphics using high quality native renderers.
 
 You can use it for cross platform rendering of UI widgets. Or as the basis for graphically rich interactive views. Or maybe you just want an easy way to import and export SVG and PNG files. Either way, I'm sure you'll find something interesting here.
 
@@ -10,7 +10,7 @@ You can use it for cross platform rendering of UI widgets. Or as the basis for g
 
 ## Installation
 
-Install it from nuget.
+[Install NGraphics from nuget](https://www.nuget.org/packages/NGraphics/).
 
 
 

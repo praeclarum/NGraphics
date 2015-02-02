@@ -6,3 +6,4 @@ obj
 packages
 *.userprefs
 *.suo
+*.nupkg
