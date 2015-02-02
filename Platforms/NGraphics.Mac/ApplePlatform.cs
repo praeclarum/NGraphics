@@ -48,10 +48,10 @@ namespace NGraphics
 					var s = (byte*)c;
 					var d = (byte*)data;
 					while (n-- > 0) {
-						var a = *s++;
-						var r = *s++;
-						var g = *s++;
 						var b = *s++;
+						var g = *s++;
+						var r = *s++;
+						var a = *s++;
 						*d++ = a;
 						*d++ = (byte)((r * a) >> 8);
 						*d++ = (byte)((g * a) >> 8);
