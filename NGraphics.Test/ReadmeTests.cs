@@ -8,6 +8,39 @@ namespace NGraphics.Test
 	[TestFixture]
 	public class ReadmeTests : PlatformTest
 	{
+		// http://app.coolors.co/dcdcdd-c5c3c6-46494c-4c5c68-4183c4
+		// http://app.coolors.co/dcdcdd-c5c3c6-46494c-4c5c68-68a5e2
+		[Test]
+		public void Icon ()
+		{
+			var size = new Size (64);
+			var canvas = Platforms.Current.CreateImageCanvas (size, scale: 2);
+			canvas.SaveState ();
+			canvas.Scale (size);
+			canvas.Translate (1 / 8.0, 0);
+
+			var p = new Path ();
+			p.MoveTo (0, 1);
+			p.LineTo (0, 0);
+			p.LineTo (0.5, 1);
+			p.LineTo (0.5, 0);
+
+			var colors = new [] {
+				"#DCDCDD",
+				"#C5C3C6",
+				"#46494C",
+				"#4C5C68",
+				"#68A5E2",
+			};
+			foreach (var c in colors) {
+				p.Pen = new Pen (c, 1 / 4.0);
+				p.Draw (canvas);
+				canvas.Translate (1 / 16.0, 0);
+			}
+
+			canvas.GetImage ().SaveAsPng (GetPath ("Icon.png"));
+		}
+
 		[Test]
 		public void Example1 ()
 		{

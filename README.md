@@ -1,5 +1,7 @@
 # NGraphics
 
+<img src="TestResults/Icon-Mac.png" width="64" height="64" style="float:left;margin-right:1em" />
+
 NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode rendering using high quality native renderers.
 
 You can use it for cross platform rendering of UI widgets. Or as the basis for graphically rich interactive views. Or maybe you just want an easy way to import and export SVG and PNG files. Either way, I'm sure you'll find something interesting here.
@@ -111,8 +113,46 @@ circle.Draw (canvas);
 	- `GraphicsCanvas` wraps a `System.Drawing.Graphics`
 
 
+## Icon
+
+The NGraphics icon can be rendered using a simple repeating path:
+
+```csharp
+var size = new Size (64);
+var canvas = Platforms.Current.CreateImageCanvas (size, scale: 2);
+canvas.SaveState ();
+canvas.Scale (size);
+canvas.Translate (1 / 8.0, 0);
+
+var p = new Path ();
+p.MoveTo (0, 1);
+p.LineTo (0, 0);
+p.LineTo (0.5, 1);
+p.LineTo (0.5, 0);
+
+var colors = new [] {
+	"#DCDCDD",
+	"#C5C3C6",
+	"#46494C",
+	"#4C5C68",
+	"#68A5E2",
+};
+foreach (var c in colors) {
+	p.Pen = new Pen (c, 1 / 4.0);
+	p.Draw (canvas);
+	canvas.Translate (1 / 16.0, 0);
+}
+
+canvas.GetImage ().SaveAsPng (GetPath ("Icon.png"));
+```
+
+<img src="TestResults/Icon-Mac.png" width="64" height="64" />
+
+
 
 ## License
 
-MIT
+The MIT License (MIT)
+
+See [LICENSE](LICENSE) for details.
 
