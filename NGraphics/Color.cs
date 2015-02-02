@@ -46,6 +46,18 @@ namespace NGraphics
 			B = W;
 			A = (byte)(Math.Min (255, Math.Max (0, (int)(alpha * 255 + 0.5))));
 		}
+		public Color (string colorString)
+		{
+			Color color;
+			if (Colors.TryParse (colorString, out color)) {
+				R = color.R;
+				G = color.G;
+				B = color.B;
+				A = color.A;
+			} else {
+				throw new ArgumentException ("Bad color string: " + colorString);
+			}
+		}
 
 		public Color WithAlpha (double alpha)
 		{

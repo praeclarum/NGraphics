@@ -22,6 +22,15 @@ namespace NGraphics
 		{
 			canvas.Transform (new Translate (dx, dy));
 		}
+		public static void Translate (this ICanvas canvas, Size translation)
+		{
+			canvas.Transform (new Translate (translation));
+		}
+		/// <summary>
+		/// Rotate the specified canvas by the given angle (in degrees).
+		/// </summary>
+		/// <param name="canvas">Canvas.</param>
+		/// <param name="angle">Angle in degrees.</param>
 		public static void Rotate (this ICanvas canvas, double angle)
 		{
 			canvas.Transform (new Rotate (angle));
@@ -29,6 +38,10 @@ namespace NGraphics
 		public static void Scale (this ICanvas canvas, double sx, double sy)
 		{
 			canvas.Transform (new Scale (sx, sy));
+		}
+		public static void Scale (this ICanvas canvas, Size scale)
+		{
+			canvas.Transform (new Scale (scale));
 		}
 
 		public static void DrawRectangle (this ICanvas canvas, double x, double y, double width, double height, Pen pen = null, Brush brush = null)

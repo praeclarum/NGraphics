@@ -93,10 +93,18 @@ namespace NGraphics
 		{
 			Add (new MoveTo (point));
 		}
+		public void MoveTo (double x, double y)
+		{
+			Add (new MoveTo (x, y));
+		}
 
 		public void LineTo (Point point)
 		{
 			Add (new LineTo (point));
+		}
+		public void LineTo (double x, double y)
+		{
+			Add (new LineTo (x, y));
 		}
 
 		public void CurveTo (Point control1, Point control2, Point point)

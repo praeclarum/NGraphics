@@ -6,6 +6,7 @@ namespace NGraphics
 	public struct Size
 	{
 		public static readonly Size Zero = new Size ();
+		public static readonly Size One = new Size (1);
 
 		public double Width;
 		public double Height;
@@ -35,6 +36,10 @@ namespace NGraphics
 		public static Size operator / (Size a, double v)
 		{
 			return new Size (a.Width / v, a.Height / v);
+		}
+		public static Size operator / (double v, Size a)
+		{
+			return new Size (v / a.Width, v / a.Height);
 		}
 
 		public override string ToString ()

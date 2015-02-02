@@ -26,10 +26,14 @@ namespace NGraphics
 			Width = 1;
 		}
 
-		public Pen (Color color, double width)
+		public Pen (Color color, double width = 1.0)
 		{
 			Color = color;
 			Width = width;
+		}
+		public Pen (string colorString, double width = 1.0)
+			: this (new Color (colorString), width)
+		{
 		}
 
 		public Pen WithWidth (double width)
