@@ -12,7 +12,7 @@ namespace NGraphics
 			return new NullImageSurface ();
 		}
 
-		public IImage CreateImage (Color[,] colors, double scale = 1.0)
+		public IImage CreateImage (Color[] colors, int width, double scale = 1.0)
 		{
 			return new NullImage ();
 		}

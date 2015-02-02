@@ -8,7 +8,7 @@ namespace NGraphics
 	{
 		string Name { get; }
 		IImageCanvas CreateImageCanvas (Size size, double scale = 1.0, bool transparency = true);
-		IImage CreateImage (Color[,] colors, double scale = 1.0);
+		IImage CreateImage (Color[] colors, int pixelWidth, double scale = 1.0);
 	}
 
 	public static class PlatformEx
@@ -17,13 +17,14 @@ namespace NGraphics
 		{
 			var w = (int)Math.Ceiling (size.Width);
 			var h = (int)Math.Ceiling (size.Height);
-			var colors = new Color[w, h];
-			for (var x = 0; x < w; x++) {
-				for (var y = 0; y < h; y++) {
-					colors [x, y] = colorFunc (x, y);
+			var colors = new Color[w * h];
+			for (var y = 0; y < h; y++) {
+				var o = y * w;
+				for (var x = 0; x < w; x++) {
+					colors [o + x] = colorFunc (x, y);
 				}
 			}
-			return platform.CreateImage (colors, scale);
+			return platform.CreateImage (colors, w, scale);
 		}
 	}
 }

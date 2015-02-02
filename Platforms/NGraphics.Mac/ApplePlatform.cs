@@ -32,30 +32,31 @@ namespace NGraphics
 			return new CGBitmapContextCanvas (bitmap, scale);
 		}
 
-		public IImage CreateImage (Color[,] colors, double scale = 1.0)
+		public IImage CreateImage (Color[] colors, int width, double scale = 1.0)
 		{
-			var pixelWidth = (nint)colors.GetLength (0);
-			var pixelHeight = (nint)colors.GetLength (1);
+			var pixelWidth = width;
+			var pixelHeight = colors.Length / width;
 			var bitmapInfo = CGImageAlphaInfo.PremultipliedFirst;
 			var bitsPerComp = 8;
-			var bytesPerRow = 4 * pixelWidth;
+			var bytesPerRow = width * 4;// ((4 * pixelWidth + 3)/4) * 4;
 			var colorSpace = CGColorSpace.CreateDeviceRGB ();
 			var bitmap = new CGBitmapContext (IntPtr.Zero, pixelWidth, pixelHeight, bitsPerComp, bytesPerRow, colorSpace, bitmapInfo);
 			var data = bitmap.Data;
 			unsafe {
-				fixed (Color *c = colors) {
-					var n = pixelWidth * pixelHeight;
-					var s = (byte*)c;
-					var d = (byte*)data;
-					while (n-- > 0) {
-						var b = *s++;
-						var g = *s++;
-						var r = *s++;
-						var a = *s++;
-						*d++ = a;
-						*d++ = (byte)((r * a) >> 8);
-						*d++ = (byte)((g * a) >> 8);
-						*d++ = (byte)((b * a) >> 8);
+				fixed (Color *c = colors) {					
+					for (var y = 0; y < pixelHeight; y++) {
+						var s = (byte*)c + 4*pixelWidth*y;
+						var d = (byte*)data + bytesPerRow*y;
+						for (var x = 0; x < pixelWidth; x++) {
+							var b = *s++;
+							var g = *s++;
+							var r = *s++;
+							var a = *s++;
+							*d++ = a;
+							*d++ = (byte)((r * a) >> 8);
+							*d++ = (byte)((g * a) >> 8);
+							*d++ = (byte)((b * a) >> 8);
+						}
 					}
 				}
 			}

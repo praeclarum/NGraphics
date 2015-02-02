@@ -17,16 +17,13 @@ namespace NGraphics
 			return new BitmapCanvas (bitmap, scale);
 		}
 
-		public IImage CreateImage (Color[,] colors, double scale = 1.0)
+		public IImage CreateImage (Color[] colors, int width, double scale = 1.0)
 		{
 			var pixelWidth = colors.GetLength (0);
 			var pixelHeight = colors.GetLength (1);
 			var acolors = new int[pixelWidth * pixelHeight];
-			for (var y = 0; y < pixelHeight; y++) {
-				var o = y * pixelWidth;
-				for (var x = 0; x < pixelWidth; x++) {
-					acolors [o + x] = colors [x, y].Argb;
-				}
+			for (var i = 0; i < colors.Length; i++) {
+				acolors [i] = colors [i].Argb;
 			}
 			var bitmap = Bitmap.CreateBitmap (acolors, pixelWidth, pixelHeight, Bitmap.Config.Argb8888);
 			return new BitmapImage (bitmap, scale);
