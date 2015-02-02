@@ -19,7 +19,17 @@ namespace NGraphics
 
 		public IImage CreateImage (Color[,] colors, double scale = 1.0)
 		{
-			throw new NotImplementedException ();
+			var pixelWidth = colors.GetLength (0);
+			var pixelHeight = colors.GetLength (1);
+			var acolors = new int[pixelWidth * pixelHeight];
+			for (var y = 0; y < pixelHeight; y++) {
+				var o = y * pixelWidth;
+				for (var x = 0; x < pixelWidth; x++) {
+					acolors [o + x] = colors [x, y].Argb;
+				}
+			}
+			var bitmap = Bitmap.CreateBitmap (acolors, pixelWidth, pixelHeight, Bitmap.Config.Argb8888);
+			return new BitmapImage (bitmap, scale);
 		}
 	}
 
@@ -89,13 +99,16 @@ namespace NGraphics
 				var rt = t as Rotate;
 				if (rt != null) {
 					graphics.Rotate ((float)rt.Angle);
-					t = t.Previous;
+					continue;
+				}
+				var st = t as Scale;
+				if (st != null) {
+					graphics.Scale ((float)st.Size.Width, (float)st.Size.Height);
 					continue;
 				}
 				var tt = t as Translate;
 				if (tt != null) {
 					graphics.Translate ((float)tt.Size.Width, (float)tt.Size.Height);
-					t = t.Previous;
 					continue;
 				}
 				throw new NotSupportedException ("Transform " + t);
@@ -106,7 +119,7 @@ namespace NGraphics
 			graphics.Restore ();
 		}
 
-		TextPaint GetFontPaint (TextAlignment alignment)
+		TextPaint GetFontPaint (Font font, TextAlignment alignment)
 		{
 			var paint = new TextPaint (PaintFlags.AntiAlias);
 			paint.TextAlign = Paint.Align.Left;
@@ -114,6 +127,11 @@ namespace NGraphics
 				paint.TextAlign = Paint.Align.Left;
 			else if (alignment == TextAlignment.Right)
 				paint.TextAlign = Paint.Align.Right;
+
+			paint.TextSize = (float)font.Size;
+			var typeface = Typeface.Create (font.Family, TypefaceStyle.Normal);
+			paint.SetTypeface (typeface);
+
 			return paint;
 		}
 		Paint GetPenPaint (Pen pen)
@@ -143,46 +161,49 @@ namespace NGraphics
 			var lgb = brush as LinearGradientBrush;
 			if (lgb != null) {
 				var n = lgb.Stops.Count;
-				var locs = new float [n];
-				var comps = new int [n];
-				for (var i = 0; i < n; i++) {
-					var s = lgb.Stops [i];
-					locs [i] = (float)s.Offset;
-					comps [i] = s.Color.Argb;
+				if (n >= 2) {
+					var locs = new float [n];
+					var comps = new int [n];
+					for (var i = 0; i < n; i++) {
+						var s = lgb.Stops [i];
+						locs [i] = (float)s.Offset;
+						comps [i] = s.Color.Argb;
+					}
+					var p1 = bb.Position + lgb.RelativeStart * bb.Size;
+					var p2 = bb.Position + lgb.RelativeEnd * bb.Size;
+					var lg = new LinearGradient (
+						        (float)p1.X, (float)p1.Y,
+						        (float)p2.X, (float)p2.Y,
+						        comps,
+						        locs,
+						        Shader.TileMode.Clamp);
+					paint.SetShader (lg);
 				}
-				var p1 = bb.Position + lgb.RelativeStart * bb.Size;
-				var p2 = bb.Position + lgb.RelativeEnd * bb.Size;
-				var lg = new LinearGradient (
-					(float)p1.X, (float)p1.Y,
-					(float)p2.X, (float)p2.Y,
-					comps,
-					locs,
-					Shader.TileMode.Clamp);
-
-				paint.SetShader (lg);
 				return;
 			}
 
 			var rgb = brush as RadialGradientBrush;
 			if (rgb != null) {
 				var n = rgb.Stops.Count;
-				var locs = new float [n];
-				var comps = new int [n];
-				for (var i = 0; i < n; i++) {
-					var s = rgb.Stops [i];
-					locs [i] = (float)s.Offset;
-					comps [i] = s.Color.Argb;
-				}
-				var p1 = bb.Position + rgb.RelativeCenter * bb.Size;
-				var r = rgb.RelativeRadius * bb.Size;
-				var rg = new RadialGradient (
-					(float)p1.X, (float)p1.Y,
-					(float)r.Max,
-					comps,
-					locs,
-					Shader.TileMode.Clamp);
+				if (n >= 2) {
+					var locs = new float [n];
+					var comps = new int [n];
+					for (var i = 0; i < n; i++) {
+						var s = rgb.Stops [i];
+						locs [i] = (float)s.Offset;
+						comps [i] = s.Color.Argb;
+					}
+					var p1 = bb.Position + rgb.RelativeCenter * bb.Size;
+					var r = rgb.RelativeRadius * bb.Size;
+					var rg = new RadialGradient (
+						        (float)p1.X, (float)p1.Y,
+						        (float)r.Max,
+						        comps,
+						        locs,
+						        Shader.TileMode.Clamp);
 
-				paint.SetShader (rg);
+					paint.SetShader (rg);
+				}
 				return;
 			}
 
@@ -194,27 +215,28 @@ namespace NGraphics
 			if (brush == null)
 				return;
 
-			if (frame.Width < double.MaxValue) {
-				var paint = GetFontPaint (alignment);
-
-				var align = global::Android.Text.Layout.Alignment.AlignNormal;
-				if (alignment == TextAlignment.Center)
-					align = global::Android.Text.Layout.Alignment.AlignCenter;
-				else if (alignment == TextAlignment.Right)
-					align = global::Android.Text.Layout.Alignment.AlignOpposite;
-
-				var sl = new global::Android.Text.StaticLayout (text, paint, (int)Math.Floor (frame.Width), align, 1, 0, false);
-
-				sl.Draw (graphics);
-			}
+//			if (frame.Width < double.MaxValue) {
+//				var paint = GetFontPaint (font, alignment);
+//
+//				var align = global::Android.Text.Layout.Alignment.AlignNormal;
+//				if (alignment == TextAlignment.Center)
+//					align = global::Android.Text.Layout.Alignment.AlignCenter;
+//				else if (alignment == TextAlignment.Right)
+//					align = global::Android.Text.Layout.Alignment.AlignOpposite;
+//
+//				var sl = new global::Android.Text.StaticLayout (text, paint, (int)Math.Floor (frame.Width), align, 1, 0, false);
+//
+//				sl.Draw (graphics);
+//			}
 //			else {
-//				var paint = GetFontPaint ();
-//				var w = paint.MeasureText (text);
-//				var fm = paint.GetFontMetrics ();
-//				var h = fm.Ascent + fm.Descent;
-//				var fr = new Rect (point, new Size (w, h));
-//				AddBrushPaint (paint, brush, fr);
-//				graphics.DrawText (text, (float)point.X, (float)point.Y, paint);
+			var paint = GetFontPaint (font, alignment);
+			var w = paint.MeasureText (text);
+			var fm = paint.GetFontMetrics ();
+			var h = fm.Ascent + fm.Descent;
+			var point = frame.Position;
+			var fr = new Rect (point, new Size (w, h));
+			AddBrushPaint (paint, brush, fr);
+			graphics.DrawText (text, (float)point.X, (float)point.Y, paint);
 //			}
 		}
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
@@ -237,6 +259,13 @@ namespace NGraphics
 					var lt = op as LineTo;
 					if (lt != null) {
 						var p = lt.Point;
+						path.LineTo ((float)p.X, (float)p.Y);
+						bb.Add (p);
+						continue;
+					}
+					var at = op as ArcTo;
+					if (at != null) {
+						var p = at.Point;
 						path.LineTo ((float)p.X, (float)p.Y);
 						bb.Add (p);
 						continue;

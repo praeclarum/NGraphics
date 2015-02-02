@@ -78,7 +78,7 @@ namespace NGraphics.Test
 					return Colors.Yellow;
 				return Colors.Black;
 
-			}, new Size (d, d), scale: 1);
+			}, new Size (d + 1, d + 2), scale: 1);
 
 			image.SaveAsPng (GetPath ("ColorToImage.Circle.png"));
 		}
