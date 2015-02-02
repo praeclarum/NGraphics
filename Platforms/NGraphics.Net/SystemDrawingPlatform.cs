@@ -83,6 +83,7 @@ namespace NGraphics
 		{
 			this.graphics = graphics;
 
+            graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
 			graphics.SmoothingMode = SmoothingMode.HighQuality;
 		}
 
@@ -135,18 +136,17 @@ namespace NGraphics
 		{
 			if (brush == null)
 				return;
-			var sdfont = new System.Drawing.Font ("Georgia", 16);
+			var sdfont = new System.Drawing.Font (font.Family, (float)font.Size, FontStyle.Regular, GraphicsUnit.Pixel);
 			var sz = graphics.MeasureString (text, sdfont);
 			var point = frame.Position;
-			var fr = new Rect (point, new Size (sz.Width, sz.Height));
-			graphics.DrawString (text, sdfont, Conversions.GetBrush (brush, fr), Conversions.ToPointF (point));
+            var fr = new Rect (point, new Size (sz.Width, sz.Height));
+            graphics.DrawString (text, sdfont, Conversions.GetBrush (brush, fr), Conversions.ToPointF (point - new Point (0, sdfont.Height)));
 		}
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 		{
 			using (var path = new GraphicsPath ()) {
 
-				Rect bb = new Rect ();
-				var nbb = 0;
+                var bb = new BoundingBoxBuilder ();
 
 				var position = Point.Zero;
 
@@ -155,11 +155,7 @@ namespace NGraphics
 					if (mt != null) {
 						var p = mt.Point;
 						position = p;
-						if (nbb == 0)
-							bb = new Rect (p, Size.Zero);
-						else
-							bb = bb.Union (p);
-						nbb++;
+                        bb.Add (p);
 						continue;
 					}
 					var lt = op as LineTo;
@@ -167,13 +163,17 @@ namespace NGraphics
 						var p = lt.Point;
 						path.AddLine (Conversions.ToPointF (position), Conversions.ToPointF (p));
 						position = p;
-						if (nbb == 0)
-							bb = new Rect (p, Size.Zero);
-						else
-							bb = bb.Union (p);
-						nbb++;
-						continue;
+                        bb.Add (p);
+                        continue;
 					}
+                    var at = op as ArcTo;
+                    if (at != null) {
+                        var p = at.Point;
+                        path.AddLine (Conversions.ToPointF (position), Conversions.ToPointF (p));
+                        position = p;
+                        bb.Add (p);
+                        continue;
+                    }
                     var ct = op as CurveTo;
                     if (ct != null) {
                         var p = ct.Point;
@@ -182,10 +182,9 @@ namespace NGraphics
                         path.AddBezier (Conversions.ToPointF (position), Conversions.ToPointF (c1),
                             Conversions.ToPointF (c2), Conversions.ToPointF (p));
                         position = p;
-                        if (nbb == 0)
-                            bb = new Rect (p, Size.Zero);
-                        bb = bb.Union (p).Union (c1).Union (c2);
-                        nbb++;
+                        bb.Add (p);
+                        bb.Add (c1);
+                        bb.Add (c2);
                         continue;
                     }
                     var cp = op as ClosePath;
@@ -197,7 +196,7 @@ namespace NGraphics
 					throw new NotSupportedException ("Path Op " + op);
 				}
 
-				var frame = bb;
+				var frame = bb.BoundingBox;
 				if (brush != null) {
 					graphics.FillPath (brush.GetBrush (frame), path);
 				}
@@ -240,52 +239,84 @@ namespace NGraphics
 			return new System.Drawing.Pen (GetColor (pen.Color), (float)pen.Width);
 		}
 
+        static ColorBlend BuildBlend (List<GradientStop> stops, bool reverse = false)
+        {
+            if (stops.Count < 2)
+                return null;
+
+            var s1 = stops[0];
+            var s2 = stops[stops.Count - 1];
+
+            // Build the blend
+            var n = stops.Count;
+            var an = 0;
+            if (s1.Offset != 0) {
+                an++;
+            }
+            if (s2.Offset != 1) {
+                an++;
+            }
+            var blend = new System.Drawing.Drawing2D.ColorBlend (n + an);
+            var o = 0;
+            if (s1.Offset != 0) {
+                blend.Colors[0] = GetColor (s1.Color);
+                blend.Positions[0] = 0;
+                o = 1;
+            }
+            for (var i = 0; i < n; i++) {
+                blend.Colors[i + o] = GetColor (stops[i].Color);
+                blend.Positions[i + o] = (float)stops[i].Offset;
+            }
+            if (s2.Offset != 1) {
+                blend.Colors[n + an - 1] = GetColor (s1.Color);
+                blend.Positions[n + an - 1] = 1;
+            }
+
+            if (reverse) {
+                for (var i = 0; i < blend.Positions.Length; i++) {
+                    blend.Positions[i] = 1 - blend.Positions[i];
+                }
+                Array.Reverse (blend.Positions);
+                Array.Reverse (blend.Colors);
+            }
+
+            return blend;
+        }
+
 		public static System.Drawing.Brush GetBrush (this Brush brush, Rect frame)
 		{
 			var cb = brush as SolidBrush;
 			if (cb != null) {
 				return new System.Drawing.SolidBrush (cb.Color.GetColor ());
 			}
+
             var lgb = brush as LinearGradientBrush;
-            if (lgb != null && lgb.Stops.Count >= 2) {
+            if (lgb != null) {
                 var s = frame.Position + lgb.RelativeStart * frame.Size;
                 var e = frame.Position + lgb.RelativeEnd * frame.Size;
-                var s1 = lgb.Stops[0];
-                var s2 = lgb.Stops[lgb.Stops.Count - 1];
-                var b = new System.Drawing.Drawing2D.LinearGradientBrush (ToPointF (s), ToPointF (e), GetColor (s1.Color), GetColor (s2.Color));
-
-                // Build the blend
-                var n = lgb.Stops.Count;
-                var an = 0;
-                if (s1.Offset != 0) {
-                    an++;
+                var b = new System.Drawing.Drawing2D.LinearGradientBrush (ToPointF (s), ToPointF (e), System.Drawing.Color.Black, System.Drawing.Color.Black);
+                var bb = BuildBlend (lgb.Stops);
+                if (bb != null) {
+                    b.InterpolationColors = bb;
                 }
-                if (s2.Offset != 1) {
-                    an++;
-                }
-                var blend = new System.Drawing.Drawing2D.ColorBlend (n + an);
-                var o = 0;
-                if (s1.Offset != 0) {
-                    blend.Colors[0] = GetColor (s1.Color);
-                    blend.Positions[0] = 0;
-                    o = 1;
-                }
-                for (var i = 0; i < n; i++) {
-                    blend.Colors[i + o] = GetColor (lgb.Stops[i].Color);
-                    blend.Positions[i + o] = (float)lgb.Stops[i].Offset;
-                }
-                if (s2.Offset != 1) {
-                    blend.Colors[n + an - 1] = GetColor (s1.Color);
-                    blend.Positions[n + an - 1] = 1;
-                }
-                b.InterpolationColors = blend;
-
-                // This is what we want but it doesn't work
-                //b.WrapMode = System.Drawing.Drawing2D.WrapMode.Clamp;
-
                 return b;
             }
-			return new System.Drawing.SolidBrush (System.Drawing.Color.Black);
+
+            var rgb = brush as RadialGradientBrush;
+            if (rgb != null) {
+                var r = rgb.RelativeRadius * frame.Size.Max;
+                var c = frame.Position + rgb.RelativeCenter * frame.Size;
+                var path = new GraphicsPath ();
+                path.AddEllipse (GetRectangle (new Rect (c - r, new Size (2*r))));
+                var b = new PathGradientBrush (path);
+                var bb = BuildBlend (rgb.Stops, true);
+                if (bb != null) {
+                    b.InterpolationColors = bb;
+                }
+                return b;
+            }
+
+			throw new NotImplementedException ("Brush " + brush);
 		}
 
         public static PointF ToPointF (Point point)
