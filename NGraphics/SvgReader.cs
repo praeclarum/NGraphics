@@ -102,7 +102,8 @@ namespace NGraphics
 					var x = ReadNumber (e.Attribute ("x"));
 					var y = ReadNumber (e.Attribute ("y"));
 					var text = e.Value.Trim ();
-					r = new Text (text, new Rect (new Point (x, y), new Size (double.MaxValue, double.MaxValue)), TextAlignment.Left, pen, brush);
+					var font = new Font ();
+					r = new Text (text, new Rect (new Point (x, y), new Size (double.MaxValue, double.MaxValue)), font, TextAlignment.Left, pen, brush);
 				}
 				break;
 			case "rect":
@@ -415,7 +416,7 @@ namespace NGraphics
 					i += 4;
 				} else if (op == "A" && i + 6 < n) {
 					var r = new Size (ReadNumber (args [i]), ReadNumber (args [i + 1]));
-					var xr = ReadNumber (args [i + 2]);
+//					var xr = ReadNumber (args [i + 2]);
 					var laf = ReadNumber (args [i + 3]) != 0;
 					var swf = ReadNumber (args [i + 4]) != 0;
 					var pt = new Point (ReadNumber (args [i + 5]), ReadNumber (args [i + 6]));

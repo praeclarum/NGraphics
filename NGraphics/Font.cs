@@ -4,8 +4,10 @@ namespace NGraphics
 {
 	public class Font
 	{
-		public string Family;
-		public double Size;
+		public string Family = "Georgia";
+		public double Size = 16;
+
+		public string Name { get { return Family; } }
 	}
 
 	public enum TextAlignment

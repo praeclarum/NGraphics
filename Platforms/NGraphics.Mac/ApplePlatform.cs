@@ -180,23 +180,27 @@ namespace NGraphics
 
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
+			if (string.IsNullOrEmpty (text))
+				return;
+			if (font == null)
+				throw new ArgumentNullException ("font");
+
 			SetBrush (brush);
 
-			context.SelectFont ("Georgia", 16, CGTextEncoding.MacRoman);
+			context.SelectFont (font.Name, (nfloat)font.Size, CGTextEncoding.MacRoman);
 			context.ShowTextAtPoint ((nfloat)frame.X, (nfloat)frame.Y, text);
 
-
-			using (var atext = new NSMutableAttributedString (text)) {
-
-				atext.AddAttributes (new CTStringAttributes {
-					ForegroundColor = new CGColor (1, 0, 0, 1),
-				}, new NSRange (0, text.Length));
-
-				using (var ct = new CTFramesetter (atext))
-				using (var path = CGPath.FromRect (Conversions.GetCGRect (frame)))
-				using (var tframe = ct.GetFrame (new NSRange (0, atext.Length), path, null))
-					tframe.Draw (context);
-			}
+//			using (var atext = new NSMutableAttributedString (text)) {
+//
+//				atext.AddAttributes (new CTStringAttributes {
+//					ForegroundColor = new CGColor (1, 0, 0, 1),
+//				}, new NSRange (0, text.Length));
+//
+//				using (var ct = new CTFramesetter (atext))
+//				using (var path = CGPath.FromRect (Conversions.GetCGRect (frame)))
+//				using (var tframe = ct.GetFrame (new NSRange (0, atext.Length), path, null))
+//					tframe.Draw (context);
+//			}
 		}
 
 		void DrawElement (Func<Rect> add, Pen pen = null, Brush brush = null)
@@ -251,30 +255,31 @@ namespace NGraphics
 
 			DrawElement (() => {
 
-				Rect bb = new Rect ();
-				var nbb = 0;
+				var bb = new BoundingBoxBuilder ();
 
 				foreach (var op in ops) {
 					var mt = op as MoveTo;
 					if (mt != null) {
 						var p = mt.Point;
 						context.MoveTo ((nfloat)p.X, (nfloat)p.Y);
-						if (nbb == 0)
-							bb = new Rect (p, Size.Zero);
-						else
-							bb = bb.Union (p);
-						nbb++;
+						bb.Add (p);
 						continue;
 					}
 					var lt = op as LineTo;
 					if (lt != null) {
 						var p = lt.Point;
 						context.AddLineToPoint ((nfloat)p.X, (nfloat)p.Y);
-						if (nbb == 0)
-							bb = new Rect (p, Size.Zero);
-						else
-							bb = bb.Union (p);
-						nbb++;
+						bb.Add (p);
+						continue;
+					}
+					var at = op as ArcTo;
+					if (at != null) {
+						var p = at.Point;
+						var pp = Conversions.GetPoint (context.GetPathCurrentPoint ());
+						Point c1, c2;
+						at.GetCircles (pp, out c1, out c2);
+						context.AddLineToPoint ((nfloat)p.X, (nfloat)p.Y);
+						bb.Add (p);
 						continue;
 					}
 					var ct = op as CurveTo;
@@ -283,10 +288,9 @@ namespace NGraphics
 						var c1 = ct.Control1;
 						var c2 = ct.Control2;
 						context.AddCurveToPoint ((nfloat)c1.X, (nfloat)c1.Y, (nfloat)c2.X, (nfloat)c2.Y, (nfloat)p.X, (nfloat)p.Y);
-						if (nbb == 0)
-							bb = new Rect (p, Size.Zero);
-						bb = bb.Union (p).Union (c1).Union (c2);
-						nbb++;
+						bb.Add (p);
+						bb.Add (c1);
+						bb.Add (c2);
 						continue;
 					}
 					var cp = op as ClosePath;
@@ -298,7 +302,7 @@ namespace NGraphics
 					throw new NotSupportedException ("Path Op " + op);
 				}
 
-				return bb;
+				return bb.BoundingBox;
 
 			}, pen, brush);
 		}
@@ -360,7 +364,10 @@ namespace NGraphics
 		{
 			return new CGPoint ((nfloat)point.X, (nfloat)point.Y);
 		}
-
+		public static Point GetPoint (CGPoint point)
+		{
+			return new Point (point.X, point.Y);
+		}
 		public static CGRect GetCGRect (Rect frame)
 		{
 			return new CGRect ((nfloat)frame.X, (nfloat)frame.Y, (nfloat)frame.Width, (nfloat)frame.Height);

@@ -27,6 +27,27 @@ namespace NGraphics
 			return point - d;
 		}
 
+		public double Distance {
+			get { return Math.Sqrt (X * X + Y * Y); }
+		}
+
+		public override bool Equals (object obj)
+		{
+			if (obj is Point) {
+				return this == (Point)obj;
+			}
+			return false;
+		}
+
+		public static bool operator == (Point a, Point b)
+		{
+			return a.X == b.X && a.Y == b.Y;
+		}
+		public static bool operator != (Point a, Point b)
+		{
+			return a.X != b.X || a.Y != b.Y;
+		}
+
 		public static Point operator * (Point a, Size v)
 		{
 			return new Point (a.X * v.Width, a.Y * v.Height);

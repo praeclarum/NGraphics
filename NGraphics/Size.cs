@@ -14,6 +14,8 @@ namespace NGraphics
 		public double Max { get { return Math.Max (Width, Height); } }
 		public double Min { get { return Math.Min (Width, Height); } }
 
+		public double Diagonal { get { return Math.Sqrt (Width*Width + Height*Height); } }
+
 		public Size (double width, double height)
 		{
 			Width = width;

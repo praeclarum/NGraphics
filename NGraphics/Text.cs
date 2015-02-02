@@ -11,11 +11,12 @@ namespace NGraphics
 		public TextAlignment Alignment;
 		public Font Font;
 
-		public Text (string text, Rect frame, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
+		public Text (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 			: base (pen, brush)
 		{
 			String = text;
 			Frame = frame;
+			Font = font;
 			Alignment = alignment;
 		}
 
