@@ -41,6 +41,24 @@ namespace NGraphics
 			return Point;
 		}
 	}
+	public class ArcTo : PathOp
+	{
+		public Size Radius;
+		public bool LargeArc;
+		public bool SweepClockwise;
+		public Point Point;
+		public ArcTo (Size radius, bool largeArc, bool sweepClockwise, Point point)
+		{
+			Radius = radius;
+			LargeArc = largeArc;
+			SweepClockwise = sweepClockwise;
+			Point = point;
+		}
+		public override Point GetContinueCurveControlPoint ()
+		{
+			return Point;
+		}
+	}
 	public class CurveTo : PathOp
 	{
 		public Point Control1;
@@ -107,6 +125,10 @@ namespace NGraphics
 			Add (new LineTo (x, y));
 		}
 
+		public void ArcTo (Size radius, bool largeArc, bool sweepClockwise, Point point)
+		{
+			Add (new ArcTo (radius, largeArc, sweepClockwise, point));
+		}
 		public void CurveTo (Point control1, Point control2, Point point)
 		{
 			Add (new CurveTo (control1, control2, point));

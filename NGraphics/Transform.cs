@@ -26,6 +26,30 @@ namespace NGraphics
 		}
 	}
 
+	public class MatrixTransform : Transform
+	{
+		public double[] Elements;
+
+		public MatrixTransform (Transform previous = null)
+			: base (previous)
+		{
+			Elements = new double[6];
+		}
+		public MatrixTransform (double[] elements, Transform previous = null)
+			: this (previous)
+		{
+			if (elements == null)
+				throw new ArgumentNullException ("elements");
+			if (elements.Length != 6)
+				throw new ArgumentException ("6 elements were expected");
+			Array.Copy (elements, Elements, 6);
+		}
+		protected override string ToCode ()
+		{
+			return string.Format (CultureInfo.InvariantCulture, "matrix(...)");
+		}
+	}
+
 	public class Translate : Transform
 	{
 		public Size Size;

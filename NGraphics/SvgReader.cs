@@ -170,6 +170,10 @@ namespace NGraphics
 			case "defs":
 				// Already read in earlier pass
 				break;
+			case "namedview":
+			case "metadata":
+				// Ignore
+				break;
 			default:
 				throw new NotSupportedException ("SVG element \"" + e.Name.LocalName + "\" is not supported");
 			}
@@ -319,11 +323,27 @@ namespace NGraphics
 				var args = c.Split (new[]{ '(', ',', ' ', '\t', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 				Transform nt = null;
 				switch (args [0]) {
+				case "matrix":
+					if (args.Length == 7) {
+						var m = new MatrixTransform (t);
+						nt = new Translate (new Size (ReadNumber (args [1]), ReadNumber (args [2])), t);
+					} else {
+						throw new NotSupportedException ("Matrices are expected to have 6 elements, this one has " + (args.Length - 1));
+					}
+					break;
 				case "translate":
 					if (args.Length >= 3) {
 						nt = new Translate (new Size (ReadNumber (args [1]), ReadNumber (args [2])), t);
 					} else if (args.Length >= 2) {
 						nt = new Translate (new Size (ReadNumber (args [1]), 0), t);
+					}
+					break;
+				case "scale":
+					if (args.Length >= 3) {
+						nt = new Scale (new Size (ReadNumber (args [1]), ReadNumber (args [2])), t);
+					} else if (args.Length >= 2) {
+						var sx = ReadNumber (args [1]);
+						nt = new Scale (new Size (sx, sx), t);
 					}
 					break;
 				case "rotate":
@@ -393,6 +413,14 @@ namespace NGraphics
 					var pt = new Point (ReadNumber (args [i + 2]), ReadNumber (args [i + 3]));
 					p.ContinueCurveTo (c, pt);
 					i += 4;
+				} else if (op == "A" && i + 6 < n) {
+					var r = new Size (ReadNumber (args [i]), ReadNumber (args [i + 1]));
+					var xr = ReadNumber (args [i + 2]);
+					var laf = ReadNumber (args [i + 3]) != 0;
+					var swf = ReadNumber (args [i + 4]) != 0;
+					var pt = new Point (ReadNumber (args [i + 5]), ReadNumber (args [i + 6]));
+					p.ArcTo (r, laf, swf, pt);
+					i += 7;
 				} else if (op == "z" || op == "Z") {
 					p.Close ();
 				} else {

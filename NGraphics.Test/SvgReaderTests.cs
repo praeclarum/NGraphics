@@ -109,6 +109,12 @@ namespace NGraphics.Test
 		{
 			ReadAndDraw ("MocastIcon.svg");
 		}
+
+		[Test]
+		public void ErulisseuiinSpaceshipPack ()
+		{
+			ReadAndDraw ("ErulisseuiinSpaceshipPack.svg");
+		}
 	}
 }
 
