@@ -14,13 +14,16 @@ namespace NGraphics
 			var pixelWidth = (int)Math.Ceiling (size.Width * scale);
 			var pixelHeight = (int)Math.Ceiling (size.Height * scale);
 			var bitmap = Bitmap.CreateBitmap (pixelWidth, pixelHeight, Bitmap.Config.Argb8888);
+			if (!transparency) {
+				bitmap.EraseColor (Colors.Black.Argb);
+			}
 			return new BitmapCanvas (bitmap, scale);
 		}
 
 		public IImage CreateImage (Color[] colors, int width, double scale = 1.0)
 		{
-			var pixelWidth = colors.GetLength (0);
-			var pixelHeight = colors.GetLength (1);
+			var pixelWidth = width;
+			var pixelHeight = colors.Length / width;
 			var acolors = new int[pixelWidth * pixelHeight];
 			for (var i = 0; i < colors.Length; i++) {
 				acolors [i] = colors [i].Argb;

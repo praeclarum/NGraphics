@@ -24,9 +24,9 @@ namespace NGraphics
 		{
 			var pixelWidth = (int)Math.Ceiling (size.Width * scale);
 			var pixelHeight = (int)Math.Ceiling (size.Height * scale);
-			var bitmapInfo = transparency ? CGImageAlphaInfo.PremultipliedFirst : CGImageAlphaInfo.None;
+			var bitmapInfo = transparency ? CGImageAlphaInfo.PremultipliedFirst : CGImageAlphaInfo.NoneSkipFirst;
 			var bitsPerComp = 8;
-			var bytesPerRow = transparency ? 4 * pixelWidth : 3 * pixelWidth;
+			var bytesPerRow = transparency ? 4 * pixelWidth : 4 * pixelWidth;
 			var colorSpace = CGColorSpace.CreateDeviceRGB ();
 			var bitmap = new CGBitmapContext (IntPtr.Zero, pixelWidth, pixelHeight, bitsPerComp, bytesPerRow, colorSpace, bitmapInfo);
 			return new CGBitmapContextCanvas (bitmap, scale);
