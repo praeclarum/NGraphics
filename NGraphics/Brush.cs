@@ -90,5 +90,12 @@ namespace NGraphics
 			RelativeEnd = relEnd;
 			Stops.AddRange (stops);
 		}
+		public LinearGradientBrush (Point relStart, Point relEnd, Color startColor, Color endColor)
+		{
+			RelativeStart = relStart;
+			RelativeEnd = relEnd;
+			Stops.Add (new GradientStop (0, startColor));
+			Stops.Add (new GradientStop (1, endColor));
+		}
 	}
 }

@@ -9,6 +9,8 @@ namespace NGraphics
 	public struct Point
 	{
 		public static readonly Point Zero = new Point (0, 0);
+		public static readonly Point OneX = new Point (1, 0);
+		public static readonly Point OneY = new Point (0, 1);
 
 		public double X;
 		public double Y;

@@ -40,6 +40,7 @@
     <Compile Include="ReadmeTests.cs" />
     <Compile Include="TransformTests.cs" />
     <Compile Include="ColorsToImageTests.cs" />
+    <Compile Include="BrushTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
