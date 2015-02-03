@@ -2,7 +2,8 @@
 <package >
   <metadata>
     <id>NGraphics</id>
-    <version>0.1.4</version>
+    <version>0.1.5</version>
+    <releaseNotes>More convenience functions</releaseNotes>
     <title>NGraphics</title>
     <authors>Frank A. Krueger</authors>
     <owners>Frank A. Krueger</owners>
@@ -10,8 +11,7 @@
     <projectUrl>https://github.com/praeclarum/NGraphics</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/praeclarum/NGraphics/master/TestResults/Icon-Mac.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode graphics using high quality native renderers.</description>
-    <releaseNotes>Remove prerelease flag</releaseNotes>
+    <description>NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode graphics using high quality native renderers.</description>    
     <copyright>Copyright 2015 Frank A. Krueger</copyright>
     <tags>graphics pcl vector drawing ios mac android xamarin imaging draw image svg png</tags>
   </metadata>
@@ -21,12 +21,12 @@
     <file src="NGraphics/bin/Release/NGraphics.xml"     target="lib\portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10\NGraphics.xml" />
     <file src="NGraphics/bin/Release/NGraphics.dll.mdb" target="lib\portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10\NGraphics.dll.mdb" />   
     <!-- Xamarin.Mac -->
-    <file src="NGraphics/bin/Release/NGraphics.dll"                       target="lib\Xamarin.Mac10\NGraphics.dll" />
-    <file src="NGraphics/bin/Release/NGraphics.xml"                       target="lib\Xamarin.Mac10\NGraphics.xml" />
-    <file src="NGraphics/bin/Release/NGraphics.dll.mdb"                   target="lib\Xamarin.Mac10\NGraphics.dll.mdb" />   
-    <file src="Platforms/NGraphics.Mac/bin/Release/NGraphics.Mac.dll"     target="lib\Xamarin.Mac10\NGraphics.Mac.dll" />
-    <file src="Platforms/NGraphics.Mac/bin/Release/NGraphics.Mac.xml"     target="lib\Xamarin.Mac10\NGraphics.Mac.xml" />
-    <file src="Platforms/NGraphics.Mac/bin/Release/NGraphics.Mac.dll.mdb" target="lib\Xamarin.Mac10\NGraphics.Mac.dll.mdb" />   
+    <file src="NGraphics/bin/Release/NGraphics.dll"                       target="lib\Xamarin.Mac20\NGraphics.dll" />
+    <file src="NGraphics/bin/Release/NGraphics.xml"                       target="lib\Xamarin.Mac20\NGraphics.xml" />
+    <file src="NGraphics/bin/Release/NGraphics.dll.mdb"                   target="lib\Xamarin.Mac20\NGraphics.dll.mdb" />   
+    <file src="Platforms/NGraphics.Mac/bin/Release/NGraphics.Mac.dll"     target="lib\Xamarin.Mac20\NGraphics.Mac.dll" />
+    <file src="Platforms/NGraphics.Mac/bin/Release/NGraphics.Mac.xml"     target="lib\Xamarin.Mac20\NGraphics.Mac.xml" />
+    <file src="Platforms/NGraphics.Mac/bin/Release/NGraphics.Mac.dll.mdb" target="lib\Xamarin.Mac20\NGraphics.Mac.dll.mdb" />   
     <!-- Xamarin.iOS -->
     <file src="NGraphics/bin/Release/NGraphics.dll"                       target="lib\Xamarin.iOS10\NGraphics.dll" />
     <file src="NGraphics/bin/Release/NGraphics.xml"                       target="lib\Xamarin.iOS10\NGraphics.xml" />
