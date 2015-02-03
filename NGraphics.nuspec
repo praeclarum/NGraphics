@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>NGraphics</id>
-    <version>0.1.2-alpha</version>
+    <version>0.1.3-alpha</version>
     <title>NGraphics</title>
     <authors>Frank A. Krueger</authors>
     <owners>Frank A. Krueger</owners>
@@ -11,7 +11,7 @@
     <iconUrl>https://raw.githubusercontent.com/praeclarum/NGraphics/master/TestResults/Icon-Mac.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode graphics using high quality native renderers.</description>
-    <releaseNotes>Fix non transparent ImageCanvases</releaseNotes>
+    <releaseNotes>More convenience functions</releaseNotes>
     <copyright>Copyright 2015 Frank A. Krueger</copyright>
     <tags>graphics pcl vector drawing ios mac android xamarin imaging draw image svg png</tags>
   </metadata>
