@@ -41,6 +41,7 @@
     <Compile Include="TransformTests.cs" />
     <Compile Include="ColorsToImageTests.cs" />
     <Compile Include="BrushTests.cs" />
+    <Compile Include="ColorTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
