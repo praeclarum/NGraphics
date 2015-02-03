@@ -30,6 +30,15 @@ namespace NGraphics.Test
 	public class ImageCanvasTest : PlatformTest
 	{
 		[Test]
+		public void Line ()
+		{
+			var s = Platform.CreateImageCanvas (new Size (100), transparency: true);
+			s.DrawLine (10, 20, 80, 70, Colors.DarkGray, 5);
+			var i = s.GetImage ();
+			var path = GetPath ("ImageCanvas.Line");
+			i.SaveAsPng (path);
+		}
+		[Test]
 		public void Ellipse ()
 		{
 			var p = Platform;

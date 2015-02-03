@@ -85,5 +85,27 @@ namespace NGraphics
 		{
 			canvas.DrawEllipse (frame, pen: new Pen (color, width));
 		}
+
+		public static void DrawLine (this ICanvas canvas, Point start, Point end, Pen pen)
+		{
+			var p = new Path { Pen = pen };
+			p.MoveTo (start);
+			p.LineTo (end);
+			p.Draw (canvas);				
+		}
+		public static void DrawLine (this ICanvas canvas, Point start, Point end, Color color, double width = 1.0)
+		{
+			var p = new Path { Pen = new Pen (color, width) };
+			p.MoveTo (start);
+			p.LineTo (end);
+			p.Draw (canvas);				
+		}
+		public static void DrawLine (this ICanvas canvas, double x1, double y1, double x2, double y2, Color color, double width = 1.0)
+		{
+			var p = new Path { Pen = new Pen (color, width) };
+			p.MoveTo (x1, y1);
+			p.LineTo (x2, y2);
+			p.Draw (canvas);				
+		}
 	}
 }
