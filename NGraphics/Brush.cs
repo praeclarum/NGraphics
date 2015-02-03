@@ -39,20 +39,56 @@ namespace NGraphics
 	{
 		public double Offset;
 		public Color Color;
+		public GradientStop ()
+		{			
+		}
+		public GradientStop (double offset, Color color)
+		{
+			Offset = offset;
+			Color = color;
+		}
 	}
 
-	public class RadialGradientBrush : Brush
+	public abstract class GradientBrush : Brush
+	{
+		public readonly List<GradientStop> Stops = new List<GradientStop> ();
+		public void AddStop (double offset, Color color)
+		{
+			Stops.Add (new GradientStop (offset, color));
+		}
+	}
+
+	public class RadialGradientBrush : GradientBrush
 	{
 		public Point RelativeCenter;
 		public Point RelativeFocus;
 		public double RelativeRadius;
-		public readonly List<GradientStop> Stops = new List<GradientStop> ();
+
+		public RadialGradientBrush ()
+		{
+		}
+		public RadialGradientBrush (Point relCenter, double relRadius, params GradientStop[] stops)
+		{
+			RelativeCenter = relCenter;
+			RelativeFocus = relCenter;
+			RelativeRadius = relRadius;
+			Stops.AddRange (stops);
+		}
 	}
 
-	public class LinearGradientBrush : Brush
+	public class LinearGradientBrush : GradientBrush
 	{
 		public Point RelativeStart;
 		public Point RelativeEnd;
-		public readonly List<GradientStop> Stops = new List<GradientStop> ();
+
+		public LinearGradientBrush ()
+		{
+		}
+		public LinearGradientBrush (Point relStart, Point relEnd, params GradientStop[] stops)
+		{
+			RelativeStart = relStart;
+			RelativeEnd = relEnd;
+			Stops.AddRange (stops);
+		}
 	}
 }

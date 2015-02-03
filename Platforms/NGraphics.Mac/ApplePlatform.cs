@@ -89,8 +89,13 @@ namespace NGraphics
 
 	public class CGImageImage : IImage
 	{
-		CGImage image;
+		readonly CGImage image;
 		readonly double scale;
+		readonly Size size;
+
+		public CGImage Image { get { return image; } }
+		public double Scale { get { return scale; } }
+		public Size Size { get { return size; } }
 
 		public CGImageImage (CGImage image, double scale)
 		{
@@ -98,6 +103,7 @@ namespace NGraphics
 				throw new ArgumentNullException ("image");
 			this.image = image;
 			this.scale = scale;
+			this.size = new Size (image.Width / scale, image.Height / scale);
 		}
 
 		public void SaveAsPng (string path)
@@ -117,6 +123,8 @@ namespace NGraphics
 	public class CGContextCanvas : ICanvas
 	{
 		readonly CGContext context;
+
+		public CGContext Context { get { return context; } }
 
 		public CGContextCanvas (CGContext context)
 		{
@@ -369,10 +377,35 @@ namespace NGraphics
 		{
 			return new Point (point.X, point.Y);
 		}
+		public static Size GetSize (CGSize size)
+		{
+			return new Size (size.Width, size.Height);
+		}
+		public static CGSize GetCGSize (Size size)
+		{
+			return new CGSize ((nfloat)size.Width, (nfloat)size.Height);
+		}
 		public static CGRect GetCGRect (Rect frame)
 		{
 			return new CGRect ((nfloat)frame.X, (nfloat)frame.Y, (nfloat)frame.Width, (nfloat)frame.Height);
 		}
+		public static Rect GetRect (CGRect rect)
+		{
+			return new Rect (rect.X, rect.Y, rect.Width, rect.Height);
+		}
+		#if __IOS__
+		public static UIKit.UIImage GetUIImage (this IImage image)
+		{
+			var c = (CGImageImage)image;
+			return new UIKit.UIImage (c.Image, (nfloat)c.Scale, UIKit.UIImageOrientation.Up);
+		}
+		#else
+		public static AppKit.NSImage GetNSImage (this IImage image)
+		{
+			var c = (CGImageImage)image;
+			return new AppKit.NSImage (c.Image, Conversions.GetCGSize (c.Size));
+		}
+		#endif
 	}
 }
 

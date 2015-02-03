@@ -56,6 +56,10 @@ namespace NGraphics
 		{
 			canvas.DrawRectangle (frame, brush: new SolidBrush (color));
 		}
+		public static void FillRectangle (this ICanvas canvas, Rect frame, Brush brush)
+		{
+			canvas.DrawRectangle (frame, brush: brush);
+		}
 		public static void StrokeRectangle (this ICanvas canvas, Rect frame, Color color, double width = 1.0)
 		{
 			canvas.DrawRectangle (frame, pen: new Pen (color, width));
@@ -73,10 +77,13 @@ namespace NGraphics
 		{
 			canvas.DrawEllipse (frame, brush: new SolidBrush (color));
 		}
+		public static void FillEllipse (this ICanvas canvas, Rect frame, Brush brush)
+		{
+			canvas.DrawEllipse (frame, brush: brush);
+		}
 		public static void StrokeEllipse (this ICanvas canvas, Rect frame, Color color, double width = 1.0)
 		{
 			canvas.DrawEllipse (frame, pen: new Pen (color, width));
 		}
-
 	}
 }

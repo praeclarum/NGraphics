@@ -38,7 +38,14 @@ namespace NGraphics
 			B = (byte)(Math.Min (255, Math.Max (0, (int)(blue * 255 + 0.5))));
 			A = (byte)(Math.Min (255, Math.Max (0, (int)(alpha * 255 + 0.5))));
 		}
-		public Color (double white, double alpha)
+		public Color (double red, double green, double blue)
+		{
+			R = (byte)(Math.Min (255, Math.Max (0, (int)(red * 255 + 0.5))));
+			G = (byte)(Math.Min (255, Math.Max (0, (int)(green * 255 + 0.5))));
+			B = (byte)(Math.Min (255, Math.Max (0, (int)(blue * 255 + 0.5))));
+			A = 255;
+		}
+		public Color (double white, double alpha = 1.0)
 		{
 			var W = (byte)(Math.Min (255, Math.Max (0, (int)(white * 255 + 0.5))));
 			R = W;

@@ -16,6 +16,12 @@ namespace NGraphics
 		public Point Position { get { return new Point (X, Y); } }
 		public Size Size { get { return new Size (Width, Height); } }
 
+		public Point TopLeft { get { return new Point (X, Y); } }
+		public Point BottomLeft { get { return new Point (X, Y + Height); } }
+		public Point Center { get { return new Point (X + Width/2, Y + Height/2); } }
+		public Point TopRight { get { return new Point (X + Width, Y); } }
+		public Point BottomRight { get { return new Point (X + Width, Y + Height); } }
+
 		public Rect (double x, double y, double width, double height)
 		{
 			X = x;
@@ -30,6 +36,11 @@ namespace NGraphics
 		public Rect (Size size)
 			: this (0, 0, size.Width, size.Height)
 		{
+		}
+
+		public void Inflate (double dx, double dy)
+		{
+
 		}
 
 		public Rect Union (Point p)
