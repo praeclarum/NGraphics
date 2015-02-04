@@ -40,7 +40,10 @@ namespace NGraphics
 
 		public void Inflate (double dx, double dy)
 		{
-
+			X -= dx;
+			Y -= dy;
+			Width += 2*dx;
+			Height += 2*dy;
 		}
 
 		public Rect Union (Point p)
