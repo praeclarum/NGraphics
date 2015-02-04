@@ -77,6 +77,15 @@ namespace NGraphics
 			return new Point (a.X + v.X, a.Y + v.Y);
 		}
 
+		public static Point operator - (Point a, Size v)
+		{
+			return new Point (a.X - v.Width, a.Y - v.Height);
+		}
+		public static Point operator + (Point a, Size v)
+		{
+			return new Point (a.X + v.Width, a.Y + v.Height);
+		}
+
 		public static Point operator - (Point a, double v)
 		{
 			return new Point (a.X - v, a.Y - v);
