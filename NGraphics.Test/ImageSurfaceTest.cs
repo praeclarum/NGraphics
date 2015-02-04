@@ -30,13 +30,28 @@ namespace NGraphics.Test
 	public class ImageCanvasTest : PlatformTest
 	{
 		[Test]
+		public void TriWithRadGrad ()
+		{
+			var canvas = Platform.CreateImageCanvas (new Size (100), transparency: true);
+			var size = new Size (100);
+			var b = new RadialGradientBrush (
+				new Point (0.5, 1), 1,
+				Colors.Yellow, Colors.Blue);
+			var p = new Path ();
+			p.MoveTo (0, 0);
+			p.LineTo (size.Width, 0);
+			p.LineTo (size.Width / 2, size.Height);
+			p.Close ();
+			p.Brush = b;
+			p.Draw (canvas);
+			canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.TriWithRadGrad"));
+		}
+		[Test]
 		public void Line ()
 		{
-			var s = Platform.CreateImageCanvas (new Size (100), transparency: true);
-			s.DrawLine (10, 20, 80, 70, Colors.DarkGray, 5);
-			var i = s.GetImage ();
-			var path = GetPath ("ImageCanvas.Line");
-			i.SaveAsPng (path);
+			var canvas = Platform.CreateImageCanvas (new Size (100), transparency: true);
+			canvas.DrawLine (10, 20, 80, 70, Colors.DarkGray, 5);
+			canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.Line"));
 		}
 		[Test]
 		public void Ellipse ()

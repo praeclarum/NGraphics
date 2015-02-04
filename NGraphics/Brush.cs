@@ -74,6 +74,14 @@ namespace NGraphics
 			RelativeRadius = relRadius;
 			Stops.AddRange (stops);
 		}
+		public RadialGradientBrush (Point relCenter, double relRadius, Color startColor, Color endColor)
+		{
+			RelativeCenter = relCenter;
+			RelativeFocus = relCenter;
+			RelativeRadius = relRadius;
+			Stops.Add (new GradientStop (0, startColor));
+			Stops.Add (new GradientStop (1, endColor));
+		}
 	}
 
 	public class LinearGradientBrush : GradientBrush
