@@ -7,6 +7,17 @@ namespace NGraphics.Test
 	public class PrimitivesTest
 	{
 		[Test]
+		public void RectInflate ()
+		{
+			var r = new Rect (new Size (10, 20));
+			r.Inflate (4, 6);
+			Assert.AreEqual (-4, r.X);
+			Assert.AreEqual (-6, r.Y);
+			Assert.AreEqual (18, r.Width);
+			Assert.AreEqual (32, r.Height);
+		}
+
+		[Test]
 		public void PointMinusScalar ()
 		{
 			var r = new Point (1, 2) - 3;
