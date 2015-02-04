@@ -175,6 +175,39 @@ namespace NGraphics
 			Add (new ClosePath ());
 		}
 
+		public bool Contains (Path path, Point point)
+		{
+			var verts = new List<Point> ();
+			foreach (var o in Operations) {
+				var mo = o as MoveTo;
+				if (mo != null) {
+					verts.Add (mo.Point);
+					continue;
+				}
+				var lt = o as LineTo;
+				if (lt != null) {
+					verts.Add (lt.Point);
+					continue;
+				}
+				var cp = o as ClosePath;
+				if (cp != null) {
+					continue;
+				}
+				throw new NotSupportedException ("Contains does not support " + o);
+			}
+			int i, j;
+			var c = false;
+			var nverts = verts.Count;
+			var testx = point.X;
+			var testy = point.Y;
+			for (i = 0, j = nverts-1; i < nverts; j = i++) {
+				if ( ((verts[i].Y>testy) != (verts[j].Y>testy)) &&
+					(testx < (verts[j].X-verts[i].X) * (testy-verts[i].Y) / (verts[j].Y-verts[i].Y) + verts[i].X) )
+					c = !c;
+			}
+			return c;
+		}
+
 		public override string ToString ()
 		{
 			return string.Format (CultureInfo.InvariantCulture, "Path ([{0}])", Operations.Count);
