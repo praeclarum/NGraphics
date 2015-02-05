@@ -2,6 +2,8 @@
 using System;
 using NGraphics;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 
 namespace NGraphics.Test
 {
@@ -24,11 +26,64 @@ namespace NGraphics.Test
 			Debug.WriteLine (path);
 			return path;
 		}
+		public Stream OpenResource (string path)
+		{
+			if (string.IsNullOrEmpty (path))
+				throw new ArgumentException ("path");
+			var ty = typeof(SvgReaderTests);
+			var ti = ty.GetTypeInfo ();
+			var assembly = ti.Assembly;
+			var resources = assembly.GetManifestResourceNames ();
+			return assembly.GetManifestResourceStream ("NGraphics.Test.Inputs." + path);
+		}
+		public IImage GetResourceImage (string name)
+		{
+			using (var s = OpenResource (name)) {
+				return Platform.LoadImage (s);
+			}
+		}
 	}
 
 	[TestFixture]
 	public class ImageCanvasTest : PlatformTest
 	{
+		[Test]
+		public void BlurImage ()
+		{
+			var img = Platform.CreateImage (
+				          new[] { Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow },
+				          2);
+			var canvas = Platform.CreateImageCanvas (new Size (100), transparency: true);
+			canvas.DrawImage (img, new Rect (new Size (100)));
+			canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.BlurImage"));
+		}
+
+		[Test]
+		public void BlurImage2 ()
+		{
+			var img = Platform.CreateImage (
+				new[] { Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow },
+				2);
+			var canvas = Platform.CreateImageCanvas (new Size (200, 100), transparency: true);
+			canvas.DrawImage (img, new Rect (new Size (50)));
+			canvas.DrawImage (img, new Rect (new Point (0, 50), new Size (50)));
+			canvas.DrawImage (img, new Rect (new Point (50, 0), new Size (150, 50)));
+			canvas.DrawImage (img, new Rect (new Point (50, 50), new Size (150, 50)));
+			canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.BlurImage2"));
+		}
+
+		[Test]
+		public void Cats ()
+		{
+			var img = GetResourceImage ("cat.png");
+			var canvas = Platform.CreateImageCanvas (new Size (100, 200), transparency: true);
+			canvas.DrawImage (img, new Rect (new Size (50)));
+			canvas.DrawImage (img, new Rect (new Point (50, 0), new Size (50)));
+			canvas.DrawImage (img, new Rect (new Point (0, 50), new Size (50, 150)));
+			canvas.DrawImage (img, new Rect (new Point (50, 50), new Size (50, 150)));
+			canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.Cats"));
+		}
+
 		[Test]
 		public void TriWithRadGrad ()
 		{

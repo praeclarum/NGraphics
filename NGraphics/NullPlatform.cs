@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace NGraphics
 {
@@ -13,6 +14,15 @@ namespace NGraphics
 		}
 
 		public IImage CreateImage (Color[] colors, int width, double scale = 1.0)
+		{
+			return new NullImage ();
+		}
+
+		public IImage LoadImage (Stream stream)
+		{
+			return new NullImage ();
+		}
+		public IImage LoadImage (string path)
 		{
 			return new NullImage ();
 		}
@@ -42,6 +52,9 @@ namespace NGraphics
 			{
 			}
 			public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)
+			{
+			}
+			public void DrawImage (IImage image, Rect frame)
 			{
 			}
 		}

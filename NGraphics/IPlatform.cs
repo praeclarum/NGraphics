@@ -1,6 +1,5 @@
 using System;
-using System.Linq;
-using System.Reflection;
+using System.IO;
 
 namespace NGraphics
 {
@@ -8,6 +7,8 @@ namespace NGraphics
 	{
 		string Name { get; }
 		IImageCanvas CreateImageCanvas (Size size, double scale = 1.0, bool transparency = true);
+		IImage LoadImage (string path);
+		IImage LoadImage (Stream stream);
 		IImage CreateImage (Color[] colors, int pixelWidth, double scale = 1.0);
 	}
 

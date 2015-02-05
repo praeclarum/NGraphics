@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace NGraphics
 {
-
 	public class GraphicCanvas : ICanvas
 	{
 		public Graphic Graphic { get; private set; }
@@ -41,6 +40,10 @@ namespace NGraphics
 		public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)
 		{
 			Graphic.Children.Add (new Ellipse (frame, pen, brush));
+		}
+		public void DrawImage (IImage image, Rect frame)
+		{
+			throw new NotImplementedException ();
 		}
 	}
 }

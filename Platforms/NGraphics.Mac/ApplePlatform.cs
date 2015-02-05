@@ -5,6 +5,8 @@ using ImageIO;
 using Foundation;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
 
 namespace NGraphics
 {
@@ -62,6 +64,29 @@ namespace NGraphics
 			}
 			var image = bitmap.ToImage (); 
 			return new CGImageImage (image, scale);
+		}
+		public IImage LoadImage (Stream stream)
+		{
+			var mem = new MemoryStream ((int)stream.Length);
+			stream.CopyTo (mem);
+			unsafe {
+				fixed (byte *x = mem.GetBuffer ()) {
+					var provider = new CGDataProvider (new IntPtr (x), (int)mem.Length, false);
+					var image = CGImage.FromPNG (provider, null, false, CGColorRenderingIntent.Default);
+					return new CGImageImage (image, 1);
+				}
+			}
+		}
+		public IImage LoadImage (string path)
+		{
+			var provider = new CGDataProvider (path);
+			CGImage image;
+			if (System.IO.Path.GetExtension (path).ToLowerInvariant () == ".png") {				
+				image = CGImage.FromPNG (provider, null, false, CGColorRenderingIntent.Default);
+			} else {
+				image = CGImage.FromJPEG (provider, null, false, CGColorRenderingIntent.Default);
+			}
+			return new CGImageImage (image, 1);
 		}
 	}
 
@@ -129,6 +154,7 @@ namespace NGraphics
 		public CGContextCanvas (CGContext context)
 		{
 			this.context = context;
+//			context.InterpolationQuality = CGInterpolationQuality.High;
 			context.TextMatrix = CGAffineTransform.MakeScale (1, -1);
 		}
 
@@ -334,6 +360,20 @@ namespace NGraphics
 				context.AddEllipseInRect (Conversions.GetCGRect (frame));
 				return frame;
 			}, pen, brush);
+		}
+		public void DrawImage (IImage image, Rect frame)
+		{
+			var cgi = image as CGImageImage;
+
+			if (cgi != null) {
+				var i = cgi.Image;
+				var h = frame.Height;
+				context.SaveState ();
+				context.TranslateCTM ((nfloat)frame.X, (nfloat)(h + frame.Y));
+				context.ScaleCTM (1, -1);
+				context.DrawImage (new CGRect (0, 0, (nfloat)frame.Width, (nfloat)frame.Height), cgi.Image);
+				context.RestoreState ();
+			}
 		}
 
 		CGPathDrawingMode SetPenAndBrush (Pen pen, Brush brush)

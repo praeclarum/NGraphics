@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Android.Graphics;
 using Android.Text;
+using System.IO;
 
 namespace NGraphics
 {
@@ -18,6 +19,18 @@ namespace NGraphics
 				bitmap.EraseColor (Colors.Black.Argb);
 			}
 			return new BitmapCanvas (bitmap, scale);
+		}
+
+		public IImage LoadImage (Stream stream)
+		{
+			var bitmap = BitmapFactory.DecodeStream (stream);
+			return new BitmapImage (bitmap);
+		}
+
+		public IImage LoadImage (string path)
+		{
+			var bitmap = BitmapFactory.DecodeFile (path);
+			return new BitmapImage (bitmap);
 		}
 
 		public IImage CreateImage (Color[] colors, int width, double scale = 1.0)
@@ -37,6 +50,12 @@ namespace NGraphics
 	{
 		readonly Bitmap bitmap;
 //		readonly double scale;
+
+		public Bitmap Bitmap {
+			get {
+				return bitmap;
+			}
+		}
 
 		public BitmapImage (Bitmap bitmap, double scale = 1.0)
 		{
@@ -132,6 +151,12 @@ namespace NGraphics
 			var typeface = Typeface.Create (font.Family, TypefaceStyle.Normal);
 			paint.SetTypeface (typeface);
 
+			return paint;
+		}
+		Paint GetImagePaint ()
+		{
+			var paint = new Paint (PaintFlags.AntiAlias);
+			paint.FilterBitmap = true;
 			return paint;
 		}
 		Paint GetPenPaint (Pen pen)
@@ -318,28 +343,36 @@ namespace NGraphics
 		{
 			if (brush != null) {
 				var paint = GetBrushPaint (brush, frame);
-				graphics.DrawOval (Conversions.GetRectangle (frame), paint);
+				graphics.DrawOval (Conversions.GetRectF (frame), paint);
 			}
 			if (pen != null) {
 				var paint = GetPenPaint (pen);
-				graphics.DrawOval (Conversions.GetRectangle (frame), paint);
+				graphics.DrawOval (Conversions.GetRectF (frame), paint);
+			}
+		}
+		public void DrawImage (IImage image, Rect frame)
+		{
+			var ii = image as BitmapImage;
+			if (ii != null) {
+				var paint = GetImagePaint ();
+				var isize = new Size (ii.Bitmap.Width, ii.Bitmap.Height);
+				var scale = frame.Size / isize;
+				var m = new Matrix ();
+				m.PreTranslate ((float)frame.X, (float)frame.Y);
+				m.PreScale ((float)scale.Width, (float)scale.Height);
+				graphics.DrawBitmap (ii.Bitmap, m, paint);
 			}
 		}
 	}
 
 	public static class Conversions
 	{
-		public static System.Drawing.Color GetColor (this Color color)
-		{
-			return System.Drawing.Color.FromArgb (color.A, color.R, color.G, color.B);
-		}
-
-		public static PointF ToPointF (Point point)
+		public static PointF GetPointF (this Point point)
         {
             return new PointF ((float)point.X, (float)point.Y);
         }
 
-		public static RectF GetRectangle (Rect frame)
+		public static RectF GetRectF (this Rect frame)
 		{
 			return new RectF ((float)frame.X, (float)frame.Y, (float)(frame.X + frame.Width), (float)(frame.Y + frame.Height));
 		}

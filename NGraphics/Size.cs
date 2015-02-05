@@ -27,6 +27,10 @@ namespace NGraphics
 			Height = size;
 		}
 
+		public static Size operator * (Size a, Size b)
+		{
+			return new Size (a.Width * b.Width, a.Height * b.Height);
+		}
 		public static Size operator * (Size a, double v)
 		{
 			return new Size (a.Width * v, a.Height * v);
@@ -34,6 +38,10 @@ namespace NGraphics
 		public static Size operator * (double v, Size a)
 		{
 			return new Size (a.Width * v, a.Height * v);
+		}
+		public static Size operator / (Size a, Size b)
+		{
+			return new Size (a.Width / b.Width, a.Height / b.Height);
 		}
 		public static Size operator / (Size a, double v)
 		{

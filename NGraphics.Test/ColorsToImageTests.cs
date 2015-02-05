@@ -9,6 +9,15 @@ namespace NGraphics.Test
 	public class ColorsToImageTests : PlatformTest
 	{
 		[Test]
+		public void RGBY ()
+		{
+			var image = Platform.CreateImage (
+				new[] { Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow },
+				2);
+			image.SaveAsPng (GetPath ("ColorToImage.RGBY.png"));
+		}
+
+		[Test]
 		public void Rand ()
 		{
 			var rand = new Random (1);

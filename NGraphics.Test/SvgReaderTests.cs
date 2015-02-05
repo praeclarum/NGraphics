@@ -8,17 +8,6 @@ namespace NGraphics.Test
 	[TestFixture]
 	public class SvgReaderTests : PlatformTest
 	{
-		Stream OpenResource (string path)
-		{
-			if (string.IsNullOrEmpty (path))
-				throw new ArgumentException ("path");
-			var ty = typeof(SvgReaderTests);
-			var ti = ty.GetTypeInfo ();
-			var assembly = ti.Assembly;
-			var resources = assembly.GetManifestResourceNames ();
-			return assembly.GetManifestResourceStream ("NGraphics.Test.Inputs." + path);
-		}
-
 		Graphic Read (string path)
 		{
 			using (var s = OpenResource (path)) {

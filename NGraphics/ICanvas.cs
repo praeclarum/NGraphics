@@ -14,6 +14,7 @@ namespace NGraphics
 		void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null);
 		void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null);
 		void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null);
+		void DrawImage (IImage image, Rect frame);
 	}
 
 	public static class CanvasEx

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
+using System.IO;
 
 namespace NGraphics
 {
@@ -16,7 +17,19 @@ namespace NGraphics
 			var pixelHeight = (int)Math.Ceiling (size.Height * scale);
 			var format = transparency ? PixelFormat.Format32bppPArgb : PixelFormat.Format24bppRgb;
 			var bitmap = new Bitmap (pixelWidth, pixelHeight, format);
-			return new BitmapSurface (bitmap, scale);
+			return new BitmapCanvas (bitmap, scale);
+		}
+
+		public IImage LoadImage (Stream stream)
+		{
+			var image = Image.FromStream (stream);
+			return new ImageImage (image);
+		}
+
+		public IImage LoadImage (string path)
+		{
+			var image = Image.FromFile (path);
+			return new ImageImage (image);
 		}
 
 		public IImage CreateImage (Color[] colors, int width, double scale = 1.0)
@@ -30,36 +43,37 @@ namespace NGraphics
 					bitmap = new Bitmap (pixelWidth, pixelHeight, pixelWidth*4, format, new IntPtr (c));
 				}
 			}
-			return new BitmapImage (bitmap);
+			return new ImageImage (bitmap);
 		}
 	}
 
-	public class BitmapImage : IImage
+	public class ImageImage : IImage
 	{
-		Bitmap bitmap;
+		readonly Image image;
 
-		public BitmapImage (Bitmap bitmap)
+		public Image Image {
+			get {
+				return image;
+			}
+		}
+
+		public ImageImage (Image image)
 		{
-			this.bitmap = bitmap;
+			this.image = image;
 		}
 
 		public void SaveAsPng (string path)
 		{
-			bitmap.Save (path, ImageFormat.Png);
+			image.Save (path, ImageFormat.Png);
 		}
-
-//		public void Draw (ISurface surface)
-//		{
-//			surface.DrawImage ();
-//		}
 	}
 
-	public class BitmapSurface : GraphicsSurface, IImageCanvas
+	public class BitmapCanvas : GraphicsCanvas, IImageCanvas
 	{
-		Bitmap bitmap;
+		readonly Bitmap bitmap;
 		readonly double scale;
 
-		public BitmapSurface (Bitmap bitmap, double scale = 1.0)
+		public BitmapCanvas (Bitmap bitmap, double scale = 1.0)
 			: base (Graphics.FromImage (bitmap))
 		{
 			this.bitmap = bitmap;
@@ -70,16 +84,16 @@ namespace NGraphics
 
 		public IImage GetImage ()
 		{
-			return new BitmapImage (bitmap);
+			return new ImageImage (bitmap);
 		}
 	}
 
-	public class GraphicsSurface : ICanvas
+	public class GraphicsCanvas : ICanvas
 	{
 		protected readonly Graphics graphics;
 		readonly Stack<GraphicsState> stateStack = new Stack<GraphicsState> ();
 
-		public GraphicsSurface (Graphics graphics)
+		public GraphicsCanvas (Graphics graphics)
 		{
 			this.graphics = graphics;
 
@@ -140,7 +154,7 @@ namespace NGraphics
 			var sz = graphics.MeasureString (text, sdfont);
 			var point = frame.Position;
             var fr = new Rect (point, new Size (sz.Width, sz.Height));
-            graphics.DrawString (text, sdfont, Conversions.GetBrush (brush, fr), Conversions.ToPointF (point - new Point (0, sdfont.Height)));
+            graphics.DrawString (text, sdfont, Conversions.GetBrush (brush, fr), Conversions.GetPointF (point - new Point (0, sdfont.Height)));
 		}
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 		{
@@ -161,7 +175,7 @@ namespace NGraphics
 					var lt = op as LineTo;
 					if (lt != null) {
 						var p = lt.Point;
-						path.AddLine (Conversions.ToPointF (position), Conversions.ToPointF (p));
+						path.AddLine (Conversions.GetPointF (position), Conversions.GetPointF (p));
 						position = p;
                         bb.Add (p);
                         continue;
@@ -169,7 +183,7 @@ namespace NGraphics
                     var at = op as ArcTo;
                     if (at != null) {
                         var p = at.Point;
-                        path.AddLine (Conversions.ToPointF (position), Conversions.ToPointF (p));
+                        path.AddLine (Conversions.GetPointF (position), Conversions.GetPointF (p));
                         position = p;
                         bb.Add (p);
                         continue;
@@ -179,8 +193,8 @@ namespace NGraphics
                         var p = ct.Point;
                         var c1 = ct.Control1;
                         var c2 = ct.Control2;
-                        path.AddBezier (Conversions.ToPointF (position), Conversions.ToPointF (c1),
-                            Conversions.ToPointF (c2), Conversions.ToPointF (p));
+                        path.AddBezier (Conversions.GetPointF (position), Conversions.GetPointF (c1),
+                            Conversions.GetPointF (c2), Conversions.GetPointF (p));
                         position = p;
                         bb.Add (p);
                         bb.Add (c1);
@@ -201,7 +215,7 @@ namespace NGraphics
 					graphics.FillPath (brush.GetBrush (frame), path);
 				}
 				if (pen != null) {
-					var r = Conversions.GetRectangle (frame);
+					var r = Conversions.GetRectangleF (frame);
 					graphics.DrawPath (pen.GetPen (), path);
 				}
 			}
@@ -209,20 +223,27 @@ namespace NGraphics
 		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
 		{
 			if (brush != null) {
-				graphics.FillRectangle (brush.GetBrush (frame), Conversions.GetRectangle (frame));
+				graphics.FillRectangle (brush.GetBrush (frame), Conversions.GetRectangleF (frame));
 			}
 			if (pen != null) {
-				var r = Conversions.GetRectangle (frame);
+				var r = Conversions.GetRectangleF (frame);
 				graphics.DrawRectangle (pen.GetPen (), r.X, r.Y, r.Width, r.Height);
 			}
 		}
 		public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)
 		{
 			if (brush != null) {
-				graphics.FillEllipse (brush.GetBrush (frame), Conversions.GetRectangle (frame));
+				graphics.FillEllipse (brush.GetBrush (frame), Conversions.GetRectangleF (frame));
 			}
 			if (pen != null) {
-				graphics.DrawEllipse (pen.GetPen (), Conversions.GetRectangle (frame));
+				graphics.DrawEllipse (pen.GetPen (), Conversions.GetRectangleF (frame));
+			}
+		}
+		public void DrawImage (IImage image, Rect frame)
+		{
+			var ii = image as ImageImage;
+			if (ii != null) {
+                graphics.DrawImage (ii.Image, Conversions.GetRectangleF (frame));
 			}
 		}
 	}
@@ -294,7 +315,7 @@ namespace NGraphics
             if (lgb != null) {
                 var s = frame.Position + lgb.RelativeStart * frame.Size;
                 var e = frame.Position + lgb.RelativeEnd * frame.Size;
-                var b = new System.Drawing.Drawing2D.LinearGradientBrush (ToPointF (s), ToPointF (e), System.Drawing.Color.Black, System.Drawing.Color.Black);
+                var b = new System.Drawing.Drawing2D.LinearGradientBrush (GetPointF (s), GetPointF (e), System.Drawing.Color.Black, System.Drawing.Color.Black);
                 var bb = BuildBlend (lgb.Stops);
                 if (bb != null) {
                     b.InterpolationColors = bb;
@@ -307,7 +328,7 @@ namespace NGraphics
                 var r = rgb.RelativeRadius * frame.Size.Max;
                 var c = frame.Position + rgb.RelativeCenter * frame.Size;
                 var path = new GraphicsPath ();
-                path.AddEllipse (GetRectangle (new Rect (c - r, new Size (2*r))));
+                path.AddEllipse (GetRectangleF (new Rect (c - r, new Size (2*r))));
                 var b = new PathGradientBrush (path);
                 var bb = BuildBlend (rgb.Stops, true);
                 if (bb != null) {
@@ -319,12 +340,12 @@ namespace NGraphics
 			throw new NotImplementedException ("Brush " + brush);
 		}
 
-        public static PointF ToPointF (Point point)
+        public static PointF GetPointF (Point point)
         {
             return new PointF ((float)point.X, (float)point.Y);
         }
 
-		public static RectangleF GetRectangle (Rect frame)
+		public static RectangleF GetRectangleF (Rect frame)
 		{
 			return new RectangleF ((float)frame.X, (float)frame.Y, (float)frame.Width, (float)frame.Height);
 		}
