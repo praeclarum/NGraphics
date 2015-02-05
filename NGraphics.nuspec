@@ -2,8 +2,8 @@
 <package >
   <metadata>
     <id>NGraphics</id>
-    <version>0.1.7</version>
-    <releaseNotes>Convenience functions and fixes</releaseNotes>
+    <version>0.1.8</version>
+    <releaseNotes>Image loading and drawing</releaseNotes>
     <title>NGraphics</title>
     <authors>Frank A. Krueger</authors>
     <owners>Frank A. Krueger</owners>
