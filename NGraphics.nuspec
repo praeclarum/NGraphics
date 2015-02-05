@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>NGraphics</id>
-    <version>0.1.6</version>
+    <version>0.1.7</version>
     <releaseNotes>Convenience functions and fixes</releaseNotes>
     <title>NGraphics</title>
     <authors>Frank A. Krueger</authors>
