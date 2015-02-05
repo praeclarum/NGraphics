@@ -175,7 +175,7 @@ namespace NGraphics
 			Add (new ClosePath ());
 		}
 
-		public bool Contains (Path path, Point point)
+		public bool Contains (Point point)
 		{
 			var verts = new List<Point> ();
 			foreach (var o in Operations) {
