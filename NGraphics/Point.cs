@@ -68,6 +68,10 @@ namespace NGraphics
 			return new Point (a.X / v, a.Y / v);
 		}
 
+		public static Point operator - (Point a)
+		{
+			return new Point (-a.X, -a.Y);
+		}
 		public static Point operator - (Point a, Point v)
 		{
 			return new Point (a.X - v.X, a.Y - v.Y);

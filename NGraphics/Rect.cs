@@ -38,6 +38,11 @@ namespace NGraphics
 		{
 		}
 
+		public void Inflate (Size padding)
+		{
+			Inflate (padding.Width, padding.Height);
+		}
+
 		public void Inflate (double dx, double dy)
 		{
 			X -= dx;
@@ -53,6 +58,18 @@ namespace NGraphics
 			var r = Math.Max (p.X, Right);
 			var b = Math.Max (p.Y, Bottom);
 			return new Rect (x, y, r - x, b - y);
+		}
+
+		public Rect MoveInto (Rect frame)
+		{
+			var r = this;
+			if (r.Right > frame.Right)
+				r.X = frame.Right - r.Width;
+			if (r.X < frame.X) r.X = frame.X;
+			if (r.Bottom > frame.Bottom)
+				r.Y = frame.Bottom - r.Height;
+			if (r.Y < frame.Y) r.Y = frame.Y;
+			return r;
 		}
 
 		public override string ToString ()

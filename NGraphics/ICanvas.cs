@@ -27,15 +27,31 @@ namespace NGraphics
 		{
 			canvas.Transform (new Translate (translation));
 		}
+		public static void Translate (this ICanvas canvas, Point translation)
+		{
+			canvas.Transform (new Translate (translation));
+		}
 		/// <summary>
 		/// Rotate the specified canvas by the given angle (in degrees).
 		/// </summary>
-		/// <param name="canvas">Canvas.</param>
 		/// <param name="angle">Angle in degrees.</param>
 		public static void Rotate (this ICanvas canvas, double angle)
 		{
 			canvas.Transform (new Rotate (angle));
 		}
+		/// <param name="angle">Angle in degrees.</param>
+		public static void Rotate (this ICanvas canvas, double angle, Point point)
+		{
+			canvas.Translate (point);
+			canvas.Rotate (angle);
+			canvas.Translate (-point);
+		}
+		/// <param name="angle">Angle in degrees.</param>
+		public static void Rotate (this ICanvas canvas, double angle, double x, double y)
+		{
+			canvas.Rotate (angle, new Point (x, y));
+		}
+
 		public static void Scale (this ICanvas canvas, double sx, double sy)
 		{
 			canvas.Transform (new Scale (sx, sy));
@@ -44,6 +60,17 @@ namespace NGraphics
 		{
 			canvas.Transform (new Scale (scale));
 		}
+		public static void Scale (this ICanvas canvas, Size scale, Point point)
+		{
+			canvas.Translate (point);
+			canvas.Scale (scale);
+			canvas.Translate (-point);
+		}
+		public static void Scale (this ICanvas canvas, double sx, double sy, double x, double y)
+		{
+			canvas.Scale (new Size (sx, sy), new Point (x, y));
+		}
+
 
 		public static void DrawRectangle (this ICanvas canvas, double x, double y, double width, double height, Pen pen = null, Brush brush = null)
 		{
@@ -85,6 +112,13 @@ namespace NGraphics
 		public static void StrokeEllipse (this ICanvas canvas, Rect frame, Color color, double width = 1.0)
 		{
 			canvas.DrawEllipse (frame, pen: new Pen (color, width));
+		}
+
+		public static void DrawPath (this ICanvas canvas, Action<Path> draw, Pen pen = null, Brush brush = null)
+		{
+			var p = new Path (pen, brush);
+			draw (p);
+			p.Draw (canvas);
 		}
 
 		public static void DrawLine (this ICanvas canvas, Point start, Point end, Pen pen)

@@ -27,6 +27,11 @@ namespace NGraphics
 			Height = size;
 		}
 
+		public static Size operator - (Size a)
+		{
+			return new Size (-a.Width, -a.Height);
+		}
+
 		public static Size operator * (Size a, Size b)
 		{
 			return new Size (a.Width * b.Width, a.Height * b.Height);

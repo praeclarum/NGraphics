@@ -58,6 +58,11 @@ namespace NGraphics
 		{
 			Size = size;
 		}
+		public Translate (Point offset, Transform previous = null)
+			: base (previous)
+		{
+			Size = new Size (offset.X, offset.Y);
+		}
 		public Translate (double dx, double dy, Transform previous = null)
 			: this (new Size (dx, dy), previous)
 		{			

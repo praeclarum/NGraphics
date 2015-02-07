@@ -7,15 +7,20 @@ namespace NGraphics
 	[System.Runtime.InteropServices.StructLayout (System.Runtime.InteropServices.LayoutKind.Sequential)]
 	public struct Color
 	{
-		public readonly byte B;
-		public readonly byte G;
-		public readonly byte R;
-        public readonly byte A;
+		public byte B;
+		public byte G;
+		public byte R;
+        public byte A;
 
-		public double Red { get { return R / 255.0; } }
-		public double Green { get { return G / 255.0; } }
-		public double Blue { get { return B / 255.0; } }
-		public double Alpha { get { return A / 255.0; } }
+		public double Red { get { return R / 255.0; } set { R = Round (value); } }
+		public double Green { get { return G / 255.0; } set { G = Round (value); } }
+		public double Blue { get { return B / 255.0; } set { B = Round (value); } }
+		public double Alpha { get { return A / 255.0; } set { A = Round (value); } }
+
+		static byte Round (double c)
+		{
+			return (byte)(Math.Min (255, Math.Max (0, (int)(c * 255 + 0.5))));
+		}
 
 		public int Argb {
 			get {
@@ -64,6 +69,17 @@ namespace NGraphics
 			} else {
 				throw new ArgumentException ("Bad color string: " + colorString);
 			}
+		}
+
+		public Color BlendWith (Color other, double otherWeight)
+		{
+			var t = otherWeight;
+			var t1 = 1 - t;
+			var r = Red * t1 + other.Red * t;
+			var g = Green * t1 + other.Green * t;
+			var b = Blue * t1 + other.Blue * t;
+			var a = Alpha * t1 + other.Alpha * t;
+			return new Color (r, g, b, a);
 		}
 
 		public Color WithAlpha (double alpha)
