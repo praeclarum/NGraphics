@@ -88,6 +88,15 @@ namespace NGraphics
 			return new Color (R, G, B, a);
 		}
 
+		public static Color FromRGB (int rgb)
+		{
+			var w = 1.0 / 255;
+			var r = ((rgb >> 16) & 0xFF) * w;
+			var g = ((rgb >>  8) & 0xFF) * w;
+			var b = ((rgb >>  0) & 0xFF) * w;
+			return new Color (r, g, b, 1);
+		}
+
 		public static Color FromHSB (double hue, double saturation, double brightness, double alpha = 1.0)
 		{
 			var c = saturation * brightness;

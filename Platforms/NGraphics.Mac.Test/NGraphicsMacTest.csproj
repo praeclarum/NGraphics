@@ -34,6 +34,7 @@
       </EnvironmentVariables>
     </EnvironmentVariables>
     <Commandlineparameters>$(SolutionDir)</Commandlineparameters>
+    <PackageSigningKey>Developer ID Installer</PackageSigningKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -48,8 +49,10 @@
     <IncludeMonoRuntime>true</IncludeMonoRuntime>
     <CreatePackage>true</CreatePackage>
     <CodeSigningKey>Developer ID Application</CodeSigningKey>
-    <EnableCodeSigning>true</EnableCodeSigning>
+    <EnableCodeSigning>false</EnableCodeSigning>
     <EnablePackageSigning>false</EnablePackageSigning>
+    <PackageSigningKey>Developer ID Installer</PackageSigningKey>
+    <XamMacArch>x86_64</XamMacArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|AnyCPU' ">
     <DebugType>full</DebugType>

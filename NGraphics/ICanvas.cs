@@ -56,6 +56,10 @@ namespace NGraphics
 		{
 			canvas.Transform (new Scale (sx, sy));
 		}
+		public static void Scale (this ICanvas canvas, double scale)
+		{
+			canvas.Transform (new Scale (scale));
+		}
 		public static void Scale (this ICanvas canvas, Size scale)
 		{
 			canvas.Transform (new Scale (scale));
@@ -66,9 +70,17 @@ namespace NGraphics
 			canvas.Scale (scale);
 			canvas.Translate (-point);
 		}
+		public static void Scale (this ICanvas canvas, double scale, Point point)
+		{
+			canvas.Scale (new Size (scale), point);
+		}
 		public static void Scale (this ICanvas canvas, double sx, double sy, double x, double y)
 		{
 			canvas.Scale (new Size (sx, sy), new Point (x, y));
+		}
+		public static void Scale (this ICanvas canvas, double scale, double x, double y)
+		{
+			canvas.Scale (new Size (scale), new Point (x, y));
 		}
 
 

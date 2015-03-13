@@ -10,6 +10,8 @@ namespace NGraphics
 		public double Width;
 		public double Height;
 
+		public double Left { get { return X; } }
+		public double Top { get { return Y; } }
 		public double Right { get { return X + Width; } }
 		public double Bottom { get { return Y + Height; } }
 
@@ -36,6 +38,15 @@ namespace NGraphics
 		public Rect (Size size)
 			: this (0, 0, size.Width, size.Height)
 		{
+		}
+
+		public static Rect operator * (Rect a, Size s)
+		{
+			return new Rect (a.X * s.Width, a.Y * s.Height, a.Width * s.Width, a.Height * s.Height);
+		}
+		public static Rect operator * (Size s, Rect a)
+		{
+			return new Rect (a.X * s.Width, a.Y * s.Height, a.Width * s.Width, a.Height * s.Height);
 		}
 
 		public void Inflate (Size padding)
@@ -70,6 +81,18 @@ namespace NGraphics
 				r.Y = frame.Bottom - r.Height;
 			if (r.Y < frame.Y) r.Y = frame.Y;
 			return r;
+		}
+
+		public bool Contains (Point point)
+		{
+			return ((X <= point.X && point.X <= Right) &&
+					(Y <= point.Y && point.Y <= Bottom));
+		}
+
+		public bool Intersects (Rect other)
+		{
+			return ((Right >= other.Left && Left <= other.Right) &&
+					(Bottom >= other.Top && Top <= other.Bottom));
 		}
 
 		public override string ToString ()

@@ -63,4 +63,9 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\NGraphics.nuspec">
+      <Link>NGraphics.nuspec</Link>
+    </None>
+  </ItemGroup>
 </Project>

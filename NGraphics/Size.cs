@@ -16,6 +16,8 @@ namespace NGraphics
 
 		public double Diagonal { get { return Math.Sqrt (Width*Width + Height*Height); } }
 
+		public Point Center { get { return new Point (Width * 0.5, Height * 0.5); } }
+
 		public Size (double width, double height)
 		{
 			Width = width;

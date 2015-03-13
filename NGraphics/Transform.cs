@@ -85,6 +85,10 @@ namespace NGraphics
 			: this (new Size (dx, dy), previous)
 		{			
 		}
+		public Scale (double scale, Transform previous = null)
+			: this (new Size (scale), previous)
+		{			
+		}
 		protected override string ToCode ()
 		{
 			return string.Format (CultureInfo.InvariantCulture, "scale({0}, {1})", Size.Width, Size.Height);

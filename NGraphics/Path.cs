@@ -159,6 +159,10 @@ namespace NGraphics
 		{
 			Add (new CurveTo (control1, control2, point));
 		}
+		public void CurveTo (double c1x, double c1y, double c2x, double c2y, double x, double y)
+		{
+			CurveTo (new Point (c1x, c1y), new Point (c2x, c2y), new Point (x, y));
+		}
 
 		public void ContinueCurveTo (Point control2, Point point)
 		{
@@ -168,6 +172,10 @@ namespace NGraphics
 			var prev = Operations [Operations.Count - 1];
 			var control1 = prev.GetContinueCurveControlPoint ();
 			Add (new CurveTo (control1, control2, point));
+		}
+		public void ContinueCurveTo (double c2x, double c2y, double x, double y)
+		{
+			ContinueCurveTo (new Point (c2x, c2y), new Point (x, y));
 		}
 
 		public void Close ()
