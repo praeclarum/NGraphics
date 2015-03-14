@@ -17,7 +17,7 @@ namespace NGraphics.Editor
 
 		void Initialize ()
 		{
-			Code = @"class Thing : IDrawable
+			Code = @"class Drawing : IDrawable
 {
 	public void Draw (ICanvas canvas)
 	{

@@ -40,8 +40,8 @@ namespace NGraphics.Editor
 
 		LinearGradientBrush backBrush = new LinearGradientBrush (
             Point.Zero, Point.OneY,
-			new Color (0.97),
-			new Color (0.90));
+			new Color (0.99),
+			new Color (0.93));
 
 		public override void DrawRect (CoreGraphics.CGRect dirtyRect)
 		{

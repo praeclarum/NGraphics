@@ -59,6 +59,7 @@ namespace NGraphics.Editor
 			var idt = typeof(IDrawable);
 
 			eval.ReferenceAssembly (idt.Assembly);
+			eval.ReferenceAssembly (typeof(Platforms).Assembly);
 
 			eval.Run ("using System; using System.Linq; using System.Collections.Generic; using NGraphics;");
 
