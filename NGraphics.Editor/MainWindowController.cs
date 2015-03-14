@@ -91,6 +91,8 @@ namespace NGraphics.Editor
 					if (result.Code == currentCode) {
 						Console.WriteLine ("NEW RESULT {0}", this.result);
 						this.result = result;
+
+						Errors.Value = result.Errors ?? "";
 					
 						Prev.Drawables = result.Drawables;
 						Prev.SetNeedsDisplayInRect (Prev.Bounds);

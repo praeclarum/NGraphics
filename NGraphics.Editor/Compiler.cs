@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Mono.CSharp;
+using System.IO;
 
 namespace NGraphics.Editor
 {
 	public class CompileResult
 	{
 		public string Code { get; set; }
-
+		public string Errors { get; set; }
 		public IDrawable[] Drawables { get; set; }
 	}
 
@@ -24,11 +25,14 @@ namespace NGraphics.Editor
 
 		CancellationTokenSource cts = new CancellationTokenSource ();
 
-		Evaluator eval = new Evaluator (new CompilerContext (new CompilerSettings (), new ConsoleReportPrinter ()));
+		StringWriter errors = new StringWriter ();
+
+		Evaluator eval;
 
 		public CompileRequest (string code, Action<CompileResult> continuation)
 		{
 			Code = code;
+			eval = new Evaluator (new CompilerContext (new CompilerSettings (), new ConsoleReportPrinter (errors)));
 			this.continuation = continuation;
 			Compile ().ContinueWith (t => {
 				if (t.IsFaulted) {
@@ -69,18 +73,23 @@ namespace NGraphics.Editor
 
 			var drawables = new List<IDrawable> ();
 
-			foreach (Match m in classRe.Matches (Code)) {
-				var className = m.Groups [1].Value;
-				eval.Evaluate ("new " + className + " ()", out res, out resSet);
-				if (resSet) {
-					var d = res as IDrawable;
-					if (d != null) {
-						drawables.Add (d);
+			if (errors.ToString ().Contains ("): error")) {
+				r.Errors = errors.ToString ();
+			} else {
+
+				foreach (Match m in classRe.Matches (Code)) {
+					var className = m.Groups [1].Value;
+					eval.Evaluate ("new " + className + " ()", out res, out resSet);
+					if (resSet) {
+						var d = res as IDrawable;
+						if (d != null) {
+							drawables.Add (d);
+						}
 					}
 				}
-			}
 
-			r.Drawables = drawables.ToArray ();
+				r.Drawables = drawables.ToArray ();
+			}
 
 			return r;
 		}
