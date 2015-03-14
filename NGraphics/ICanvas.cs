@@ -96,6 +96,14 @@ namespace NGraphics
 		{
 			canvas.DrawRectangle (frame, brush: new SolidBrush (color));
 		}
+		public static void FillRectangle (this ICanvas canvas, double x, double y, double width, double height, Color color)
+		{
+			canvas.DrawRectangle (new Rect (x, y, width, height), brush: new SolidBrush (color));
+		}
+		public static void FillRectangle (this ICanvas canvas, double x, double y, double width, double height, Brush brush)
+		{
+			canvas.DrawRectangle (new Rect (x, y, width, height), brush: brush);
+		}
 		public static void FillRectangle (this ICanvas canvas, Rect frame, Brush brush)
 		{
 			canvas.DrawRectangle (frame, brush: brush);
