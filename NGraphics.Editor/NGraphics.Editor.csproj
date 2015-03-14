@@ -91,6 +91,7 @@
       <DependentUpon>Preview.cs</DependentUpon>
     </Compile>
     <Compile Include="Document.cs" />
+    <Compile Include="Style.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="MainWindow.xib" />

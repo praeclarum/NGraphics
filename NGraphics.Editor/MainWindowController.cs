@@ -7,6 +7,8 @@ namespace NGraphics.Editor
 {
 	public partial class MainWindowController : NSWindowController
 	{
+		Style style = new Style ();
+
 		public MainWindowController (IntPtr handle) : base (handle)
 		{
 		}
@@ -26,8 +28,9 @@ namespace NGraphics.Editor
 
 			Editor.Delegate = new EditorDelegate { Controller = this };
 
-			Editor.Value = currentCode;
-			CompileCode ();
+			Editor.Value = Code;
+			HandleTextChanged ();
+			HandleThrottledTextChanged ();
 		}
 
 		public new MainWindow Window {
@@ -41,7 +44,7 @@ namespace NGraphics.Editor
 
 		CompileResult result = null;
 		CompileRequest request = null;
-		string currentCode 
+		string Code 
 		{
 			get {
 				var d = Document as CSharpDocument;
@@ -55,25 +58,21 @@ namespace NGraphics.Editor
 			}
 		}
 
-		void HandleTextChanged ()
+		void HandleThrottledTextChanged ()
 		{
-			Console.WriteLine ("TEXT CHANGED");
-
-			currentCode = Editor.Value;
-
 			CompileCode ();
 		}
 
 		void CompileCode ()
 		{
 			// Done already?
-			if (result != null && result.Code == currentCode) {
+			if (result != null && result.Code == Code) {
 				return;
 			}
 
 			// Already requested?
 			if (request != null) {
-				if (request.Code == currentCode) {
+				if (request.Code == Code) {
 					// The proper request is pending
 					return;
 				}
@@ -81,14 +80,14 @@ namespace NGraphics.Editor
 			}
 
 			// Start a new request
-			request = new CompileRequest (currentCode, AcceptCompileResult);
+			request = new CompileRequest (Code, AcceptCompileResult);
 		}
 
 		void AcceptCompileResult (CompileResult result)
 		{
 			this.BeginInvokeOnMainThread (() => {
 				try {
-					if (result.Code == currentCode) {
+					if (result.Code == Code) {
 						Console.WriteLine ("NEW RESULT {0}", this.result);
 						this.result = result;
 
@@ -103,24 +102,50 @@ namespace NGraphics.Editor
 			});
 		}
 
+		void HandleTextChanged ()
+		{
+			Console.WriteLine ("TEXT CHANGED");
+
+			var s = Editor.TextStorage;
+			Code = s.Value;
+
+			s.BeginEditing ();
+			style.FormatCode (s);
+			s.EndEditing ();
+		}
+
 		class EditorDelegate : NSTextViewDelegate
 		{
 			public MainWindowController Controller;
 			NSTimer changeThrottle = null;
 			public override void TextDidChange (NSNotification notification)
 			{
+				try {
+					Controller.HandleTextChanged ();
+				} catch (Exception ex) {
+					Console.WriteLine ();
+				}
 				if (changeThrottle != null) {
 					changeThrottle.Invalidate ();
 				}
 				changeThrottle = NSTimer.CreateScheduledTimer (0.3333, t => {
 					try {
 						changeThrottle = null;
-						Controller.HandleTextChanged ();
+						Controller.HandleThrottledTextChanged ();
 					} catch (Exception ex) {
 						ShowError (ex);
 					}	
 				});
 
+			}
+
+			public override bool DoCommandBySelector (NSTextView textView, ObjCRuntime.Selector commandSelector)
+			{
+//				if (commandSelector.Name == "insertTab:") {
+//					textView.InsertText (new NSString ("    "));
+//					return true;
+//				}
+				return false;
 			}
 		}
 	}
