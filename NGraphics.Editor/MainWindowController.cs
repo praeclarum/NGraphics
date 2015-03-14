@@ -26,14 +26,6 @@ namespace NGraphics.Editor
 
 			Editor.Delegate = new EditorDelegate { Controller = this };
 
-			currentCode = @"class Thing : IDrawable
-{
-	public void Draw (ICanvas canvas)
-	{
-		canvas.FillEllipse (new Rect(10, 20, 100, 200), Colors.Blue);
-	}
-}
-";
 			Editor.Value = currentCode;
 			CompileCode ();
 		}
@@ -49,7 +41,19 @@ namespace NGraphics.Editor
 
 		CompileResult result = null;
 		CompileRequest request = null;
-		string currentCode = "";
+		string currentCode 
+		{
+			get {
+				var d = Document as CSharpDocument;
+				return d != null ? d.Code : "";
+			}
+			set {
+				var d = Document as CSharpDocument;
+				if (d != null) {
+					d.Code = value;
+				}
+			}
+		}
 
 		void HandleTextChanged ()
 		{
