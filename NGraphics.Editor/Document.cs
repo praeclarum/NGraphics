@@ -25,7 +25,7 @@ class Drawing : IDrawable
 {
 	public void Draw (ICanvas canvas)
 	{
-		canvas.FillEllipse (new Rect(100, 100, 200, 200), Colors.Red);
+		canvas.FillEllipse (new Rect(100, 100, 200, 200), Color.FromRGB (0x6495ED));
 	}
 }
 ";

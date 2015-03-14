@@ -28,6 +28,13 @@ namespace NGraphics.Editor
 
 			Editor.Delegate = new EditorDelegate { Controller = this };
 
+			Editor.AutomaticDashSubstitutionEnabled = false;
+			Editor.AutomaticDataDetectionEnabled = false;
+			Editor.AutomaticLinkDetectionEnabled = true;
+			Editor.AutomaticQuoteSubstitutionEnabled = false;
+			Editor.AutomaticSpellingCorrectionEnabled = false;
+			Editor.AutomaticTextReplacementEnabled = false;
+
 			Editor.Value = Code;
 			HandleTextChanged ();
 			HandleThrottledTextChanged ();

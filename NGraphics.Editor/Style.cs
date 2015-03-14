@@ -11,7 +11,7 @@ namespace NGraphics.Editor
 		NSDictionary wsAttrs = FontAttrs ("Helvetica Neue", 14);
 		NSDictionary identAttrs = FontAttrs ("Helvetica Neue", 14);
 		NSDictionary kwdAttrs = FontColorAttrs ("Helvetica Neue Bold", 14, NSColor.FromRgba (0.35f, 0.35f, 0.35f, 1));
-		NSDictionary valAttrs = FontColorAttrs ("Menlo Bold", 14, NSColor.FromRgba (0.2f, 0.1f, 1.0f, 1));
+		NSDictionary valAttrs = FontColorAttrs ("Menlo Bold", 14, NSColor.FromRgba (0x64/290.0f, 0x95/290.0f, 0xF3/290.0f, 1));
 		NSDictionary gAttrs = FontColorAttrs ("Helvetica Neue Bold", 14, NSColor.FromRgba (0.05f, 0.05f, 0.05f, 1));
 
 		HashSet<string> keywords = new HashSet<string> {
@@ -67,6 +67,11 @@ namespace NGraphics.Editor
 			if (n == 0)
 				return;
 
+			Func<char, bool> isDigit = ch => {
+				var l = char.ToLowerInvariant (ch);
+				return l == '.' || l == 'a' || l=='b'||l=='c'||l=='d'||l=='e'||l=='f'||l=='x'||char.IsDigit (ch);
+			};
+
 			while (p < n) {
 				var wsp = p;
 				while (p < n && char.IsWhiteSpace (s [p])) {
@@ -99,7 +104,7 @@ namespace NGraphics.Editor
 
 				} else if (char.IsDigit (ch)) {
 					var sp = p;
-					while (p < n && (s[p] == '.' || s[p] == 'e' || s[p] == 'E' || char.IsDigit (s[p]))) {
+					while (p < n && isDigit (s[p])) {
 						p++;
 					}
 					fs.AddAttributes (valAttrs, new NSRange (sp, p - sp));
