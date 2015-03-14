@@ -24,6 +24,24 @@ namespace NGraphics.Test
 
 			canvas.GetImage ().SaveAsPng (GetPath ("Brush.RectLinearGradient.png"));
 		}
+
+		[Test]
+		public void RectAbsLinearGradient ()
+		{
+			var canvas = Platforms.Current.CreateImageCanvas (new Size (100));
+
+			var rect = new Rect (0, 10, 100, 80);
+			var brush = new LinearGradientBrush (
+				Point.Zero,
+				new Point (0, 200),
+				Colors.Yellow,
+				Colors.Red);				
+			brush.PositionIsAbsolute = true;
+
+			canvas.DrawRectangle (rect, brush: brush);
+
+			canvas.GetImage ().SaveAsPng (GetPath ("Brush.RectAbsLinearGradient.png"));
+		}
 	}
 }
 

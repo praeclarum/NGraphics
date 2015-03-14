@@ -97,6 +97,7 @@ namespace NGraphics
 	{
 		public Point RelativeStart;
 		public Point RelativeEnd;
+		public bool PositionIsAbsolute = false;
 
 		public LinearGradientBrush ()
 		{
