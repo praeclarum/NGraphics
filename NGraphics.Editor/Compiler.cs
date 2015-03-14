@@ -65,8 +65,6 @@ namespace NGraphics.Editor
 			eval.ReferenceAssembly (idt.Assembly);
 			eval.ReferenceAssembly (typeof(Platforms).Assembly);
 
-			eval.Run ("using System; using System.Linq; using System.Collections.Generic; using NGraphics;");
-
 			object res;
 			bool resSet;
 			eval.Evaluate (Code, out res, out resSet);

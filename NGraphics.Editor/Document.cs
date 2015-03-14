@@ -17,7 +17,11 @@ namespace NGraphics.Editor
 
 		void Initialize ()
 		{
-			Code = @"class Drawing : IDrawable
+			Code = @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using NGraphics; 
+class Drawing : IDrawable
 {
 	public void Draw (ICanvas canvas)
 	{
