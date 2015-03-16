@@ -463,10 +463,10 @@ namespace NGraphics
 		{
 			var b = new LinearGradientBrush ();
 
-			b.RelativeStart.X = ReadNumber (e.Attribute ("x1"));
-			b.RelativeStart.Y = ReadNumber (e.Attribute ("y1"));
-			b.RelativeEnd.X = ReadNumber (e.Attribute ("x2"));
-			b.RelativeEnd.Y = ReadNumber (e.Attribute ("y2"));
+			b.Start.X = ReadNumber (e.Attribute ("x1"));
+			b.Start.Y = ReadNumber (e.Attribute ("y1"));
+			b.End.X = ReadNumber (e.Attribute ("x2"));
+			b.End.Y = ReadNumber (e.Attribute ("y2"));
 
 			ReadStops (e, b.Stops);
 

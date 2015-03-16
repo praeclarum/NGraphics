@@ -36,7 +36,7 @@ namespace NGraphics.Test
 				new Point (0, 200),
 				Colors.Yellow,
 				Colors.Red);				
-			brush.PositionIsAbsolute = true;
+			brush.Absolute = true;
 
 			canvas.DrawRectangle (rect, brush: brush);
 

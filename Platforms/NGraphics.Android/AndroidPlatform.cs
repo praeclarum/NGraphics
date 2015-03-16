@@ -198,8 +198,8 @@ namespace NGraphics
 						locs [i] = (float)s.Offset;
 						comps [i] = s.Color.Argb;
 					}
-					var p1 = bb.Position + lgb.RelativeStart * bb.Size;
-					var p2 = bb.Position + lgb.RelativeEnd * bb.Size;
+					var p1 = lgb.Absolute ? lgb.Start : bb.Position + lgb.Start * bb.Size;
+					var p2 = lgb.Absolute ? lgb.End : bb.Position + lgb.End * bb.Size;
 					var lg = new LinearGradient (
 						        (float)p1.X, (float)p1.Y,
 						        (float)p2.X, (float)p2.Y,

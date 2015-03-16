@@ -254,8 +254,8 @@ namespace NGraphics
 				context.Clip ();
 				CGGradientDrawingOptions options = CGGradientDrawingOptions.DrawsBeforeStartLocation | CGGradientDrawingOptions.DrawsAfterEndLocation;
 				var size = frame.Size;
-				var start = Conversions.GetCGPoint (lgb.PositionIsAbsolute ? lgb.RelativeStart : frame.Position + lgb.RelativeStart * size);
-				var end = Conversions.GetCGPoint (lgb.PositionIsAbsolute ? lgb.RelativeEnd : frame.Position + lgb.RelativeEnd * size);
+				var start = Conversions.GetCGPoint (lgb.Absolute ? lgb.Start : frame.Position + lgb.Start * size);
+				var end = Conversions.GetCGPoint (lgb.Absolute ? lgb.End : frame.Position + lgb.End * size);
 				context.DrawLinearGradient (cg, start, end, options);
 				context.RestoreState ();
 				brush = null;

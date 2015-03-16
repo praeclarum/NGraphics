@@ -331,8 +331,8 @@ namespace NGraphics
 
             var lgb = brush as LinearGradientBrush;
             if (lgb != null) {
-                var s = frame.Position + lgb.RelativeStart * frame.Size;
-                var e = frame.Position + lgb.RelativeEnd * frame.Size;
+                var s = lgb.Absolute ? lgb.Start : frame.Position + lgb.Start * frame.Size;
+                var e = lgb.Absolute ? lgb.End : frame.Position + lgb.End * frame.Size;
                 var b = new System.Drawing.Drawing2D.LinearGradientBrush (GetPointF (s), GetPointF (e), System.Drawing.Color.Black, System.Drawing.Color.Black);
                 var bb = BuildBlend (lgb.Stops);
                 if (bb != null) {

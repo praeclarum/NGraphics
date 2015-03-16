@@ -95,30 +95,30 @@ namespace NGraphics
 
 	public class LinearGradientBrush : GradientBrush
 	{
-		public Point RelativeStart;
-		public Point RelativeEnd;
-		public bool PositionIsAbsolute = false;
+		public Point Start;
+		public Point End;
+		public bool Absolute = false;
 
 		public LinearGradientBrush ()
 		{
 		}
 		public LinearGradientBrush (Point relStart, Point relEnd, params GradientStop[] stops)
 		{
-			RelativeStart = relStart;
-			RelativeEnd = relEnd;
+			Start = relStart;
+			End = relEnd;
 			Stops.AddRange (stops);
 		}
 		public LinearGradientBrush (Point relStart, Point relEnd, Color startColor, Color endColor)
 		{
-			RelativeStart = relStart;
-			RelativeEnd = relEnd;
+			Start = relStart;
+			End = relEnd;
 			Stops.Add (new GradientStop (0, startColor));
 			Stops.Add (new GradientStop (1, endColor));
 		}
 		public LinearGradientBrush (Point relStart, Point relEnd, Color startColor, Color midColor, Color endColor)
 		{
-			RelativeStart = relStart;
-			RelativeEnd = relEnd;
+			Start = relStart;
+			End = relEnd;
 			Stops.Add (new GradientStop (0, startColor));
 			Stops.Add (new GradientStop (0.5, midColor));
 			Stops.Add (new GradientStop (1, endColor));
