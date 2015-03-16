@@ -82,7 +82,7 @@ What would a graphics library be without a `Color` class? Well, this one is a st
 
 Normally you will use the RGBA constructor of color: `new Color (r, g, b, a)` where each value can range from 0 to 1.
 
-If you're not normal, you might prefer the web notation: `new Color ("#BEEFEE")`.
+If you're not normal, you might prefer the web notation: `Color.FromRGB (0xBEEFEE)`.
 
 
 
@@ -117,13 +117,13 @@ circle.Draw (canvas);
 
 ## Editor
 
-To speed up the process of drawing with code, NGraphics ships with a code editor and live preview for OS X.
+To speed up the process of drawing with code, NGraphics ships with a code editor and live preview for OS X. [Download the editor from the Releases page.](https://github.com/praeclarum/NGraphics/releases)
 
 <img src="Documentation/Editor.png" width="640" />
 
 Any C# file that can be independently compiled can be used. The advantage of this editor over Xamarin Studio is that you can work on your drawings without having to wait for your whole project to compile and run.
 
-Simply compile and run the project [NGraphics.Editor](https://github.com/praeclarum/NGraphics/tree/master/NGraphics.Editor) to get started.
+Simply compile and run the project [NGraphics.Editor](https://github.com/praeclarum/NGraphics/tree/master/NGraphics.Editor) or [download the editor](https://github.com/praeclarum/NGraphics/releases) to get started.
 
 
 ## Examples
