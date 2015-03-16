@@ -189,9 +189,9 @@ namespace NGraphics
 			p.Draw (canvas);				
 		}
 
-		public static void DrawImage (this ICanvas canvas, IImage image, double x, double y, double width, double height)
+		public static void DrawImage (this ICanvas canvas, IImage image, double x, double y, double width, double height, double alpha = 1.0)
 		{
-			canvas.DrawImage (image, new Rect (x, y, width, height));
+			canvas.DrawImage (image, new Rect (x, y, width, height), alpha);
 		}
 	}
 }
