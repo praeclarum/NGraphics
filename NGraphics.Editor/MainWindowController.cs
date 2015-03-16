@@ -99,9 +99,12 @@ namespace NGraphics.Editor
 						this.result = result;
 
 						Errors.Value = result.Errors ?? "";
+						Errors.TextColor = NSColor.Red;
 					
-						Prev.Drawables = result.Drawables;
-						Prev.SetNeedsDisplayInRect (Prev.Bounds);
+						if (string.IsNullOrEmpty (result.Errors)) {
+							Prev.Drawables = result.Drawables;
+							Prev.SetNeedsDisplayInRect (Prev.Bounds);
+						}
 					}
 				} catch (Exception ex) {
 					Console.WriteLine (ex);
