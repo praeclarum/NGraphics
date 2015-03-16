@@ -76,6 +76,9 @@ namespace NGraphics
 		readonly Bitmap bitmap;
 		readonly double scale;
 
+		public Size ImageSize { get { return new Size (bitmap.Width, bitmap.Height); } }
+		public double ImageScale { get { return scale; } }
+
 		public BitmapCanvas (Bitmap bitmap, double scale = 1.0)
 			: base (new Canvas (bitmap))
 		{
@@ -153,10 +156,11 @@ namespace NGraphics
 
 			return paint;
 		}
-		Paint GetImagePaint ()
+		Paint GetImagePaint (double alpha)
 		{
 			var paint = new Paint (PaintFlags.AntiAlias);
 			paint.FilterBitmap = true;
+			paint.Alpha = (int)(alpha * 255);
 			return paint;
 		}
 		Paint GetPenPaint (Pen pen)
@@ -350,11 +354,11 @@ namespace NGraphics
 				graphics.DrawOval (Conversions.GetRectF (frame), paint);
 			}
 		}
-		public void DrawImage (IImage image, Rect frame)
+		public void DrawImage (IImage image, Rect frame, double alpha = 1.0)
 		{
 			var ii = image as BitmapImage;
 			if (ii != null) {
-				var paint = GetImagePaint ();
+				var paint = GetImagePaint (alpha);
 				var isize = new Size (ii.Bitmap.Width, ii.Bitmap.Height);
 				var scale = frame.Size / isize;
 				var m = new Matrix ();

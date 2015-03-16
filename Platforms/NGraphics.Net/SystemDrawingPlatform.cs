@@ -73,6 +73,9 @@ namespace NGraphics
 		readonly Bitmap bitmap;
 		readonly double scale;
 
+		public Size ImageSize { get { return new Size (bitmap.Width, bitmap.Height); } }
+		public double ImageScale { get { return scale; } }
+
 		public BitmapCanvas (Bitmap bitmap, double scale = 1.0)
 			: base (Graphics.FromImage (bitmap))
 		{
@@ -239,11 +242,26 @@ namespace NGraphics
 				graphics.DrawEllipse (pen.GetPen (), Conversions.GetRectangleF (frame));
 			}
 		}
-		public void DrawImage (IImage image, Rect frame)
+		public void DrawImage (IImage image, Rect frame, double alpha = 1.0)
 		{
 			var ii = image as ImageImage;
 			if (ii != null) {
-                graphics.DrawImage (ii.Image, Conversions.GetRectangleF (frame));
+				if (alpha < 0.999) {
+					var i = new ImageAttributes ();
+					var mat = new ColorMatrix (new float[][] { 
+						new[] { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f },
+						new[] { 0.0f, 1.0f, 0.0f, 0.0f, 0.0f },
+						new[] { 0.0f, 0.0f, 1.0f, 0.0f, 0.0f },
+						new[] { 0.0f, 0.0f, 0.0f, (float)alpha, 0.0f },
+						new[] { 0.0f, 0.0f, 0.0f, 0.0f, 1.0f }
+					});
+					i.SetColorMatrix (mat);
+					var size = ii.Image.Size;
+					graphics.DrawImage (ii.Image, Conversions.GetRectangle (frame),
+						0, 0, size.Width, size.Height, GraphicsUnit.Pixel, i);
+				} else {
+					graphics.DrawImage (ii.Image, Conversions.GetRectangleF (frame));
+				}
 			}
 		}
 	}
@@ -340,14 +358,19 @@ namespace NGraphics
 			throw new NotImplementedException ("Brush " + brush);
 		}
 
-        public static PointF GetPointF (Point point)
+        public static PointF GetPointF (this Point point)
         {
             return new PointF ((float)point.X, (float)point.Y);
         }
 
-		public static RectangleF GetRectangleF (Rect frame)
+		public static RectangleF GetRectangleF (this Rect frame)
 		{
 			return new RectangleF ((float)frame.X, (float)frame.Y, (float)frame.Width, (float)frame.Height);
+		}
+
+		public static System.Drawing.Rectangle GetRectangle (this Rect frame)
+		{
+			return new System.Drawing.Rectangle ((int)frame.X, (int)frame.Y, (int)frame.Width, (int)frame.Height);
 		}
 	}
 }

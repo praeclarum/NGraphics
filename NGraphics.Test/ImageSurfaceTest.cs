@@ -85,6 +85,18 @@ namespace NGraphics.Test
 		}
 
 		[Test]
+		public void DrawImageWithAlpha ()
+		{
+			var img = GetResourceImage ("cat.png");
+			var canvas = Platform.CreateImageCanvas (new Size (100, 200), transparency: true);
+			canvas.DrawImage (img, new Rect (new Size (50)), 1);
+			canvas.DrawImage (img, new Rect (new Point (50, 0), new Size (50)), 0.5);
+			canvas.DrawImage (img, new Rect (new Point (0, 50), new Size (50, 150)), 0.25);
+			canvas.DrawImage (img, new Rect (new Point (50, 50), new Size (50, 150)), 0);
+			canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.DrawImageWithAlpha"));
+		}
+
+		[Test]
 		public void TriWithRadGrad ()
 		{
 			var canvas = Platform.CreateImageCanvas (new Size (100), transparency: true);

@@ -6,7 +6,7 @@ namespace NGraphics
 {
 	public interface ICanvas
 	{
-		void SaveState();
+		void SaveState ();
 		void Transform (Transform transform);
 		void RestoreState ();
 
@@ -14,7 +14,7 @@ namespace NGraphics
 		void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null);
 		void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null);
 		void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null);
-		void DrawImage (IImage image, Rect frame);
+		void DrawImage (IImage image, Rect frame, double alpha = 1.0);
 	}
 
 	public static class CanvasEx
@@ -140,6 +140,16 @@ namespace NGraphics
 			draw (p);
 			p.Draw (canvas);
 		}
+		public static void FillPath (this ICanvas canvas, Action<Path> draw, Brush brush)
+		{
+			var p = new Path (null, brush);
+			draw (p);
+			p.Draw (canvas);
+		}
+		public static void FillPath (this ICanvas canvas, Action<Path> draw, Color color)
+		{
+			FillPath (canvas, draw, new SolidBrush (color));
+		}
 
 		public static void DrawLine (this ICanvas canvas, Point start, Point end, Pen pen)
 		{
@@ -161,6 +171,11 @@ namespace NGraphics
 			p.MoveTo (x1, y1);
 			p.LineTo (x2, y2);
 			p.Draw (canvas);				
+		}
+
+		public static void DrawImage (this ICanvas canvas, IImage image, double x, double y, double width, double height)
+		{
+			canvas.DrawImage (image, new Rect (x, y, width, height));
 		}
 	}
 }

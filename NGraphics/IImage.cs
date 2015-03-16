@@ -10,5 +10,7 @@ namespace NGraphics
 	public interface IImageCanvas : ICanvas
 	{
 		IImage GetImage ();
+		Size ImageSize { get; }
+		double ImageScale { get; }
 	}
 }

@@ -33,6 +33,8 @@ namespace NGraphics
 			{
 				return new NullImage ();
 			}
+			public Size ImageSize { get { return Size.Zero; } }
+			public double ImageScale { get { return 1.0; } }
 			public void SaveState ()
 			{
 			}
@@ -54,7 +56,7 @@ namespace NGraphics
 			public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)
 			{
 			}
-			public void DrawImage (IImage image, Rect frame)
+			public void DrawImage (IImage image, Rect frame, double alpha = 1.0)
 			{
 			}
 		}

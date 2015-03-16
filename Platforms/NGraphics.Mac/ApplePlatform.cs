@@ -95,6 +95,9 @@ namespace NGraphics
 		CGBitmapContext context;
 		readonly double scale;
 
+		public Size ImageSize { get { return new Size (context.Width, context.Height); } }
+		public double ImageScale { get { return scale; } }
+
 		public CGBitmapContextCanvas (CGBitmapContext context, double scale)
 			: base (context)
 		{
@@ -361,7 +364,7 @@ namespace NGraphics
 				return frame;
 			}, pen, brush);
 		}
-		public void DrawImage (IImage image, Rect frame)
+		public void DrawImage (IImage image, Rect frame, double alpha = 1.0)
 		{
 			var cgi = image as CGImageImage;
 
@@ -369,6 +372,7 @@ namespace NGraphics
 				var i = cgi.Image;
 				var h = frame.Height;
 				context.SaveState ();
+				context.SetAlpha ((nfloat)alpha);
 				context.TranslateCTM ((nfloat)frame.X, (nfloat)(h + frame.Y));
 				context.ScaleCTM (1, -1);
 				context.DrawImage (new CGRect (0, 0, (nfloat)frame.Width, (nfloat)frame.Height), cgi.Image);

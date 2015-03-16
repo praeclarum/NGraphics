@@ -41,7 +41,7 @@ namespace NGraphics
 		{
 			Graphic.Children.Add (new Ellipse (frame, pen, brush));
 		}
-		public void DrawImage (IImage image, Rect frame)
+		public void DrawImage (IImage image, Rect frame, double alpha = 1.0)
 		{
 			throw new NotImplementedException ();
 		}
