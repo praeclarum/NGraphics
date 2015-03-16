@@ -115,6 +115,17 @@ circle.Draw (canvas);
 	- `GraphicsCanvas` wraps a `System.Drawing.Graphics`
 
 
+## Editor
+
+To speed up the process of drawing with code, NGraphics ships with a code editor and live preview for OS X.
+
+<img src="Documentation/Editor.png" width="640" />
+
+Any C# file that can be independently compiled can be used. The advantage of this editor over Xamarin Studio is that you can work on your drawings without having to wait for your whole project to compile and run.
+
+Simply compile and run the project [NGraphics.Editor](https://github.com/praeclarum/NGraphics/tree/master/NGraphics.Editor) to get started.
+
+
 ## Examples
 
 For more examples, check out the images in the [TestResults directory](https://github.com/praeclarum/NGraphics/tree/master/TestResults)
