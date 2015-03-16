@@ -95,8 +95,9 @@ namespace NGraphics
 		CGBitmapContext context;
 		readonly double scale;
 
-		public Size ImageSize { get { return new Size (context.Width, context.Height); } }
-		public double ImageScale { get { return scale; } }
+		public Size Size { get { return new Size (context.Width / scale, context.Height / scale); } }
+		public Size SizeInPixels { get { return new Size (context.Width, context.Height); } }
+		public double Scale { get { return scale; } }
 
 		public CGBitmapContextCanvas (CGBitmapContext context, double scale)
 			: base (context)

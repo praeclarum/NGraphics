@@ -67,5 +67,8 @@
     <None Include="..\NGraphics.nuspec">
       <Link>NGraphics.nuspec</Link>
     </None>
+    <None Include="..\README.md">
+      <Link>README.md</Link>
+    </None>
   </ItemGroup>
 </Project>

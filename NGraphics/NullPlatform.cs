@@ -33,8 +33,8 @@ namespace NGraphics
 			{
 				return new NullImage ();
 			}
-			public Size ImageSize { get { return Size.Zero; } }
-			public double ImageScale { get { return 1.0; } }
+			public Size Size { get { return Size.Zero; } }
+			public double Scale { get { return 1.0; } }
 			public void SaveState ()
 			{
 			}

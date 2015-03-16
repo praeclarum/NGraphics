@@ -76,8 +76,8 @@ namespace NGraphics
 		readonly Bitmap bitmap;
 		readonly double scale;
 
-		public Size ImageSize { get { return new Size (bitmap.Width, bitmap.Height); } }
-		public double ImageScale { get { return scale; } }
+		public Size Size { get { return new Size (bitmap.Width / scale, bitmap.Height / scale); } }
+		public double Scale { get { return scale; } }
 
 		public BitmapCanvas (Bitmap bitmap, double scale = 1.0)
 			: base (new Canvas (bitmap))

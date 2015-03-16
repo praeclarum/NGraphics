@@ -121,6 +121,14 @@ namespace NGraphics
 		{
 			canvas.DrawEllipse (new Rect (position, size), pen, brush);
 		}
+		public static void FillEllipse (this ICanvas canvas, double x, double y, double width, double height, Color color)
+		{
+			canvas.DrawEllipse (new Rect (x, y, width, height), brush: new SolidBrush (color));
+		}
+		public static void FillEllipse (this ICanvas canvas, double x, double y, double width, double height, Brush brush)
+		{
+			canvas.DrawEllipse (new Rect (x, y, width, height), brush: brush);
+		}
 		public static void FillEllipse (this ICanvas canvas, Rect frame, Color color)
 		{
 			canvas.DrawEllipse (frame, brush: new SolidBrush (color));
@@ -139,6 +147,14 @@ namespace NGraphics
 			var p = new Path (pen, brush);
 			draw (p);
 			p.Draw (canvas);
+		}
+		public static void FillPath (this ICanvas canvas, IEnumerable<PathOp> ops, Brush brush)
+		{
+			canvas.DrawPath (ops, brush: brush);
+		}
+		public static void FillPath (this ICanvas canvas, IEnumerable<PathOp> ops, Color color)
+		{
+			canvas.DrawPath (ops, brush: new SolidBrush (color));
 		}
 		public static void FillPath (this ICanvas canvas, Action<Path> draw, Brush brush)
 		{

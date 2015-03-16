@@ -46,14 +46,16 @@ namespace NGraphics.Test
 		{
 			var canvas = Platforms.Current.CreateImageCanvas (new Size (100), scale: 2);
 
-			canvas.DrawEllipse (10, 20, 30, 30, Pens.Red, Brushes.White);
-			canvas.DrawRectangle (40, 50, 60, 70, brush: Brushes.Blue);
-			canvas.DrawPath (new PathOp[] {	
-				new MoveTo (100, 100),
-				new LineTo (50, 100),
-				new LineTo (50, 0),
+			var skyBrush = new LinearGradientBrush (Point.Zero, Point.OneY, Colors.Blue, Colors.White);
+			canvas.FillRectangle (new Rect (canvas.Size), skyBrush);
+			canvas.FillEllipse (10, 10, 30, 30, Colors.Yellow);
+			canvas.FillRectangle (50, 60, 60, 40, Colors.LightGray);
+			canvas.FillPath (new PathOp[] {	
+				new MoveTo (40, 60),
+				new LineTo (120, 60),
+				new LineTo (80, 30),
 				new ClosePath ()
-			}, brush: Brushes.Gray);
+			}, Colors.Gray);
 
 			canvas.GetImage ().SaveAsPng (GetPath ("Example1.png"));
 		}
