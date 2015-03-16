@@ -115,7 +115,12 @@ circle.Draw (canvas);
 	- `GraphicsCanvas` wraps a `System.Drawing.Graphics`
 
 
-## Icon
+## Examples
+
+For more examples, check out the images in the [TestResults directory](https://github.com/praeclarum/NGraphics/tree/master/TestResults)
+and the [test code](https://github.com/praeclarum/NGraphics/tree/master/NGraphics.Test) that generated them.
+
+### Icon
 
 The NGraphics icon can be rendered using a simple repeating path:
 
@@ -150,6 +155,22 @@ canvas.GetImage ().SaveAsPng (GetPath ("Icon.png"));
 
 <img src="TestResults/Icon-Mac.png" width="64" height="64" />
 
+
+### Cats
+
+NGraphics also supports scaling cats:
+
+```csharp
+var img = GetResourceImage ("cat.png");
+var canvas = Platform.CreateImageCanvas (new Size (100, 200), transparency: true);
+canvas.DrawImage (img, new Rect (new Size (50)));
+canvas.DrawImage (img, new Rect (new Point (50, 0), new Size (50)));
+canvas.DrawImage (img, new Rect (new Point (0, 50), new Size (50, 150)));
+canvas.DrawImage (img, new Rect (new Point (50, 50), new Size (50, 150)));
+canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.Cats"));
+```
+
+<img src="TestResults/ImageCanvas.Cats-Mac.png" width="100" height="200" />
 
 
 ## License
