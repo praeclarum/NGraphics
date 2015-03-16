@@ -13,9 +13,10 @@ namespace NGraphics.Editor
 		NSDictionary kwdAttrs = FontColorAttrs ("Helvetica Neue Bold", 14, NSColor.FromRgba (0.35f, 0.35f, 0.35f, 1));
 		NSDictionary valAttrs = FontColorAttrs ("Menlo Bold", 14, NSColor.FromRgba (0x64/290.0f, 0x95/290.0f, 0xF3/290.0f, 1));
 		NSDictionary gAttrs = FontColorAttrs ("Helvetica Neue Bold", 14, NSColor.FromRgba (0.05f, 0.05f, 0.05f, 1));
+		NSDictionary commentAttrs = FontAttrs ("Georgia", 14);
 
 		HashSet<string> keywords = new HashSet<string> {
-			"class", "delegate", "do", "event", "for", "let", "new", "private", "protected", "public", "return", "using", "var", "void", "while",
+			"class", "delegate", "do", "double", "event", "float", "for", "if", "int", "let", "new", "private", "protected", "public", "return", "using", "var", "void", "while",
 		};
 		HashSet<string> valwords = new HashSet<string> {
 			"true", "false",
