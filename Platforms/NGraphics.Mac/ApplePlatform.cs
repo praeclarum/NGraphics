@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using UIKit;
 
 namespace NGraphics
 {
@@ -177,6 +178,19 @@ namespace NGraphics
 			while (stack.Count > 0) {
 				t = stack.Pop ();
 
+				var tm = t as MatrixTransform;
+				if (tm != null) {
+					if (tm.Elements[0] == 1 && tm.Elements[1] == 0 && tm.Elements[2] == 0 && tm.Elements[3] == 1)
+					{
+						context.TranslateCTM((nfloat)tm.Elements[4], (nfloat)tm.Elements[5]);
+					} 
+					else if (tm.Elements[1] == 0 && tm.Elements[2] == 0 && tm.Elements[4] == 0 && tm.Elements[5] == 0)
+					{
+						//scale?
+					}
+					continue;
+				}
+
 				var rt = t as Rotate;
 				if (rt != null) {
 					context.RotateCTM ((nfloat)(rt.Angle * Math.PI / 180));
@@ -226,7 +240,12 @@ namespace NGraphics
 
 			SetBrush (brush);
 
-			context.SelectFont (font.Name, (nfloat)font.Size, CGTextEncoding.MacRoman);
+			string fontName = font.Name;
+			var availableFonts = UIFont.FontNamesForFamilyName(fontName);
+			if (availableFonts != null && availableFonts.Length > 0)
+				context.SelectFont (font.Name, (nfloat)font.Size, CGTextEncoding.MacRoman);
+			else
+				context.SelectFont("Helvetica", (nfloat)font.Size, CGTextEncoding.MacRoman);
 			context.ShowTextAtPoint ((nfloat)frame.X, (nfloat)frame.Y, text);
 
 //			using (var atext = new NSMutableAttributedString (text)) {
