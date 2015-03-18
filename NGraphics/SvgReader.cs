@@ -189,17 +189,7 @@ namespace NGraphics
 					var x2 = ReadNumber ( e.Attribute("x2") );
 					var y1 = ReadNumber ( e.Attribute("y1") );
 					var y2 = ReadNumber ( e.Attribute("y2") );
-
-					Pen myPen = pen;
-					var strokeAttribute = e.Attribute("stroke");
-					var strokeWidthAttribute = e.Attribute("stroke-width");
-					if (strokeAttribute != null || strokeWidthAttribute != null)
-					{
-						var strokeWidth = strokeWidthAttribute != null ? ReadNumber(strokeWidthAttribute.Value) : pen.Width;
-						var strokeColor = strokeAttribute != null ? ReadColor(strokeAttribute.Value) : pen.Color;
-						myPen = new Pen(strokeColor, strokeWidth);
-					}
-					r = new Line(new Point(x1, y1), new Point(x2, y2), myPen);
+					r = new Line(new Point(x1, y1), new Point(x2, y2), pen);
 				}
 				break;
 
@@ -459,7 +449,7 @@ namespace NGraphics
 				} else if (op == "z" || op == "Z") {
 					p.Close ();
 				} else {
-					throw new NotSupportedException ("Path Operation " + op);
+					//throw new NotSupportedException ("Path Operation " + op);
 				}
 			}
 		}
