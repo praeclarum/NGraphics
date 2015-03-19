@@ -88,9 +88,9 @@ namespace NGraphics
 			}
 			pen = pen ?? inheritPen;
 			brush = brush ?? inheritBrush;
-			if (pen == null && brush == null) {
-				brush = Brushes.Black;
-			}
+			//if (pen == null && brush == null) {
+			//	brush = Brushes.Black;
+			//}
 			//var id = ReadString (e.Attribute ("id"));
 
 			//
@@ -102,7 +102,13 @@ namespace NGraphics
 					var x = ReadNumber (e.Attribute ("x"));
 					var y = ReadNumber (e.Attribute ("y"));
 					var text = e.Value.Trim ();
+					var fontFamilyAttribute = e.Attribute("font-family");
 					var font = new Font ();
+					if (fontFamilyAttribute != null)
+						font.Family = fontFamilyAttribute.Value.Trim('\'');
+					var fontSizeAttribute = e.Attribute("font-size");
+					if (fontSizeAttribute != null)
+						font.Size = ReadNumber(fontSizeAttribute.Value);
 					r = new Text (text, new Rect (new Point (x, y), new Size (double.MaxValue, double.MaxValue)), font, TextAlignment.Left, pen, brush);
 				}
 				break;
@@ -173,8 +179,26 @@ namespace NGraphics
 				break;
 			case "namedview":
 			case "metadata":
+			case "image":
 				// Ignore
 				break;
+
+				case "line":
+				{
+					var x1 = ReadNumber ( e.Attribute("x1") );
+					var x2 = ReadNumber ( e.Attribute("x2") );
+					var y1 = ReadNumber ( e.Attribute("y1") );
+					var y2 = ReadNumber ( e.Attribute("y2") );
+					r = new Line(new Point(x1, y1), new Point(x2, y2), pen);
+				}
+				break;
+
+
+				// color definition that can be referred to by other elements
+				case "linearGradient":
+				break;
+
+
 			default:
 				throw new NotSupportedException ("SVG element \"" + e.Name.LocalName + "\" is not supported");
 			}
@@ -237,7 +261,7 @@ namespace NGraphics
 			var stroke = GetString (style, "stroke").Trim ();
 			if (string.IsNullOrEmpty (stroke)) {
 				// No change
-			} else if (stroke == "none") {
+			} else if (stroke.Equals("none", StringComparison.OrdinalIgnoreCase)) {
 				pen = null;
 			} else {
 				if (pen == null)
@@ -269,7 +293,7 @@ namespace NGraphics
 			var fill = GetString (style, "fill").Trim ();
 			if (string.IsNullOrEmpty (fill)) {
 				// No change
-			} else if (fill == "none") {
+			} else if (fill.Equals("none", StringComparison.OrdinalIgnoreCase)) {
 				brush = null;
 			} else {
 				Color color;
@@ -326,8 +350,8 @@ namespace NGraphics
 				switch (args [0]) {
 				case "matrix":
 					if (args.Length == 7) {
-						var m = new MatrixTransform (t);
-						nt = new Translate (new Size (ReadNumber (args [1]), ReadNumber (args [2])), t);
+						nt = new MatrixTransform (new double[] { ReadNumber(args[1]), 
+							ReadNumber(args[2]), ReadNumber(args[3]), ReadNumber(args[4]), ReadNumber(args[5]), ReadNumber(args[6]) }, t);
 					} else {
 						throw new NotSupportedException ("Matrices are expected to have 6 elements, this one has " + (args.Length - 1));
 					}
@@ -425,7 +449,7 @@ namespace NGraphics
 				} else if (op == "z" || op == "Z") {
 					p.Close ();
 				} else {
-					throw new NotSupportedException ("Path Operation " + op);
+					//throw new NotSupportedException ("Path Operation " + op);
 				}
 			}
 		}
@@ -479,7 +503,22 @@ namespace NGraphics
 			foreach (var se in e.Elements (ns + "stop")) {
 				var s = new GradientStop ();
 				s.Offset = ReadNumber (se.Attribute ("offset"));
-				s.Color = ReadColor (se, "stop-color");
+				var styleAttribute = se.Attribute("style");
+				if (styleAttribute != null)
+				{
+					var styleSettings = styleAttribute.Value.Split(';');
+					foreach(var style in styleSettings)
+					{
+						if (style.Contains("stop-color") && style.IndexOf(':') != -1)
+						{
+							s.Color = ReadColor(style.Substring(style.IndexOf(':')+1));
+							break;
+						}
+					}
+				}
+				var stopColorAttribute = se.Attribute("stop-color");
+				if (stopColorAttribute != null)
+					s.Color = ReadColor (stopColorAttribute.Value);
 				stops.Add (s);
 			}
 			stops.Sort ((x, y) => x.Offset.CompareTo (y.Offset));
@@ -495,12 +534,13 @@ namespace NGraphics
 
 		Color ReadColor (string raw)
 		{
-			if (string.IsNullOrWhiteSpace (raw))
+			if (string.IsNullOrWhiteSpace (raw) || raw.Equals("none", StringComparison.OrdinalIgnoreCase))
 				return Colors.Clear;
 
 			var s = raw.Trim ();
 
-			if (s.Length == 7 && s [0] == '#') {
+			if (s.Length == 7 && s [0] == '#') 
+			{
 
 				var r = int.Parse (s.Substring (1, 2), NumberStyles.HexNumber, icult);
 				var g = int.Parse (s.Substring (3, 2), NumberStyles.HexNumber, icult);
