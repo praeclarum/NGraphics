@@ -449,7 +449,7 @@ namespace NGraphics
 				} else if (op == "z" || op == "Z") {
 					p.Close ();
 				} else {
-					//throw new NotSupportedException ("Path Operation " + op);
+					throw new NotSupportedException ("Path Operation " + op);
 				}
 			}
 		}
