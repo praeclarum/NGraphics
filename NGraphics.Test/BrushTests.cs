@@ -1,13 +1,14 @@
 ﻿#if VSTEST
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestClassAttribute;
-using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestMethodAttribute;
+using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.AppContainer.UITestMethodAttribute;
 #else
 using NUnit.Framework;
 #endif
 using System.IO;
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace NGraphics.Test
 {
@@ -15,7 +16,7 @@ namespace NGraphics.Test
 	public class BrushTests : PlatformTest
 	{
 		[Test]
-		public void RectLinearGradient ()
+		public async Task RectLinearGradient ()
 		{
 			var canvas = Platforms.Current.CreateImageCanvas (new Size (100));
 
@@ -28,11 +29,11 @@ namespace NGraphics.Test
 
 			canvas.DrawRectangle (rect, brush: brush);
 
-			canvas.GetImage ().SaveAsPng (GetPath ("Brush.RectLinearGradient.png"));
+			await SaveImage (canvas, "Brush.RectLinearGradient.png");
 		}
 
 		[Test]
-		public void RectAbsLinearGradient ()
+		public async Task RectAbsLinearGradient ()
 		{
 			var canvas = Platforms.Current.CreateImageCanvas (new Size (100));
 
@@ -46,7 +47,7 @@ namespace NGraphics.Test
 
 			canvas.DrawRectangle (rect, brush: brush);
 
-			canvas.GetImage ().SaveAsPng (GetPath ("Brush.RectAbsLinearGradient.png"));
+			await SaveImage (canvas, "Brush.RectAbsLinearGradient.png");
 		}
 	}
 }

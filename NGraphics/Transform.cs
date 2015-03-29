@@ -26,6 +26,32 @@ namespace NGraphics
 		}
 	}
 
+	public class IdentityTransform : Transform
+	{
+		protected override string ToCode ()
+		{
+			return "I";
+		}
+	}
+
+	public class AggregateTransform : Transform
+	{
+		Transform transform;
+
+		public AggregateTransform (Transform transform, Transform previous = null)
+			: base (previous)
+		{
+			if (transform == null)
+				throw new ArgumentNullException ("transform");
+			this.transform = transform;
+		}
+
+		protected override string ToCode ()
+		{
+			return transform.ToString ();
+		}
+	}
+
 	public class MatrixTransform : Transform
 	{
 		public double[] Elements;

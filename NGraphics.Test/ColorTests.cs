@@ -1,13 +1,14 @@
 ﻿#if VSTEST
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestClassAttribute;
-using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestMethodAttribute;
+using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.AppContainer.UITestMethodAttribute;
 #else
 using NUnit.Framework;
 #endif
 using System.IO;
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace NGraphics.Test
 {
@@ -15,7 +16,7 @@ namespace NGraphics.Test
 	public class ColorTests : PlatformTest
 	{
 		[Test]
-		public void HSL ()
+		public async Task HSL ()
 		{
 			// http://en.wikipedia.org/wiki/HSL_and_HSV#Examples
 			var tests = new [] {
@@ -52,7 +53,7 @@ namespace NGraphics.Test
 				AssertInRange (t.Item2.B, t.Item1.B - 1, t.Item1.B + 1);
 			}
 
-			canvas.GetImage ().SaveAsPng (GetPath ("Color.HSL.png"));
+			await SaveImage (canvas, "Color.HSL.png");
 		}
 
 		static void AssertInRange (int x, int min, int max)
@@ -62,7 +63,7 @@ namespace NGraphics.Test
 		}
 
 		[Test]
-		public void HSB ()
+		public async Task HSB ()
 		{
 			// http://en.wikipedia.org/wiki/HSL_and_HSV#Examples
 			var tests = new [] {
@@ -99,7 +100,7 @@ namespace NGraphics.Test
 				AssertInRange (t.Item2.B, t.Item1.B - 1, t.Item1.B + 1);
 			}
 
-			canvas.GetImage ().SaveAsPng (GetPath ("Color.HSB.png"));
+			await SaveImage (canvas, "Color.HSB.png");
 		}
 	}
 }

@@ -8,6 +8,7 @@ using Android.Widget;
 using Android.OS;
 using NGraphics.Test;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NGraphics.Android.Test
 {
@@ -34,7 +35,7 @@ namespace NGraphics.Android.Test
 			};
 		}
 
-		void RunUnitTests ()
+		async Task RunUnitTests ()
 		{
 			var tat = typeof(NUnit.Framework.TestAttribute);
 			var tfat = typeof(NUnit.Framework.TestFixtureAttribute);
@@ -53,7 +54,10 @@ namespace NGraphics.Android.Test
 				var ms = t.GetMethods ().Where (m => m.GetCustomAttributes (tat, true).Length > 0);
 				foreach (var m in ms) {
 					try {
-						m.Invoke (test, null);
+						var r = m.Invoke (test, null);
+						var ta = r as Task;
+						if (ta != null)
+							await ta;
 					} catch (Exception ex) {
 						Console.WriteLine (ex);
 					}
@@ -63,7 +67,7 @@ namespace NGraphics.Android.Test
 			var client = new System.Net.WebClient ();
 			var pngs = System.IO.Directory.GetFiles (PlatformTest.ResultsDirectory, "*.png");
 			foreach (var f in pngs) {
-				client.UploadData ("http://192.168.1.201:1234/" + System.IO.Path.GetFileName (f), System.IO.File.ReadAllBytes (f));
+				client.UploadData ("http://10.0.1.8:1234/" + System.IO.Path.GetFileName (f), System.IO.File.ReadAllBytes (f));
 			}
 		}
 	}

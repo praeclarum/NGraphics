@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace NGraphics
 {
@@ -66,6 +67,13 @@ namespace NGraphics
 		{
 			image.Save (path, ImageFormat.Png);
 		}
+
+		public Task SaveAsPngAsync (Stream stream)
+		{
+			return Task.Run (() => {
+				image.Save (stream, ImageFormat.Png);
+			});
+		}
 	}
 
 	public class BitmapCanvas : GraphicsCanvas, IImageCanvas
@@ -85,9 +93,9 @@ namespace NGraphics
 			graphics.ScaleTransform ((float)scale, (float)scale);
 		}
 
-		public IImage GetImage ()
+		public Task<IImage> GetImageAsync ()
 		{
-			return new ImageImage (bitmap);
+			return Task.FromResult<IImage> (new ImageImage (bitmap));
 		}
 	}
 

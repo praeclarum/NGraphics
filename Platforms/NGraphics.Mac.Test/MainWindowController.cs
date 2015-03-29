@@ -5,6 +5,7 @@ using AppKit;
 using System.Linq;
 using NGraphics.Test;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace NGraphics.Mac.Test
 {
@@ -26,12 +27,17 @@ namespace NGraphics.Mac.Test
 		public override void AwakeFromNib ()
 		{
 			base.AwakeFromNib ();
+			RunTestsAsync ();
+		}
 
+		async Task RunTestsAsync ()
+		{
 			var sdir = System.IO.Path.GetDirectoryName (Environment.GetCommandLineArgs () [0]);
 			while (Directory.GetFiles (sdir, "NGraphics.sln").Length == 0)
 				sdir = System.IO.Path.GetDirectoryName (sdir);
 			PlatformTest.ResultsDirectory = System.IO.Path.Combine (sdir, "TestResults");
 			PlatformTest.Platform = Platforms.Current;
+			PlatformTest.OpenStream = File.OpenWrite;
 			Environment.CurrentDirectory = PlatformTest.ResultsDirectory;
 
 			var tat = typeof(NUnit.Framework.TestAttribute);
@@ -44,7 +50,10 @@ namespace NGraphics.Mac.Test
 				var test = Activator.CreateInstance (t);
 				var ms = t.GetMethods ().Where (m => m.GetCustomAttributes (tat, true).Length > 0);
 				foreach (var m in ms) {
-					m.Invoke (test, null);
+					var r = m.Invoke (test, null);
+					var ta = r as Task;
+					if (ta != null)
+						await ta;
 				}
 			}
 

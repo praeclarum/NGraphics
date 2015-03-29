@@ -1,7 +1,7 @@
 ﻿#if VSTEST
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestClassAttribute;
-using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestMethodAttribute;
+using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.AppContainer.UITestMethodAttribute;
 #else
 using NUnit.Framework;
 #endif
@@ -10,6 +10,7 @@ using NGraphics;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace NGraphics.Test
 {
@@ -20,7 +21,12 @@ namespace NGraphics.Test
 			public static IPlatform Current { get { return PlatformTest.Platform; } }
 		}
 
-		public static IPlatform Platform = new NullPlatform ();
+		public static IPlatform Platform =
+#if NETFX_CORE
+			new WindowsXamlPlatform ();
+#else
+			new NullPlatform ();
+#endif
 
 		public static string ResultsDirectory = "";
 		public static string GetPath (string filename)
@@ -48,24 +54,39 @@ namespace NGraphics.Test
 				return Platform.LoadImage (s);
 			}
 		}
+
+		public static Func<string, Stream> OpenStream = p => null;
+
+		public async Task SaveImage (IImageCanvas canvas, string name)
+		{
+			var path = GetPath (name);
+			var i = await canvas.GetImageAsync ();
+			using (var s = OpenStream (path)) {
+				if (s == null) {
+					i.SaveAsPng (path);
+				} else {
+					await i.SaveAsPngAsync (s);
+				}
+			}
+		}
 	}
 
 	[TestFixture]
 	public class ImageCanvasTest : PlatformTest
 	{
 		[Test]
-		public void BlurImage ()
+		public async Task BlurImage ()
 		{
 			var img = Platform.CreateImage (
 				          new[] { Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow },
 				          2);
 			var canvas = Platform.CreateImageCanvas (new Size (100), transparency: true);
 			canvas.DrawImage (img, new Rect (new Size (100)));
-			canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.BlurImage"));
+			await SaveImage (canvas, "ImageCanvas.BlurImage");
 		}
 
 		[Test]
-		public void BlurImage2 ()
+		public async Task BlurImage2 ()
 		{
 			var img = Platform.CreateImage (
 				new[] { Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow },
@@ -75,11 +96,11 @@ namespace NGraphics.Test
 			canvas.DrawImage (img, new Rect (new Point (0, 50), new Size (50)));
 			canvas.DrawImage (img, new Rect (new Point (50, 0), new Size (150, 50)));
 			canvas.DrawImage (img, new Rect (new Point (50, 50), new Size (150, 50)));
-			canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.BlurImage2"));
+			await SaveImage (canvas, "ImageCanvas.BlurImage2");
 		}
 
 		[Test]
-		public void Cats ()
+		public async Task Cats ()
 		{
 			var img = GetResourceImage ("cat.png");
 			var canvas = Platform.CreateImageCanvas (new Size (100, 200), transparency: true);
@@ -87,11 +108,11 @@ namespace NGraphics.Test
 			canvas.DrawImage (img, new Rect (new Point (50, 0), new Size (50)));
 			canvas.DrawImage (img, new Rect (new Point (0, 50), new Size (50, 150)));
 			canvas.DrawImage (img, new Rect (new Point (50, 50), new Size (50, 150)));
-			canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.Cats"));
+			await SaveImage (canvas, "ImageCanvas.Cats");
 		}
 
 		[Test]
-		public void DrawImageWithAlpha ()
+		public async Task DrawImageWithAlpha ()
 		{
 			var img = GetResourceImage ("cat.png");
 			var canvas = Platform.CreateImageCanvas (new Size (100, 200), transparency: true);
@@ -99,11 +120,11 @@ namespace NGraphics.Test
 			canvas.DrawImage (img, new Rect (new Point (50, 0), new Size (50)), 0.5);
 			canvas.DrawImage (img, new Rect (new Point (0, 50), new Size (50, 150)), 0.25);
 			canvas.DrawImage (img, new Rect (new Point (50, 50), new Size (50, 150)), 0);
-			canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.DrawImageWithAlpha"));
+			await SaveImage (canvas, "ImageCanvas.DrawImageWithAlpha");
 		}
 
 		[Test]
-		public void TriWithRadGrad ()
+		public async Task TriWithRadGrad ()
 		{
 			var canvas = Platform.CreateImageCanvas (new Size (100), transparency: true);
 			var size = new Size (100);
@@ -117,45 +138,39 @@ namespace NGraphics.Test
 			p.Close ();
 			p.Brush = b;
 			p.Draw (canvas);
-			canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.TriWithRadGrad"));
+			await SaveImage (canvas, "ImageCanvas.TriWithRadGrad");
 		}
 		[Test]
-		public void Line ()
+		public async Task Line ()
 		{
 			var canvas = Platform.CreateImageCanvas (new Size (100), transparency: true);
 			canvas.DrawLine (10, 20, 80, 70, Colors.DarkGray, 5);
-			canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.Line"));
+			await SaveImage (canvas, "ImageCanvas.Line");
 		}
 		[Test]
-		public void Ellipse ()
+		public async Task Ellipse ()
 		{
 			var p = Platform;
 			var s = p.CreateImageCanvas (new Size (100), transparency: true);
 			s.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Red.WithWidth (10), Brushes.Yellow);
-			var i = s.GetImage ();
-			var path = GetPath ("Ellipse");
-			i.SaveAsPng (path);
+			await SaveImage (s, "Ellipse");
 		}
 		[Test]
-		public void EllipseWithoutBackground ()
+		public async Task EllipseWithoutBackground ()
 		{
 			var p = Platform;
 			var s = p.CreateImageCanvas (new Size (100), transparency: false);
 			s.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Red.WithWidth (10), Brushes.Yellow);
-			var i = s.GetImage ();
-			var path = GetPath ("ImageCanvas.EllipseWithoutBackground");
-			i.SaveAsPng (path);
+			await SaveImage (s, "ImageCanvas.EllipseWithoutBackground");
 		}
 		[Test]
-		public void EllipseWithBackground ()
+		public async Task EllipseWithBackground ()
 		{
 			var p = Platform;
 			var s = p.CreateImageCanvas (new Size (100), transparency: false);
 			s.FillRectangle (new Rect (new Size (100)), Colors.DarkGray);
 			s.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Red.WithWidth (10), Brushes.Yellow);
-			var i = s.GetImage ();
-			var path = GetPath ("ImageCanvas.EllipseWithBackground");
-			i.SaveAsPng (path);
+			await SaveImage (s, "ImageCanvas.EllipseWithBackground");
 		}
 	}
 }

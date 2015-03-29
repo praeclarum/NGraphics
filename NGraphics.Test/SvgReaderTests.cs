@@ -1,13 +1,14 @@
 ﻿#if VSTEST
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestClassAttribute;
-using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestMethodAttribute;
+using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.AppContainer.UITestMethodAttribute;
 #else
 using NUnit.Framework;
 #endif
 using System.IO;
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace NGraphics.Test
 {
@@ -25,90 +26,90 @@ namespace NGraphics.Test
 			}
 		}
 
-		void ReadAndDraw (string path)
+		async Task ReadAndDraw (string path)
 		{
 			var g = Read (path);
 			var c = Platform.CreateImageCanvas (g.Size);
 			g.Draw (c);
-			c.GetImage ().SaveAsPng (GetPath (path));
+			await SaveImage (c, path);
 		}
 
 		[Test]
-		public void MozillaEllipse ()
+		public async Task MozillaEllipse ()
 		{
-			ReadAndDraw ("mozilla.ellipse.svg");
+			await ReadAndDraw ("mozilla.ellipse.svg");
 		}
 
 		[Test]
-		public void MozillaPath ()
+		public async Task MozillaPath ()
 		{
-			ReadAndDraw ("mozilla.path.svg");
+			await ReadAndDraw ("mozilla.path.svg");
 		}
 
 		[Test]
-		public void MozillaTransform ()
+		public async Task MozillaTransform ()
 		{
-			ReadAndDraw ("mozilla.transform.svg");
+			await ReadAndDraw ("mozilla.transform.svg");
 		}
 
 		[Test]
-		public void MozillaBezierCurves1 ()
+		public async Task MozillaBezierCurves1 ()
 		{
-			ReadAndDraw ("mozilla.BezierCurves1.svg");
+			await ReadAndDraw ("mozilla.BezierCurves1.svg");
 		}
 
 		[Test]
-		public void MozillaBezierCurves2 ()
+		public async Task MozillaBezierCurves2 ()
 		{
-			ReadAndDraw ("mozilla.BezierCurves2.svg");
+			await ReadAndDraw ("mozilla.BezierCurves2.svg");
 		}
 
 		[Test]
-		public void MozillaText1 ()
+		public async Task MozillaText1 ()
 		{
-			ReadAndDraw ("mozilla.Text1.svg");
+			await ReadAndDraw ("mozilla.Text1.svg");
 		}
 
 		[Test]
-		public void MozillaText2 ()
+		public async Task MozillaText2 ()
 		{
-			ReadAndDraw ("mozilla.Text2.svg");
+			await ReadAndDraw ("mozilla.Text2.svg");
 		}
 
 		[Test]
-		public void MozillaText3 ()
+		public async Task MozillaText3 ()
 		{
-			ReadAndDraw ("mozilla.Text3.svg");
+			await ReadAndDraw ("mozilla.Text3.svg");
 		}
 
 		[Test]
-		public void MozillaText4 ()
+		public async Task MozillaText4 ()
 		{
-			ReadAndDraw ("mozilla.Text4.svg");
+			await ReadAndDraw ("mozilla.Text4.svg");
 		}
 
 		[Test]
-		public void Smile ()
+		public async Task Smile ()
 		{
-			ReadAndDraw ("Smile.svg");
+			await ReadAndDraw ("Smile.svg");
 		}
 
 		[Test]
-		public void SunAtNight ()
+		public async Task SunAtNight ()
 		{
-			ReadAndDraw ("SunAtNight.svg");
+			await ReadAndDraw ("SunAtNight.svg");
 		}
 
 		[Test]
-		public void MocastIcon ()
+		public async Task MocastIcon ()
 		{
-			ReadAndDraw ("MocastIcon.svg");
+			await ReadAndDraw ("MocastIcon.svg");
 		}
 
 		[Test]
-		public void ErulisseuiinSpaceshipPack ()
+		public async Task ErulisseuiinSpaceshipPack ()
 		{
-			ReadAndDraw ("ErulisseuiinSpaceshipPack.svg");
+			await ReadAndDraw ("ErulisseuiinSpaceshipPack.svg");
 		}
 	}
 }

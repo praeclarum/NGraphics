@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Android.Graphics;
 using Android.Text;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace NGraphics
 {
@@ -69,6 +70,13 @@ namespace NGraphics
 				bitmap.Compress (Bitmap.CompressFormat.Png, 100, f);
 			}
 		}
+
+		public Task SaveAsPngAsync (Stream stream)
+		{
+			return Task.Run (() => {
+				bitmap.Compress (Bitmap.CompressFormat.Png, 100, stream);
+			});
+		}
 	}
 
 	public class BitmapCanvas : CanvasCanvas, IImageCanvas
@@ -88,9 +96,9 @@ namespace NGraphics
 			graphics.Scale ((float)scale, (float)scale);
 		}
 
-		public IImage GetImage ()
+		public Task<IImage> GetImageAsync ()
 		{
-			return new BitmapImage (bitmap, scale);
+			return Task.FromResult<IImage> (new BitmapImage (bitmap, scale));
 		}
 	}
 
