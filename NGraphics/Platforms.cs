@@ -20,6 +20,8 @@ namespace NGraphics
 					current = new ApplePlatform ();
 					#elif __ANDROID__
 					current = new AndroidPlatform ();
+					#elif NETFX_CORE
+					current = new WindowsXamlPlatform ();
 					#else
 					current = new SystemDrawingPlatform ();
 					#endif
