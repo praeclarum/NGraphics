@@ -151,8 +151,7 @@ namespace NGraphics
 
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 		{
-			var p = GetBrush (pen);
-			var b = GetBrush (brush);
+			var bb = new BoundingBoxBuilder ();
 			var s = new D2D1.PathGeometry (factories.D2DFactory);
 			var figureDepth = 0;
 			using (var sink = s.Open ()) {
@@ -165,10 +164,12 @@ namespace NGraphics
 						var mop = ((MoveTo)op);
 						sink.BeginFigure (Conversions.ToVector2 (mop.Point), D2D1.FigureBegin.Filled);
 						figureDepth++;
+						bb.Add (mop.Point);
 					}
 					else if (op is LineTo) {
 						var lop = ((LineTo)op);
 						sink.AddLine (Conversions.ToVector2 (lop.Point));
+						bb.Add (lop.Point);
 					}
 					else if (op is ClosePath) {
 						sink.EndFigure (D2D1.FigureEnd.Closed);
@@ -184,6 +185,9 @@ namespace NGraphics
 				}
 				sink.Close ();
 			}
+
+			var p = GetBrush (pen);
+			var b = GetBrush (bb.BoundingBox, brush);
 				
 			if (b != null) {
 				renderTarget.FillGeometry (s, b);
@@ -196,7 +200,7 @@ namespace NGraphics
 		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
 		{
 			var p = GetBrush (pen);
-			var b = GetBrush (brush);
+			var b = GetBrush (frame, brush);
 			if (b != null) {
 				renderTarget.FillRectangle (frame.ToRectangleF (), b);
 			}
@@ -208,7 +212,7 @@ namespace NGraphics
 		public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)
 		{
 			var p = GetBrush (pen);
-			var b = GetBrush (brush);
+			var b = GetBrush (frame, brush);
 			var c = frame.Center;
 			var s = new D2D1.Ellipse (new Vector2 ((float)c.X, (float)c.Y), (float)(frame.Width / 2.0), (float)(frame.Height / 2.0));
 			if (b != null) {
@@ -235,17 +239,34 @@ namespace NGraphics
 			return new D2D1.SolidColorBrush (renderTarget, pen.Color.ToColor4 ());
 		}
 
-		D2D1.Brush GetBrush (Brush brush)
+		D2D1.Brush GetBrush (Rect frame, Brush brush)
 		{
 			if (brush == null) return null;
 			var sb = brush as SolidBrush;
 			if (sb != null) {
 				return new D2D1.SolidColorBrush (renderTarget, sb.Color.ToColor4 ());
 			}
-			else {
-				// TODO: Gradient brushes
-				return new D2D1.SolidColorBrush (renderTarget, Colors.Green.ToColor4 ());
+
+			var lgb = brush as LinearGradientBrush;
+			if (lgb != null) {
+				if (lgb.Stops.Count < 2) return null;
+				var props = new D2D1.LinearGradientBrushProperties {
+					StartPoint = lgb.GetAbsoluteStart (frame).ToVector2 (),
+					EndPoint = lgb.GetAbsoluteEnd (frame).ToVector2 (),
+				};
+				var stops =
+					lgb.Stops.
+					Select (s => new D2D1.GradientStop {
+						Color = s.Color.ToColor4 (),
+						Position = (float)s.Offset,
+					}).
+					ToArray ();
+				var stopc = new D2D1.GradientStopCollection (renderTarget, stops);
+				return new D2D1.LinearGradientBrush (renderTarget, props, stopc);
 			}
+
+			// TODO: Radial gradient brushes
+			return new D2D1.SolidColorBrush (renderTarget, Colors.Black.ToColor4 ());
 		}
 	}
 

@@ -123,5 +123,15 @@ namespace NGraphics
 			Stops.Add (new GradientStop (0.5, midColor));
 			Stops.Add (new GradientStop (1, endColor));
 		}
+		public Point GetAbsoluteStart (Rect frame)
+		{
+			if (Absolute) return Start;
+			return frame.TopLeft + Start * frame.Size;
+		}
+		public Point GetAbsoluteEnd (Rect frame)
+		{
+			if (Absolute) return End;
+			return frame.TopLeft + End * frame.Size;
+		}
 	}
 }
