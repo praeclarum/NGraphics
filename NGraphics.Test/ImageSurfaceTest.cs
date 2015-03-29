@@ -1,4 +1,10 @@
-﻿using NUnit.Framework;
+﻿#if VSTEST
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestClassAttribute;
+using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestMethodAttribute;
+#else
+using NUnit.Framework;
+#endif
 using System;
 using NGraphics;
 using System.Diagnostics;
@@ -30,7 +36,7 @@ namespace NGraphics.Test
 		{
 			if (string.IsNullOrEmpty (path))
 				throw new ArgumentException ("path");
-			var ty = typeof(SvgReaderTests);
+			var ty = typeof(AssemblyMarker);
 			var ti = ty.GetTypeInfo ();
 			var assembly = ti.Assembly;
 			var resources = assembly.GetManifestResourceNames ();

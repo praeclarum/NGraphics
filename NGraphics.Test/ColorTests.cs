@@ -1,4 +1,10 @@
-﻿using NUnit.Framework;
+﻿#if VSTEST
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestClassAttribute;
+using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestMethodAttribute;
+#else
+using NUnit.Framework;
+#endif
 using System.IO;
 using System;
 using System.Reflection;
@@ -41,12 +47,18 @@ namespace NGraphics.Test
 				canvas.FillRectangle (rect, t.Item2);
 				canvas.Translate (s, 0);
 
-				Assert.That (t.Item2.R, Is.InRange (t.Item1.R - 1, t.Item1.R + 1));
-				Assert.That (t.Item2.G, Is.InRange (t.Item1.G - 1, t.Item1.G + 1));
-				Assert.That (t.Item2.B, Is.InRange (t.Item1.B - 1, t.Item1.B + 1));
+				AssertInRange (t.Item2.R, t.Item1.R - 1, t.Item1.R + 1);
+				AssertInRange (t.Item2.G, t.Item1.G - 1, t.Item1.G + 1);
+				AssertInRange (t.Item2.B, t.Item1.B - 1, t.Item1.B + 1);
 			}
 
 			canvas.GetImage ().SaveAsPng (GetPath ("Color.HSL.png"));
+		}
+
+		static void AssertInRange (int x, int min, int max)
+		{
+			Assert.IsTrue (x >= min);
+			Assert.IsTrue (x <= max);
 		}
 
 		[Test]
@@ -82,9 +94,9 @@ namespace NGraphics.Test
 				canvas.FillRectangle (rect, t.Item2);
 				canvas.Translate (s, 0);
 
-				Assert.That (t.Item2.R, Is.InRange (t.Item1.R - 1, t.Item1.R + 1));
-				Assert.That (t.Item2.G, Is.InRange (t.Item1.G - 1, t.Item1.G + 1));
-				Assert.That (t.Item2.B, Is.InRange (t.Item1.B - 1, t.Item1.B + 1));
+				AssertInRange (t.Item2.R, t.Item1.R - 1, t.Item1.R + 1);
+				AssertInRange (t.Item2.G, t.Item1.G - 1, t.Item1.G + 1);
+				AssertInRange (t.Item2.B, t.Item1.B - 1, t.Item1.B + 1);
 			}
 
 			canvas.GetImage ().SaveAsPng (GetPath ("Color.HSB.png"));

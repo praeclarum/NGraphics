@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -30,6 +30,7 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AssemblyMarker.cs" />
     <Compile Include="ImageSurfaceTest.cs" />
     <Compile Include="DrawingTest.cs" />
     <Compile Include="PrimitivesTest.cs" />
@@ -59,10 +60,7 @@
       <Name>NGraphics</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-    <Folder Include="Inputs\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Inputs\mozilla\ellipse.svg" />
     <EmbeddedResource Include="Inputs\SunAtNight.svg" />

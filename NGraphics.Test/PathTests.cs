@@ -1,4 +1,10 @@
-﻿using NUnit.Framework;
+﻿#if VSTEST
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestClassAttribute;
+using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestMethodAttribute;
+#else
+using NUnit.Framework;
+#endif
 using System.IO;
 using System;
 using System.Reflection;
@@ -17,10 +23,10 @@ namespace NGraphics.Test
 			p.LineTo (new Point (100, 50));
 			p.Close ();
 
-			Assert.False (p.Contains (new Point (0, 1)));
-			Assert.True (p.Contains (new Point (0, 0)));
-			Assert.True (p.Contains (new Point (99, 49)));
-			Assert.False (p.Contains (new Point (50, 49)));
+			Assert.IsFalse (p.Contains (new Point (0, 1)));
+			Assert.IsTrue (p.Contains (new Point (0, 0)));
+			Assert.IsTrue (p.Contains (new Point (99, 49)));
+			Assert.IsFalse (p.Contains (new Point (50, 49)));
 		}
 
 		[Test]

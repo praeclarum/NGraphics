@@ -1,4 +1,10 @@
-﻿using NUnit.Framework;
+﻿#if VSTEST
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestClassAttribute;
+using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestMethodAttribute;
+#else
+using NUnit.Framework;
+#endif
 using System.IO;
 using System;
 using System.Reflection;
@@ -12,9 +18,9 @@ namespace NGraphics.Test
 		{
 			using (var s = OpenResource (path)) {
 				var r = new SvgReader (new StreamReader (s));
-				Assert.GreaterOrEqual (r.Graphic.Children.Count, 0);
-				Assert.Greater (r.Graphic.Size.Width, 1);
-				Assert.Greater (r.Graphic.Size.Height, 1);
+				Assert.IsTrue (r.Graphic.Children.Count >= 0);
+				Assert.IsTrue (r.Graphic.Size.Width > 1);
+				Assert.IsTrue (r.Graphic.Size.Height > 1);
 				return r.Graphic;
 			}
 		}

@@ -1,4 +1,10 @@
-﻿using NUnit.Framework;
+﻿#if VSTEST
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestClassAttribute;
+using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestMethodAttribute;
+#else
+using NUnit.Framework;
+#endif
 using System;
 
 namespace NGraphics.Test
@@ -35,7 +41,7 @@ namespace NGraphics.Test
 		public void CreateOval ()
 		{
 			var g = new Ellipse (new Point (10, 20), new Size (30, 40));
-			Assert.NotNull (g);
+			Assert.IsNotNull (g);
 		}
 	}
 }
