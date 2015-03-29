@@ -12,13 +12,13 @@ using Shapes = Windows.UI.Xaml.Shapes;
 
 namespace NGraphics
 {
-	public class WindowsXamlPlatform : IPlatform
+	public class WinRTPlatform : IPlatform
 	{
-		public string Name { get { return "WindowsXaml"; } }
+		public string Name { get { return "WinRT"; } }
 
 		public IImageCanvas CreateImageCanvas (Size size, double scale = 1.0, bool transparency = true)
 		{
-			throw new NotImplementedException ();
+			return new WicRenderTargetCanvas (size, scale, transparency);
 		}
 
 		public IImage CreateImage (Color[] colors, int width, double scale = 1.0)

@@ -21,7 +21,7 @@ namespace NGraphics
 					#elif __ANDROID__
 					current = new AndroidPlatform ();
 					#elif NETFX_CORE
-					current = new WindowsXamlPlatform ();
+					current = new WinRTPlatform ();
 					#else
 					current = new SystemDrawingPlatform ();
 					#endif

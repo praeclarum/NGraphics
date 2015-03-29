@@ -22,6 +22,12 @@
       <package id="SharpDX.Direct3D11" />
       <package id="SharpDX.DXGI" />
     </group>
+    <group targetFramework="wpa81">
+      <package id="SharpDX" />
+      <package id="SharpDX.Direct2D1" />
+      <package id="SharpDX.Direct3D11" />
+      <package id="SharpDX.DXGI" />
+    </group>
   </dependencies>
   <files>
     <!-- PCL -->

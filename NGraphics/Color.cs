@@ -27,6 +27,16 @@ namespace NGraphics
 				return (A << 24) | (R << 16) | (G << 8) | B;
 			}
 		}
+		public int Rgba {
+			get {
+				return (R << 24) | (G << 16) | (B << 8) | A;
+			}
+		}
+		public int Abgr {
+			get {
+				return (A << 24) | (B << 16) | (G << 8) | R;
+			}
+		}
 
 		Color (byte r, byte g, byte b, byte a)
 		{

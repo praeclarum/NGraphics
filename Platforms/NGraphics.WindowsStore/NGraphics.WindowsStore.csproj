@@ -110,7 +110,7 @@
     <Compile Include="CanvasCanvas.cs" />
     <Compile Include="Direct2DCanvas.cs" />
     <Compile Include="ImageSourceImage.cs" />
-    <Compile Include="WindowsXamlPlatform.cs" />
+    <Compile Include="WinRTPlatform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
