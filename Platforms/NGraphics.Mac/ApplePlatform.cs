@@ -7,7 +7,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using UIKit;
 using System.Threading.Tasks;
 
 namespace NGraphics
@@ -261,11 +260,17 @@ namespace NGraphics
 			SetBrush (brush);
 
 			string fontName = font.Name;
-			var availableFonts = UIFont.FontNamesForFamilyName(fontName);
+			Array availableFonts =
+				#if __IOS__
+				UIKit.UIFont.FontNamesForFamilyName(fontName);
+				#else
+				AppKit.NSFontManager.SharedFontManager.AvailableMembersOfFontFamily (fontName).ToArray ();
+				#endif
 			if (availableFonts != null && availableFonts.Length > 0)
 				context.SelectFont (font.Name, (nfloat)font.Size, CGTextEncoding.MacRoman);
 			else
-				context.SelectFont("Helvetica", (nfloat)font.Size, CGTextEncoding.MacRoman);
+				context.SelectFont ("Georgia", (nfloat)font.Size, CGTextEncoding.MacRoman);
+			
 			context.ShowTextAtPoint ((nfloat)frame.X, (nfloat)frame.Y, text);
 
 //			using (var atext = new NSMutableAttributedString (text)) {

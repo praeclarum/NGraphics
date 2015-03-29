@@ -64,7 +64,7 @@ namespace NGraphics
 			//
 			Graphic = new Graphic (size, viewBox);
 
-			AddElements (Graphic.Children, svg.Elements (), null, null);
+			AddElements (Graphic.Children, svg.Elements (), null, Brushes.Black);
 		}
 
 		void AddElements (IList<IDrawable> list, IEnumerable<XElement> es, Pen inheritPen, Brush inheritBrush)
@@ -81,16 +81,14 @@ namespace NGraphics
 			Element r = null;
 			Pen pen = null;
 			Brush brush = null;
-			ApplyStyle (e.Attributes ().ToDictionary (k => k.Name.LocalName, v => v.Value), ref pen, ref brush);
+			bool hasPen, hasBrush;
+			ApplyStyle (e.Attributes ().ToDictionary (k => k.Name.LocalName, v => v.Value), ref pen, out hasPen, ref brush, out hasBrush);
 			var style = ReadString (e.Attribute ("style"));
 			if (!string.IsNullOrWhiteSpace (style)) {
-				ApplyStyle (style, ref pen, ref brush);
+				ApplyStyle (style, ref pen, out hasPen, ref brush, out hasBrush);
 			}
-			pen = pen ?? inheritPen;
-			brush = brush ?? inheritBrush;
-			//if (pen == null && brush == null) {
-			//	brush = Brushes.Black;
-			//}
+			pen = hasPen ? pen : inheritPen;
+			brush = hasBrush ? brush : inheritBrush;
 			//var id = ReadString (e.Attribute ("id"));
 
 			//
@@ -211,7 +209,7 @@ namespace NGraphics
 
 		Regex keyValueRe = new Regex (@"\s*(\w+)\s*:\s*(.*)");
 
-		void ApplyStyle (string style, ref Pen pen, ref Brush brush)
+		void ApplyStyle (string style, ref Pen pen, out bool hasPen, ref Brush brush, out bool hasBrush)
 		{
 			var d = new Dictionary<string, string> ();
 			var kvs = style.Split (new[]{ ';' }, StringSplitOptions.RemoveEmptyEntries);
@@ -223,7 +221,7 @@ namespace NGraphics
 					d [k] = v;
 				}
 			}
-			ApplyStyle (d, ref pen, ref brush);
+			ApplyStyle (d, ref pen, out hasPen, ref brush, out hasBrush);
 		}
 
 		string GetString (Dictionary<string, string> style, string name, string defaultValue = "")
@@ -236,7 +234,7 @@ namespace NGraphics
 
 		Regex fillUrlRe = new Regex (@"url\s*\(\s*#([^\)]+)\)");
 
-		void ApplyStyle (Dictionary<string, string> style, ref Pen pen, ref Brush brush)
+		void ApplyStyle (Dictionary<string, string> style, ref Pen pen, out bool hasPen, ref Brush brush, out bool hasBrush)
 		{
 			//
 			// Pen attributes
@@ -261,9 +259,12 @@ namespace NGraphics
 			var stroke = GetString (style, "stroke").Trim ();
 			if (string.IsNullOrEmpty (stroke)) {
 				// No change
+				hasPen = false;
 			} else if (stroke.Equals("none", StringComparison.OrdinalIgnoreCase)) {
+				hasPen = true;
 				pen = null;
 			} else {
+				hasPen = true;
 				if (pen == null)
 					pen = new Pen ();
 				Color color;
@@ -293,9 +294,12 @@ namespace NGraphics
 			var fill = GetString (style, "fill").Trim ();
 			if (string.IsNullOrEmpty (fill)) {
 				// No change
+				hasBrush = false;
 			} else if (fill.Equals("none", StringComparison.OrdinalIgnoreCase)) {
+				hasBrush = true;
 				brush = null;
 			} else {
+				hasBrush = true;
 				Color color;
 				if (Colors.TryParse (fill, out color)) {
 					var sb = brush as SolidBrush;
