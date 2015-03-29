@@ -20,12 +20,11 @@ namespace NGraphics
 		readonly double scale;
 		readonly Direct2DFactories factories;
 
-		//DXGI.Format.B8G8R8A8_UNorm, transparency ? D2D1.AlphaMode.Premultiplied : D2D1.AlphaMode.Ignore
-
 		public WicRenderTargetCanvas (Size size, double scale = 1.0, bool transparency = true, Direct2DFactories factories = null)
 			: this (
+				// DIPs = pixels / (DPI/96.0)
 				new WIC.Bitmap ((factories ?? Direct2DFactories.Shared).WicFactory, (int)(Math.Ceiling (size.Width * scale)), (int)(Math.Ceiling (size.Height * scale)), transparency ? WIC.PixelFormat.Format32bppPBGRA : WIC.PixelFormat.Format32bppBGR, WIC.BitmapCreateCacheOption.CacheOnLoad),
-				new D2D1.RenderTargetProperties (D2D1.RenderTargetType.Default, new D2D1.PixelFormat (DXGI.Format.Unknown, D2D1.AlphaMode.Unknown), (float)(160.0 * scale), (float)(160.0 * scale), D2D1.RenderTargetUsage.None, D2D1.FeatureLevel.Level_DEFAULT))
+				new D2D1.RenderTargetProperties (D2D1.RenderTargetType.Default, new D2D1.PixelFormat (DXGI.Format.Unknown, D2D1.AlphaMode.Unknown), (float)(96.0 * scale), (float)(96.0 * scale), D2D1.RenderTargetUsage.None, D2D1.FeatureLevel.Level_DEFAULT))
 		{
 		}
 
@@ -33,9 +32,9 @@ namespace NGraphics
 			: base (new D2D1.WicRenderTarget ((factories ?? Direct2DFactories.Shared).D2DFactory, bmp, properties))
 		{
 			this.Bmp = bmp;
-			this.scale = properties.DpiX / 160.0;
+			this.scale = properties.DpiX / 96.0;
 			var bmpSize = bmp.Size;
-			this.size = new Size (bmpSize.Width, bmpSize.Height);
+			this.size = new Size (bmpSize.Width / scale, bmpSize.Height / scale);
 			this.factories = factories ?? Direct2DFactories.Shared;
 		}
 
@@ -152,6 +151,46 @@ namespace NGraphics
 
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 		{
+			var p = GetBrush (pen);
+			var b = GetBrush (brush);
+			var s = new D2D1.PathGeometry (factories.D2DFactory);
+			var figureDepth = 0;
+			using (var sink = s.Open ()) {
+				foreach (var op in ops) {
+					if (op is MoveTo) {
+						while (figureDepth > 0) {
+							sink.EndFigure (D2D1.FigureEnd.Open);
+							figureDepth--;
+						}
+						var mop = ((MoveTo)op);
+						sink.BeginFigure (Conversions.ToVector2 (mop.Point), D2D1.FigureBegin.Filled);
+						figureDepth++;
+					}
+					else if (op is LineTo) {
+						var lop = ((LineTo)op);
+						sink.AddLine (Conversions.ToVector2 (lop.Point));
+					}
+					else if (op is ClosePath) {
+						sink.EndFigure (D2D1.FigureEnd.Closed);
+						figureDepth--;
+					}
+					else {
+						// TODO: More path operations
+					}
+				}
+				while (figureDepth > 0) {
+					sink.EndFigure (D2D1.FigureEnd.Open);
+					figureDepth--;
+				}
+				sink.Close ();
+			}
+				
+			if (b != null) {
+				renderTarget.FillGeometry (s, b);
+			}
+			if (p != null) {
+				renderTarget.DrawGeometry (s, p, (float)pen.Width, GetStrokeStyle (pen));
+			}			
 		}
 
 		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
@@ -162,18 +201,32 @@ namespace NGraphics
 				renderTarget.FillRectangle (frame.ToRectangleF (), b);
 			}
 			if (p != null) {
-				renderTarget.DrawRectangle (frame.ToRectangleF (), b, (float)pen.Width);
+				renderTarget.DrawRectangle (frame.ToRectangleF (), p, (float)pen.Width, GetStrokeStyle (pen));
 			}
 		}
 
 		public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)
 		{
-			DrawRectangle (frame, pen, brush);
+			var p = GetBrush (pen);
+			var b = GetBrush (brush);
+			var c = frame.Center;
+			var s = new D2D1.Ellipse (new Vector2 ((float)c.X, (float)c.Y), (float)(frame.Width / 2.0), (float)(frame.Height / 2.0));
+			if (b != null) {
+				renderTarget.FillEllipse (s, b);
+			}
+			if (p != null) {
+				renderTarget.DrawEllipse (s, p, (float)pen.Width, GetStrokeStyle (pen));
+			}
 		}
 
 		public void DrawImage (IImage image, Rect frame, double alpha = 1.0)
 		{
 			DrawRectangle (frame, null, Brushes.Red);
+		}
+
+		D2D1.StrokeStyle GetStrokeStyle (Pen pen)
+		{
+			return null;
 		}
 
 		D2D1.Brush GetBrush (Pen pen)
@@ -200,15 +253,15 @@ namespace NGraphics
 	{
 		public readonly SharpDX.WIC.ImagingFactory WicFactory;
 		public readonly D2D1.Factory D2DFactory;
-		public readonly SharpDX.DirectWrite.Factory _dWriteFactory;
-		public readonly D2D1.DeviceContext _d2DDeviceContext;
+		//public readonly SharpDX.DirectWrite.Factory _dWriteFactory;
+		//public readonly D2D1.DeviceContext _d2DDeviceContext;
 
 		public static readonly Direct2DFactories Shared = new Direct2DFactories ();
 
 		public Direct2DFactories ()
 		{
 			WicFactory = new SharpDX.WIC.ImagingFactory ();
-			_dWriteFactory = new SharpDX.DirectWrite.Factory ();
+			//_dWriteFactory = new SharpDX.DirectWrite.Factory ();
 
 			var d3DDevice = new D3D11.Device (
 				D3D.DriverType.Hardware,
@@ -229,18 +282,18 @@ namespace NGraphics
 			var dxgiDevice = ComObject.As<SharpDX.DXGI.Device> (d3DDevice.NativePointer);
 			var d2DDevice = new D2D1.Device (dxgiDevice);
 			D2DFactory = d2DDevice.Factory;
-			_d2DDeviceContext = new D2D1.DeviceContext (d2DDevice, D2D1.DeviceContextOptions.None);
-			var dpi = DisplayDpi;
-			_d2DDeviceContext.DotsPerInch = new Size2F (dpi, dpi);
+			//_d2DDeviceContext = new D2D1.DeviceContext (d2DDevice, D2D1.DeviceContextOptions.None);
+			//var dpi = DisplayDpi;
+			//_d2DDeviceContext.DotsPerInch = new Size2F (dpi, dpi);
 		}
 
-		static float DisplayDpi
+		/*static float DisplayDpi
 		{
 			get
 			{
 				return Windows.Graphics.Display.DisplayInformation.GetForCurrentView ().LogicalDpi;
 			}
-		}
+		}*/
 	}
 
 	public static partial class Conversions
@@ -248,6 +301,11 @@ namespace NGraphics
 		public static Color4 ToColor4 (this Color color)
 		{
 			return new Color4 (color.Abgr);
+		}
+
+		public static Vector2 ToVector2 (this Point point)
+		{
+			return new Vector2 ((float)point.X, (float)point.Y);
 		}
 
 		public static RectangleF ToRectangleF (this Rect rect)
