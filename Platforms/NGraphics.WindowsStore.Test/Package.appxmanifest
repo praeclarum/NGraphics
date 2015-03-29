@@ -1,53 +1,38 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  
-  <Identity Name="cb7c46da-e628-4b32-8fe3-815648007be0"
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
+
+  <Identity Name="a9334deb-f52c-4722-8049-199cf49da461"
             Publisher="CN=fak"
             Version="1.0.0.0" />
-  
+
   <Properties>
     <DisplayName>NGraphics.WindowsStore.Test</DisplayName>
     <PublisherDisplayName>fak</PublisherDisplayName>
-    <Logo>Images\UnitTestStoreLogo.png</Logo>
-    <Description>NGraphics.WindowsStore.Test</Description>
+    <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
-  
+
   <Prerequisites>
     <OSMinVersion>6.3.0</OSMinVersion>
     <OSMaxVersionTested>6.3.0</OSMaxVersionTested>
   </Prerequisites>
-  
+
   <Resources>
     <Resource Language="x-generate"/>
   </Resources>
-  
-  <Applications>
-    <Application Id="vstest.executionengine.App" 
-        Executable="vstest.executionengine.appcontainer.exe" 
-        EntryPoint="vstest.executionengine.App">
-        <VisualElements 
-            DisplayName="NoUIEntryPoints"
-            Logo="Images\UnitTestLogo.png"
-            SmallLogo="Images\UnitTestSmallLogo.png"
-            Description="vstest.executionengine.App"
-            ForegroundText="light"
-            BackgroundColor="#0084FF">
-            <SplashScreen Image="Images\UnitTestSplashScreen.png" />
-        </VisualElements>
-    </Application>
 
-    <Application Id="vstest.executionengine.x86.App" 
-        Executable="vstest.executionengine.appcontainer.x86.exe" 
-        EntryPoint="vstest.executionengine.x86.App">
-        <VisualElements 
-            DisplayName="NoUIEntryPoints"
-            Logo="Images\UnitTestLogo.png"
-            SmallLogo="Images\UnitTestSmallLogo.png"
-            Description="vstest.executionengine.x86.App"
+  <Applications>
+    <Application Id="App"
+        Executable="$targetnametoken$.exe"
+        EntryPoint="NGraphics.WindowsStore.Test.App">
+        <m2:VisualElements
+            DisplayName="NGraphics.WindowsStore.Test"
+            Square150x150Logo="Assets\Logo.png"
+            Square30x30Logo="Assets\SmallLogo.png"
+            Description="NGraphics.WindowsStore.Test"
             ForegroundText="light"
-            BackgroundColor="#0084FF">
-            <SplashScreen Image="Images\UnitTestSplashScreen.png" />
-        </VisualElements>
+            BackgroundColor="#464646">
+            <m2:SplashScreen Image="Assets\SplashScreen.png" />
+        </m2:VisualElements>
     </Application>
   </Applications>
   <Capabilities>

@@ -56,6 +56,7 @@ namespace NGraphics.Test
 		}
 
 		public static Func<string, Stream> OpenStream = p => null;
+		public static Func<Stream, Task> CloseStream = s => Task.FromResult<object> (null);
 
 		public async Task SaveImage (IImageCanvas canvas, string name)
 		{
@@ -66,6 +67,7 @@ namespace NGraphics.Test
 					i.SaveAsPng (path);
 				} else {
 					await i.SaveAsPngAsync (s);
+					await CloseStream (s);
 				}
 			}
 		}

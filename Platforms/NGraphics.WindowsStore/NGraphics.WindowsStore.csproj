@@ -106,6 +106,8 @@
     <Compile Include="..\..\NGraphics\Platforms.cs">
       <Link>Platforms.cs</Link>
     </Compile>
+    <Compile Include="CanvasCanvas.cs" />
+    <Compile Include="ImageSourceImage.cs" />
     <Compile Include="WindowsXamlPlatform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

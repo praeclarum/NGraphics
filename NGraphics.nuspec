@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>NGraphics</id>
-    <version>0.1.11</version>
+    <version>0.2.0</version>
     <releaseNotes>Handle SVG lines and Windows platforms</releaseNotes>
     <title>NGraphics</title>
     <authors>Frank A. Krueger, et al</authors>
