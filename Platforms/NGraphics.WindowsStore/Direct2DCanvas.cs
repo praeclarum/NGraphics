@@ -20,9 +20,11 @@ namespace NGraphics
 		readonly double scale;
 		readonly Direct2DFactories factories;
 
+		//DXGI.Format.B8G8R8A8_UNorm, transparency ? D2D1.AlphaMode.Premultiplied : D2D1.AlphaMode.Ignore
+
 		public WicRenderTargetCanvas (Size size, double scale = 1.0, bool transparency = true, Direct2DFactories factories = null)
 			: this (
-				new WIC.Bitmap ((factories ?? Direct2DFactories.Shared).WicFactory, (int)(Math.Ceiling (size.Width * scale)), (int)(Math.Ceiling (size.Height * scale)), SharpDX.WIC.PixelFormat.Format32bppBGR, WIC.BitmapCreateCacheOption.CacheOnLoad),
+				new WIC.Bitmap ((factories ?? Direct2DFactories.Shared).WicFactory, (int)(Math.Ceiling (size.Width * scale)), (int)(Math.Ceiling (size.Height * scale)), transparency ? WIC.PixelFormat.Format32bppPBGRA : WIC.PixelFormat.Format32bppBGR, WIC.BitmapCreateCacheOption.CacheOnLoad),
 				new D2D1.RenderTargetProperties (D2D1.RenderTargetType.Default, new D2D1.PixelFormat (DXGI.Format.Unknown, D2D1.AlphaMode.Unknown), (float)(160.0 * scale), (float)(160.0 * scale), D2D1.RenderTargetUsage.None, D2D1.FeatureLevel.Level_DEFAULT))
 		{
 		}
