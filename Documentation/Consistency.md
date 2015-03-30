@@ -2,7 +2,7 @@
 
 Not all 2D renderers were created equally. There are always performance and quality trade offs to be made - and the heuristics used to choose between the two change over time.
 
-That is to say, although it's NGraphic's goal to create a consistent rendering experience across platforms, it is not perfect and never will be.
+That is to say, although it's NGraphics' goal to create a consistent rendering experience across platforms, it is not perfect and never will be.
 
 This document describes a few of the more notable divergers.
 
@@ -16,9 +16,9 @@ The following pictures show a 2x2 pixel image fitted into a larger image 4 times
 1. <img src="../TestResults/ImageCanvas.BlurImage2-Net.png" /> .NET
 1. <img src="../TestResults/ImageCanvas.BlurImage2-WinRT.png" /> WinRT
 
-I don't know what .NET (aka System.Drawing, aka GDI+) was smoking before this test, but they have some *interesting* results. In general, .NET is always off by about half a pixel and this test really shows the effect. The team must have chosen is strange fill convention and we're stuck with it for eternity.
+I don't know what .NET (aka System.Drawing, aka GDI+) was thinking, but they have some *interesting* results. In general, .NET is always off by about half a pixel and this test really shows the effect. The team chose this strange fill convention and we're stuck with it for eternity.
 
-The clear winner here in WinRT using Direct2D. It's glorious. Just look at that fade! Not a pixel in sight. Now that's some programmers showing off.
+The clear winner here is WinRT using Direct2D. It's glorious. Just look at that fade! Not a pixel in sight. Now that's some programmers showing off.
 
 Android does the next most competent job with CoreGraphics in a close third place.
 
