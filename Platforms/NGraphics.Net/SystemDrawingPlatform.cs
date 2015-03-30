@@ -351,10 +351,10 @@ namespace NGraphics
 
             var rgb = brush as RadialGradientBrush;
             if (rgb != null) {
-                var r = rgb.RelativeRadius * frame.Size.Max;
-                var c = frame.Position + rgb.RelativeCenter * frame.Size;
+                var r = rgb.GetAbsoluteRadius (frame);
+                var c = rgb.GetAbsoluteCenter (frame);
                 var path = new GraphicsPath ();
-                path.AddEllipse (GetRectangleF (new Rect (c - r, new Size (2*r))));
+                path.AddEllipse (GetRectangleF (new Rect (c - r, 2 * r)));
                 var b = new PathGradientBrush (path);
                 var bb = BuildBlend (rgb.Stops, true);
                 if (bb != null) {

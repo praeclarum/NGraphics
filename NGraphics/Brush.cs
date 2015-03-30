@@ -60,36 +60,52 @@ namespace NGraphics
 
 	public class RadialGradientBrush : GradientBrush
 	{
-		public Point RelativeCenter;
-		public Point RelativeFocus;
-		public double RelativeRadius;
+		public Point Center;
+		public Point Focus;
+		public Size Radius;
+		public bool Absolute = false;
 
 		public RadialGradientBrush ()
 		{
 		}
-		public RadialGradientBrush (Point relCenter, double relRadius, params GradientStop[] stops)
+		public RadialGradientBrush (Point relCenter, Size relRadius, params GradientStop[] stops)
 		{
-			RelativeCenter = relCenter;
-			RelativeFocus = relCenter;
-			RelativeRadius = relRadius;
+			Center = relCenter;
+			Focus = relCenter;
+			Radius = relRadius;
 			Stops.AddRange (stops);
 		}
-		public RadialGradientBrush (Point relCenter, double relRadius, Color startColor, Color endColor)
+		public RadialGradientBrush (Point relCenter, Size relRadius, Color startColor, Color endColor)
 		{
-			RelativeCenter = relCenter;
-			RelativeFocus = relCenter;
-			RelativeRadius = relRadius;
+			Center = relCenter;
+			Focus = relCenter;
+			Radius = relRadius;
 			Stops.Add (new GradientStop (0, startColor));
 			Stops.Add (new GradientStop (1, endColor));
 		}
-		public RadialGradientBrush (Point relCenter, double relRadius, Color startColor, Color midColor, Color endColor)
+		public RadialGradientBrush (Point relCenter, Size relRadius, Color startColor, Color midColor, Color endColor)
 		{
-			RelativeCenter = relCenter;
-			RelativeFocus = relCenter;
-			RelativeRadius = relRadius;
+			Center = relCenter;
+			Focus = relCenter;
+			Radius = relRadius;
 			Stops.Add (new GradientStop (0, startColor));
 			Stops.Add (new GradientStop (0.5, midColor));
 			Stops.Add (new GradientStop (1, endColor));
+		}
+		public Point GetAbsoluteCenter (Rect frame)
+		{
+			if (Absolute) return Center;
+			return frame.TopLeft + Center * frame.Size;
+		}
+		public Size GetAbsoluteRadius (Rect frame)
+		{
+			if (Absolute) return Radius;
+			return Radius * frame.Size;
+		}
+		public Point GetAbsoluteFocus (Rect frame)
+		{
+			if (Absolute) return Focus;
+			return Focus * frame.Size;
 		}
 	}
 

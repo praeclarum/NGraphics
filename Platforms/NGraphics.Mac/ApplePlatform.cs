@@ -314,9 +314,9 @@ namespace NGraphics
 				context.Clip ();
 				CGGradientDrawingOptions options = CGGradientDrawingOptions.DrawsBeforeStartLocation | CGGradientDrawingOptions.DrawsAfterEndLocation;
 				var size = frame.Size;
-				var start = Conversions.GetCGPoint (frame.Position + rgb.RelativeCenter * size);
-				var r = (nfloat)(rgb.RelativeRadius * size).Max;
-				var end = Conversions.GetCGPoint (frame.Position + rgb.RelativeFocus * size);
+				var start = Conversions.GetCGPoint (rgb.GetAbsoluteCenter (frame));
+				var r = (nfloat)rgb.GetAbsoluteRadius (frame).Max;
+				var end = Conversions.GetCGPoint (rgb.GetAbsoluteFocus (frame));
 				context.DrawRadialGradient (cg, start, 0, end, r, options);
 				context.RestoreState ();
 				brush = null;

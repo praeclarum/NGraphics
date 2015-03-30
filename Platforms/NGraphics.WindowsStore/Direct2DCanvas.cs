@@ -254,19 +254,37 @@ namespace NGraphics
 					StartPoint = lgb.GetAbsoluteStart (frame).ToVector2 (),
 					EndPoint = lgb.GetAbsoluteEnd (frame).ToVector2 (),
 				};
-				var stops =
-					lgb.Stops.
-					Select (s => new D2D1.GradientStop {
-						Color = s.Color.ToColor4 (),
-						Position = (float)s.Offset,
-					}).
-					ToArray ();
-				var stopc = new D2D1.GradientStopCollection (renderTarget, stops);
-				return new D2D1.LinearGradientBrush (renderTarget, props, stopc);
+				return new D2D1.LinearGradientBrush (renderTarget, props, GetStops (lgb.Stops));
+			}
+
+			var rgb = brush as RadialGradientBrush;
+			if (rgb != null) {
+				if (rgb.Stops.Count < 2) return null;
+				var rad = rgb.GetAbsoluteRadius (frame);
+				var center = rgb.GetAbsoluteCenter (frame);
+				var focus = rgb.GetAbsoluteFocus (frame);
+				var props = new D2D1.RadialGradientBrushProperties {
+					Center = center.ToVector2 (),
+					RadiusX = (float)rad.Width,
+					RadiusY = (float)rad.Height,
+					GradientOriginOffset = (focus - center).ToVector2 (),
+				};
+				return new D2D1.RadialGradientBrush (renderTarget, props, GetStops (rgb.Stops));
 			}
 
 			// TODO: Radial gradient brushes
 			return new D2D1.SolidColorBrush (renderTarget, Colors.Black.ToColor4 ());
+		}
+
+		D2D1.GradientStopCollection GetStops (List<GradientStop> stops)
+		{
+			var q =
+				stops.
+				Select (s => new D2D1.GradientStop {
+					Color = s.Color.ToColor4 (),
+					Position = (float)s.Offset,
+				});
+			return new D2D1.GradientStopCollection (renderTarget, q.ToArray ());
 		}
 	}
 

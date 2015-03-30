@@ -476,11 +476,12 @@ namespace NGraphics
 		{
 			var b = new RadialGradientBrush ();
 
-			b.RelativeCenter.X = ReadNumber (e.Attribute ("cx"));
-			b.RelativeCenter.Y = ReadNumber (e.Attribute ("cy"));
-			b.RelativeFocus.X = ReadNumber (e.Attribute ("fx"));
-			b.RelativeFocus.Y = ReadNumber (e.Attribute ("fy"));
-			b.RelativeRadius = ReadNumber (e.Attribute ("r"));
+			b.Center.X = ReadNumber (e.Attribute ("cx"));
+			b.Center.Y = ReadNumber (e.Attribute ("cy"));
+			b.Focus.X = ReadNumber (e.Attribute ("fx"));
+			b.Focus.Y = ReadNumber (e.Attribute ("fy"));
+			var r = ReadNumber (e.Attribute ("r"));
+			b.Radius = new Size (r);
 
 			ReadStops (e, b.Stops);
 

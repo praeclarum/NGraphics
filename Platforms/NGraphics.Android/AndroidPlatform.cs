@@ -230,8 +230,8 @@ namespace NGraphics
 						locs [i] = (float)s.Offset;
 						comps [i] = s.Color.Argb;
 					}
-					var p1 = bb.Position + rgb.RelativeCenter * bb.Size;
-					var r = rgb.RelativeRadius * bb.Size;
+					var p1 = rgb.GetAbsoluteCenter (bb);
+					var r = rgb.GetAbsoluteRadius (bb);
 					var rg = new RadialGradient (
 						        (float)p1.X, (float)p1.Y,
 						        (float)r.Max,

@@ -131,7 +131,7 @@ namespace NGraphics.Test
 			var canvas = Platform.CreateImageCanvas (new Size (100), transparency: true);
 			var size = new Size (100);
 			var b = new RadialGradientBrush (
-				new Point (0.5, 1), 1,
+				new Point (0.5, 1), new Size (1),
 				Colors.Yellow, Colors.Blue);
 			var p = new Path ();
 			p.MoveTo (0, 0);
