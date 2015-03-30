@@ -57,10 +57,12 @@ namespace NGraphics
 
 	public class WicBitmapImage : IImage
 	{
-		readonly WIC.Bitmap bmp;
+		readonly WIC.BitmapSource bmp;
 		readonly Direct2DFactories factories;
 
-		public WicBitmapImage (WIC.Bitmap bmp, Direct2DFactories factories = null)
+		public WIC.BitmapSource Bitmap { get { return bmp; } }
+
+		public WicBitmapImage (WIC.BitmapSource bmp, Direct2DFactories factories = null)
 		{
 			if (bmp == null)
 				throw new ArgumentNullException ("bmp");
@@ -225,7 +227,32 @@ namespace NGraphics
 
 		public void DrawImage (IImage image, Rect frame, double alpha = 1.0)
 		{
-			DrawRectangle (frame, null, Brushes.Red);
+			var i = GetImage (image);
+			renderTarget.DrawBitmap (i, frame.ToRectangleF (), (float)alpha, D2D1.BitmapInterpolationMode.Linear);
+		}
+
+		D2D1.Bitmap GetImage (IImage image)
+		{
+			if (image == null)
+				return null;
+
+			var wbi = image as WicBitmapImage;
+			if (wbi != null) {
+				Guid renderFormat = WIC.PixelFormat.Format32bppPBGRA;
+				if (wbi.Bitmap.PixelFormat != renderFormat) {
+					System.Diagnostics.Debug.WriteLine ("RT  FORMAT: " + renderTarget.PixelFormat.Format);
+					System.Diagnostics.Debug.WriteLine ("BMP FORMAT: " + wbi.Bitmap.PixelFormat);
+					var c = new WIC.FormatConverter (factories.WicFactory);
+					c.Initialize (wbi.Bitmap, renderFormat);
+					System.Diagnostics.Debug.WriteLine ("CO  FORMAT: " + c.PixelFormat);
+					return D2D1.Bitmap.FromWicBitmap (renderTarget, c);
+				}
+				else {
+					return D2D1.Bitmap.FromWicBitmap (renderTarget, wbi.Bitmap);
+				}
+			}
+
+			throw new NotSupportedException ("Image type " + image.GetType () + " not supported");
 		}
 
 		D2D1.StrokeStyle GetStrokeStyle (Pen pen)

@@ -41,11 +41,15 @@ namespace NGraphics
 
 		public IImage LoadImage (Stream stream)
 		{
-			throw new NotImplementedException ();
+			var factories = Direct2DFactories.Shared;
+			var d = new WIC.BitmapDecoder (factories.WicFactory, stream, WIC.DecodeOptions.CacheOnDemand);
+			var b = d.GetFrame (0);
+			return new WicBitmapImage (b, factories);
 		}
+
 		public IImage LoadImage (string path)
 		{
-			throw new NotImplementedException ();
+			throw new NotSupportedException ("WinRT cannot load images from file paths. Use the Stream overload instead.");
 		}
 	}
 }
