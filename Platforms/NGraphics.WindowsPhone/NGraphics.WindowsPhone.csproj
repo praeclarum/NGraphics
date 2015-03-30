@@ -100,9 +100,6 @@
     <Compile Include="..\NGraphics.WindowsStore\Direct2DCanvas.cs">
       <Link>Direct2DCanvas.cs</Link>
     </Compile>
-    <Compile Include="..\NGraphics.WindowsStore\ImageSourceImage.cs">
-      <Link>ImageSourceImage.cs</Link>
-    </Compile>
     <Compile Include="..\NGraphics.WindowsStore\WinRTPlatform.cs">
       <Link>WinRTPlatform.cs</Link>
     </Compile>

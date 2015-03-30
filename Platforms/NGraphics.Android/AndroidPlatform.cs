@@ -71,11 +71,9 @@ namespace NGraphics
 			}
 		}
 
-		public Task SaveAsPngAsync (Stream stream)
+		public void SaveAsPng (Stream stream)
 		{
-			return Task.Run (() => {
-				bitmap.Compress (Bitmap.CompressFormat.Png, 100, stream);
-			});
+			bitmap.Compress (Bitmap.CompressFormat.Png, 100, stream);
 		}
 	}
 
@@ -96,9 +94,9 @@ namespace NGraphics
 			graphics.Scale ((float)scale, (float)scale);
 		}
 
-		public Task<IImage> GetImageAsync ()
+		public IImage GetImage ()
 		{
-			return Task.FromResult<IImage> (new BitmapImage (bitmap, scale));
+			return new BitmapImage (bitmap, scale);
 		}
 	}
 

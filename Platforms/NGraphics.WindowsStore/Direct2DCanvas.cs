@@ -39,10 +39,10 @@ namespace NGraphics
 			this.factories = factories ?? Direct2DFactories.Shared;
 		}
 
-		public Task<IImage> GetImageAsync ()
+		public IImage GetImage ()
 		{
 			renderTarget.EndDraw ();
-			return Task.FromResult<IImage> (new WICBitmapSourceImage (Bmp, factories));
+			return new WICBitmapSourceImage (Bmp, factories);
 		}
 
 		public Size Size
@@ -76,12 +76,7 @@ namespace NGraphics
 			throw new NotSupportedException ("WinRT does not support saving to files. Please use the Stream override instead.");
 		}
 
-		public Task SaveAsPngAsync (System.IO.Stream stream)
-		{
-			return Task.Run (() => SaveAsPng (stream));
-		}
-
-		void SaveAsPng (System.IO.Stream stream)
+		public void SaveAsPng (System.IO.Stream stream)
 		{
 			using (var encoder = new WIC.PngBitmapEncoder (factories.WICFactory, stream)) {
 				using (var bitmapFrameEncode = new WIC.BitmapFrameEncode (encoder)) {

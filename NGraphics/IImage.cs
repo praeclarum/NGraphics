@@ -7,12 +7,12 @@ namespace NGraphics
 	public interface IImage //: IDrawable
 	{
 		void SaveAsPng (string path);
-		Task SaveAsPngAsync (Stream stream);
+		void SaveAsPng (Stream stream);
 	}	
 
 	public interface IImageCanvas : ICanvas
 	{
-		Task<IImage> GetImageAsync ();
+		IImage GetImage ();
 		Size Size { get; }
 		double Scale { get; }
 	}

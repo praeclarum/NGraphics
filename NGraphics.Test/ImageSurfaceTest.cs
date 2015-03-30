@@ -66,7 +66,7 @@ namespace NGraphics.Test
 					i.SaveAsPng (path);
 				}
 				else {
-					await i.SaveAsPngAsync (s);
+					i.SaveAsPng (s);
 					await CloseStream (s);
 				}
 			}
@@ -74,7 +74,7 @@ namespace NGraphics.Test
 
 		public async Task SaveImage (IImageCanvas canvas, string name)
 		{
-			await SaveImage (await canvas.GetImageAsync (), name);
+			await SaveImage (canvas.GetImage (), name);
 		}
 	}
 

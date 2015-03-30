@@ -111,9 +111,9 @@ namespace NGraphics
 			this.context.ScaleCTM (nscale, -nscale);
 		}
 
-		public Task<IImage> GetImageAsync ()
+		public IImage GetImage ()
 		{
-			return Task.FromResult<IImage> (new CGImageImage (this.context.ToImage (), scale));
+			return new CGImageImage (this.context.ToImage (), scale);
 		}
 	}
 
@@ -149,23 +149,21 @@ namespace NGraphics
 			}
 		}
 
-		public Task SaveAsPngAsync (Stream stream)
+		public void SaveAsPng (Stream stream)
 		{
 			if (stream == null)
 				throw new ArgumentNullException ();
 			
-			return Task.Run (() => {
-				using (var data = new NSMutableData ()) {
-					using (var dest = CGImageDestination.Create (data, "public.png", 1)) {
-						if (dest == null) {
-							throw new InvalidOperationException (string.Format ("Could not create image destination from {0}.", stream));
-						}
-						dest.AddImage (image);
-						dest.Close ();
+			using (var data = new NSMutableData ()) {
+				using (var dest = CGImageDestination.Create (data, "public.png", 1)) {
+					if (dest == null) {
+						throw new InvalidOperationException (string.Format ("Could not create image destination from {0}.", stream));
 					}
-					data.AsStream ().CopyTo (stream);
+					dest.AddImage (image);
+					dest.Close ();
 				}
-			});
+				data.AsStream ().CopyTo (stream);
+			}
 		}
 	}
 

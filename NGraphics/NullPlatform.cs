@@ -30,9 +30,9 @@ namespace NGraphics
 
 		class NullImageSurface : IImageCanvas
 		{
-			public Task<IImage> GetImageAsync ()
+			public IImage GetImage ()
 			{
-				return Task.FromResult<IImage> (new NullImage ());
+				return new NullImage ();
 			}
 			public Size Size { get { return Size.Zero; } }
 			public double Scale { get { return 1.0; } }
@@ -67,9 +67,8 @@ namespace NGraphics
 			public void SaveAsPng (string path)
 			{
 			}
-			public Task SaveAsPngAsync (Stream stream)
+			public void SaveAsPng (Stream stream)
 			{
-				return Task.FromResult<object> (null);
 			}
 		}
 	}
