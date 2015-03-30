@@ -19,7 +19,7 @@ namespace NGraphics
 
 		public IImageCanvas CreateImageCanvas (Size size, double scale = 1.0, bool transparency = true)
 		{
-			return new WICRenderTargetCanvas (size, scale, transparency);
+			return new WICBitmapCanvas (size, scale, transparency);
 		}
 
 		public IImage CreateImage (Color[] colors, int width, double scale = 1.0)
@@ -54,6 +54,7 @@ namespace NGraphics
 				b = c;				
 			}
 
+			// Convert the BitmapSource to a Bitmap so we can allow the decoder to go out of memory
 			return new WICBitmapSourceImage (new WIC.Bitmap (factories.WICFactory, b, WIC.BitmapCreateCacheOption.CacheOnLoad), factories);
 		}
 

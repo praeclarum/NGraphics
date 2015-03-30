@@ -16,13 +16,13 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace NGraphics
 {
-	public class WICRenderTargetCanvas : RenderTargetCanvas, IImageCanvas
+	public class WICBitmapCanvas : RenderTargetCanvas, IImageCanvas
 	{
 		protected readonly WIC.Bitmap Bmp;
 		readonly Size size;
 		readonly double scale;
 
-		public WICRenderTargetCanvas (Size size, double scale = 1.0, bool transparency = true, Direct2DFactories factories = null)
+		public WICBitmapCanvas (Size size, double scale = 1.0, bool transparency = true, Direct2DFactories factories = null)
 			: this (
 				// DIPs = pixels / (DPI/96.0)
 				new WIC.Bitmap ((factories ?? Direct2DFactories.Shared).WICFactory, (int)(Math.Ceiling (size.Width * scale)), (int)(Math.Ceiling (size.Height * scale)), transparency ? WIC.PixelFormat.Format32bppPBGRA : WIC.PixelFormat.Format32bppBGR, WIC.BitmapCreateCacheOption.CacheOnLoad),
@@ -30,7 +30,7 @@ namespace NGraphics
 		{
 		}
 
-		public WICRenderTargetCanvas (WIC.Bitmap bmp, D2D1.RenderTargetProperties properties, Direct2DFactories factories = null)
+		public WICBitmapCanvas (WIC.Bitmap bmp, D2D1.RenderTargetProperties properties, Direct2DFactories factories = null)
 			: base (new D2D1.WicRenderTarget ((factories ?? Direct2DFactories.Shared).D2DFactory, bmp, properties), factories)
 		{
 			this.Bmp = bmp;
