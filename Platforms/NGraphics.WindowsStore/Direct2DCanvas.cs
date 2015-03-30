@@ -21,7 +21,6 @@ namespace NGraphics
 		protected readonly WIC.Bitmap Bmp;
 		readonly Size size;
 		readonly double scale;
-		readonly Direct2DFactories factories;
 
 		public WICRenderTargetCanvas (Size size, double scale = 1.0, bool transparency = true, Direct2DFactories factories = null)
 			: this (
@@ -32,13 +31,12 @@ namespace NGraphics
 		}
 
 		public WICRenderTargetCanvas (WIC.Bitmap bmp, D2D1.RenderTargetProperties properties, Direct2DFactories factories = null)
-			: base (new D2D1.WicRenderTarget ((factories ?? Direct2DFactories.Shared).D2DFactory, bmp, properties))
+			: base (new D2D1.WicRenderTarget ((factories ?? Direct2DFactories.Shared).D2DFactory, bmp, properties), factories)
 		{
 			this.Bmp = bmp;
 			this.scale = properties.DpiX / 96.0;
 			var bmpSize = bmp.Size;
 			this.size = new Size (bmpSize.Width / scale, bmpSize.Height / scale);
-			this.factories = factories ?? Direct2DFactories.Shared;
 		}
 
 		public IImage GetImage ()

@@ -94,9 +94,9 @@
     <Compile Include="..\..\NGraphics\Platforms.cs">
       <Link>Platforms.cs</Link>
     </Compile>
-    <Compile Include="..\NGraphics.WindowsStore\CanvasCanvas.cs">
+    <None Include="..\NGraphics.WindowsStore\CanvasCanvas.cs">
       <Link>CanvasCanvas.cs</Link>
-    </Compile>
+    </None>
     <Compile Include="..\NGraphics.WindowsStore\Direct2DCanvas.cs">
       <Link>Direct2DCanvas.cs</Link>
     </Compile>
