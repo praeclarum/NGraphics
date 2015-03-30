@@ -2,12 +2,18 @@
 using System.IO;
 using NGraphics.Test;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NGraphics.Net.Test
 {
 	class MainClass
 	{
 		public static void Main (string[] args)
+		{
+			RunTests ().Wait ();
+		}
+
+		static async Task RunTests ()
 		{
 			var sdir = System.IO.Path.GetDirectoryName (Environment.GetCommandLineArgs () [0]);
 			while (Directory.GetFiles (sdir, "NGraphics.sln").Length == 0)
@@ -28,7 +34,16 @@ namespace NGraphics.Net.Test
 				foreach (var m in ms) {
 					Console.WriteLine ("Running {0}...", m);
 
-					m.Invoke (test, null);
+					try {
+						var r = m.Invoke (test, null);
+						var ta = r as Task;
+						if (ta != null)
+							await ta;
+					}
+					catch (Exception ex) {
+						Console.WriteLine (ex);
+						Console.ReadLine ();
+					}
 				}
 			}
 

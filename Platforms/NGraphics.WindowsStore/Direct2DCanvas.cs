@@ -135,7 +135,12 @@ namespace NGraphics
 
 		public void Transform (Transform transform)
 		{
-			// TODO: Implement Transform
+			var currentTx = renderTarget.Transform;
+			var tx = new Matrix3x2 (
+				(float)transform.A, (float)transform.B,
+				(float)transform.C, (float)transform.D,
+				(float)transform.E, (float)transform.F);
+			renderTarget.Transform = tx * currentTx;
 		}
 
 		public void RestoreState ()

@@ -188,45 +188,10 @@ namespace NGraphics
 		}
 		public void Transform (Transform transform)
 		{
-			var t = transform;
-			var stack = new Stack<Transform> ();
-			while (t != null) {
-				stack.Push (t);
-				t = t.Previous;
-			}
-			while (stack.Count > 0) {
-				t = stack.Pop ();
-
-				var tm = t as MatrixTransform;
-				if (tm != null) {
-					if (tm.Elements[0] == 1 && tm.Elements[1] == 0 && tm.Elements[2] == 0 && tm.Elements[3] == 1)
-					{
-						context.TranslateCTM((nfloat)tm.Elements[4], (nfloat)tm.Elements[5]);
-					} 
-					else if (tm.Elements[1] == 0 && tm.Elements[2] == 0 && tm.Elements[4] == 0 && tm.Elements[5] == 0)
-					{
-						//scale?
-					}
-					continue;
-				}
-
-				var rt = t as Rotate;
-				if (rt != null) {
-					context.RotateCTM ((nfloat)(rt.Angle * Math.PI / 180));
-					continue;
-				}
-				var tt = t as Translate;
-				if (tt != null) {
-					context.TranslateCTM ((nfloat)tt.Size.Width, (nfloat)tt.Size.Height);
-					continue;
-				}
-				var st = t as Scale;
-				if (st != null) {
-					context.ScaleCTM ((nfloat)st.Size.Width, (nfloat)st.Size.Height);
-					continue;
-				}
-				throw new NotSupportedException ("Transform " + t);
-			}
+			context.ConcatCTM (new CGAffineTransform (
+				(nfloat)transform.A, (nfloat)transform.B,
+				(nfloat)transform.C, (nfloat)transform.D,
+				(nfloat)transform.E, (nfloat)transform.F));
 		}
 		public void RestoreState ()
 		{

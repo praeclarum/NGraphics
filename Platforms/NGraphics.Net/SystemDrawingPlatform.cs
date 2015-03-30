@@ -119,34 +119,14 @@ namespace NGraphics
 		}
 		public void Transform (Transform transform)
 		{
-			var t = transform;
-			var stack = new Stack<Transform> ();
-			while (t != null) {
-				stack.Push (t);
-				t = t.Previous;
+			try {
+				graphics.MultiplyTransform (new Matrix (
+					(float)transform.A, (float)transform.B,
+					(float)transform.C, (float)transform.D,
+					(float)transform.E, (float)transform.F), MatrixOrder.Prepend);
 			}
-			while (stack.Count > 0) {
-				t = stack.Pop ();
-
-				var rt = t as Rotate;
-				if (rt != null) {
-					graphics.RotateTransform ((float)rt.Angle);
-					t = t.Previous;
-					continue;
-				}
-				var tt = t as Translate;
-				if (tt != null) {
-					graphics.TranslateTransform ((float)tt.Size.Width, (float)tt.Size.Height);
-					t = t.Previous;
-					continue;
-				}
-                var st = t as Scale;
-                if (st != null) {
-                    graphics.ScaleTransform ((float)st.Size.Width, (float)st.Size.Height);
-                    t = t.Previous;
-                    continue;
-                }
-                throw new NotSupportedException ("Transform " + t);
+			catch (Exception ex) {
+				Console.WriteLine (ex);
 			}
 		}
 		public void RestoreState ()

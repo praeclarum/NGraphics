@@ -8,140 +8,101 @@ using System.Text.RegularExpressions;
 
 namespace NGraphics
 {
-	public abstract class Transform
+	public struct Transform
 	{
-		public Transform Previous;
-		protected Transform (Transform previous = null)
+		public double A, B, C, D, E, F;
+
+		public static readonly Transform Identity = new Transform (1, 0, 0, 1, 0, 0);
+
+		public Transform (double a, double b, double c, double d, double e, double f)
 		{
-			Previous = previous;
+			A = a; B = b; C = c; D = d; E = e; F = f;
 		}
-		protected abstract string ToCode ();
+
+		public override bool Equals (object obj)
+		{
+			if (obj is Transform) {
+				var y = (Transform)obj;
+				return A == y.A && B == y.B && C == y.C && D == y.D && E == y.E && F == y.F;
+			}
+			return false;
+		}
+
+		public override int GetHashCode ()
+		{
+			return A.GetHashCode () + 2*B.GetHashCode () + 3*C.GetHashCode () + 5*D.GetHashCode () + 7*E.GetHashCode () + 11*F.GetHashCode ();
+		}
+
+		public static bool operator == (Transform x, Transform y)
+		{
+			return x.A == y.A && x.B == y.B && x.C == y.C && x.D == y.D && x.E == y.E && x.F == y.F;
+		}
+
+		public static bool operator != (Transform x, Transform y)
+		{
+			return x.A != y.A || x.B != y.B || x.C != y.C || x.D != y.D || x.E != y.E || x.F != y.F;
+		}
+
 		public override string ToString ()
 		{
-			var s = ToCode ();
-			if (Previous != null) {
-				s = Previous + " " + s;
-			}
-			return s;
+			return string.Format ("matrix({0}, {1}, {2}, {3}, {4}, {5})", A, B, C, D, E, F);
+		}
+
+		public Point TransformPoint (Point point)
+		{
+			return new Point (
+				A * point.X + C * point.Y + E,
+				B * point.X + D * point.Y + F);
+		}
+
+		public static Transform operator * (Transform x, Transform y)
+		{
+			return new Transform (
+				x.A * y.A + x.C * y.B,
+				x.B * y.A + x.D * y.B,
+				x.A * y.C + x.C * y.D,
+				x.B * y.C + x.D * y.D,
+				x.A * y.E + x.C * y.F + x.E,
+				x.B * y.E + x.D * y.F + x.F);
+		}
+
+		public static Transform Translate (double x, double y)
+		{
+			return new Transform (1, 0, 0, 1, x, y);
+		}
+
+		public static Transform Translate (Size size)
+		{
+			return Translate (size.Width, size.Height);
+		}
+
+		public static Transform Translate (Point point)
+		{
+			return Translate (point.X, point.Y);
+		}
+
+		public static Transform Scale (double x, double y)
+		{
+			return new Transform (x, 0, 0, y, 0, 0);
+		}
+
+		public static Transform Scale (Size size)
+		{
+			return Scale (size.Width, size.Height);
+		}
+
+		public static Transform Scale (Point point)
+		{
+			return Scale (point.X, point.Y);
+		}
+
+		public static Transform Rotate (double angleInDegrees)
+		{
+			var a = angleInDegrees * (Math.PI / 180.0);
+			var ca = Math.Cos (a);
+			var sa = Math.Sin (a);
+			return new Transform (ca, sa, -sa, ca, 0, 0);
 		}
 	}
-
-	public class IdentityTransform : Transform
-	{
-		protected override string ToCode ()
-		{
-			return "I";
-		}
-	}
-
-	public class AggregateTransform : Transform
-	{
-		Transform transform;
-
-		public AggregateTransform (Transform transform, Transform previous = null)
-			: base (previous)
-		{
-			if (transform == null)
-				throw new ArgumentNullException ("transform");
-			this.transform = transform;
-		}
-
-		protected override string ToCode ()
-		{
-			return transform.ToString ();
-		}
-	}
-
-	public class MatrixTransform : Transform
-	{
-		public double[] Elements;
-
-		public MatrixTransform (Transform previous = null)
-			: base (previous)
-		{
-			Elements = new double[6];
-		}
-		public MatrixTransform (double[] elements, Transform previous = null)
-			: this (previous)
-		{
-			if (elements == null)
-				throw new ArgumentNullException ("elements");
-			if (elements.Length != 6)
-				throw new ArgumentException ("6 elements were expected");
-			Array.Copy (elements, Elements, 6);
-		}
-		protected override string ToCode ()
-		{
-			return string.Format (CultureInfo.InvariantCulture, "matrix(...)");
-		}
-	}
-
-	public class Translate : Transform
-	{
-		public Size Size;
-		public Translate (Size size, Transform previous = null)
-			: base (previous)
-		{
-			Size = size;
-		}
-		public Translate (Point offset, Transform previous = null)
-			: base (previous)
-		{
-			Size = new Size (offset.X, offset.Y);
-		}
-		public Translate (double dx, double dy, Transform previous = null)
-			: this (new Size (dx, dy), previous)
-		{			
-		}
-		protected override string ToCode ()
-		{
-			return string.Format (CultureInfo.InvariantCulture, "translate({0}, {1})", Size.Width, Size.Height);
-		}
-	}
-
-	public class Scale : Transform
-	{
-		public Size Size;
-		public Scale (Size size, Transform previous = null)
-			: base (previous)
-		{
-			Size = size;
-		}
-		public Scale (double dx, double dy, Transform previous = null)
-			: this (new Size (dx, dy), previous)
-		{			
-		}
-		public Scale (double scale, Transform previous = null)
-			: this (new Size (scale), previous)
-		{			
-		}
-		protected override string ToCode ()
-		{
-			return string.Format (CultureInfo.InvariantCulture, "scale({0}, {1})", Size.Width, Size.Height);
-		}
-	}
-
-	public class Rotate : Transform
-	{
-		/// <summary>
-		/// The angle in degrees.
-		/// </summary>
-		public double Angle;
-		/// <summary>
-		/// Initializes a new instance of the <see cref="NGraphics.Rotate"/> class.
-		/// </summary>
-		/// <param name="angle">Angle in degrees</param>
-		/// <param name="previous">Previous.</param>
-		public Rotate (double angle, Transform previous = null)
-			: base (previous)
-		{
-			Angle = angle;
-		}
-		protected override string ToCode ()
-		{
-			return string.Format (CultureInfo.InvariantCulture, "rotate({0})", Angle);
-		}
-	}
-
-
 }
+

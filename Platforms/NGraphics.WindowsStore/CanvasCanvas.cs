@@ -33,7 +33,7 @@ namespace NGraphics
 		public CanvasCanvas (Canvas canvas)
 		{
 			this.canvas = canvas;
-			stateStack.Push (new State { Transform = new IdentityTransform (), });
+			stateStack.Push (new State { Transform = NGraphics.Transform.Identity, });
 			ClassifyChildren ();
 		}
 
@@ -45,7 +45,7 @@ namespace NGraphics
 		public void Transform (Transform transform)
 		{
 			var state = stateStack.Peek ();
-			state.Transform = new AggregateTransform (transform, state.Transform);
+			state.Transform = state.Transform * transform;
 		}
 
 		public void RestoreState ()

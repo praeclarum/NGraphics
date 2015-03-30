@@ -21,15 +21,15 @@ namespace NGraphics
 	{
 		public static void Translate (this ICanvas canvas, double dx, double dy)
 		{
-			canvas.Transform (new Translate (dx, dy));
+			canvas.Transform (Transform.Translate (dx, dy));
 		}
 		public static void Translate (this ICanvas canvas, Size translation)
 		{
-			canvas.Transform (new Translate (translation));
+			canvas.Transform (Transform.Translate (translation));
 		}
 		public static void Translate (this ICanvas canvas, Point translation)
 		{
-			canvas.Transform (new Translate (translation));
+			canvas.Transform (Transform.Translate (translation));
 		}
 		/// <summary>
 		/// Rotate the specified canvas by the given angle (in degrees).
@@ -37,50 +37,70 @@ namespace NGraphics
 		/// <param name="angle">Angle in degrees.</param>
 		public static void Rotate (this ICanvas canvas, double angle)
 		{
-			canvas.Transform (new Rotate (angle));
+			if (angle != 0) {
+				canvas.Transform (Transform.Rotate (angle));
+			}
 		}
 		/// <param name="angle">Angle in degrees.</param>
 		public static void Rotate (this ICanvas canvas, double angle, Point point)
 		{
-			canvas.Translate (point);
-			canvas.Rotate (angle);
-			canvas.Translate (-point);
+			if (angle != 0) {
+				canvas.Translate (point);
+				canvas.Rotate (angle);
+				canvas.Translate (-point);
+			}
 		}
 		/// <param name="angle">Angle in degrees.</param>
 		public static void Rotate (this ICanvas canvas, double angle, double x, double y)
 		{
-			canvas.Rotate (angle, new Point (x, y));
+			if (angle != 0) {
+				canvas.Rotate (angle, new Point (x, y));
+			}
 		}
 
 		public static void Scale (this ICanvas canvas, double sx, double sy)
 		{
-			canvas.Transform (new Scale (sx, sy));
+			if (sx != 1 || sy != 1) {
+				canvas.Transform (Transform.Scale (sx, sy));
+			}
 		}
 		public static void Scale (this ICanvas canvas, double scale)
 		{
-			canvas.Transform (new Scale (scale));
+			if (scale != 1) {
+				canvas.Transform (Transform.Scale (scale, scale));
+			}
 		}
 		public static void Scale (this ICanvas canvas, Size scale)
 		{
-			canvas.Transform (new Scale (scale));
+			if (scale.Width != 1 || scale.Height != 1) {
+				canvas.Transform (Transform.Scale (scale));
+			}
 		}
 		public static void Scale (this ICanvas canvas, Size scale, Point point)
 		{
-			canvas.Translate (point);
-			canvas.Scale (scale);
-			canvas.Translate (-point);
+			if (scale.Width != 1 || scale.Height != 1) {
+				canvas.Translate (point);
+				canvas.Scale (scale);
+				canvas.Translate (-point);
+			}
 		}
 		public static void Scale (this ICanvas canvas, double scale, Point point)
 		{
-			canvas.Scale (new Size (scale), point);
+			if (scale != 1) {
+				canvas.Scale (new Size (scale), point);
+			}
 		}
 		public static void Scale (this ICanvas canvas, double sx, double sy, double x, double y)
 		{
-			canvas.Scale (new Size (sx, sy), new Point (x, y));
+			if (sx != 1 || sy != 1) {
+				canvas.Scale (new Size (sx, sy), new Point (x, y));
+			}
 		}
 		public static void Scale (this ICanvas canvas, double scale, double x, double y)
 		{
-			canvas.Scale (new Size (scale), new Point (x, y));
+			if (scale != 1) {
+				canvas.Scale (new Size (scale), new Point (x, y));
+			}
 		}
 
 

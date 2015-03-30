@@ -116,33 +116,15 @@ namespace NGraphics
 			graphics.Save (SaveFlags.Matrix|SaveFlags.Clip);
 		}
 		public void Transform (Transform transform)
-		{
-			var t = transform;
-			var stack = new Stack<Transform> ();
-			while (t != null) {
-				stack.Push (t);
-				t = t.Previous;
-			}
-			while (stack.Count > 0) {
-				t = stack.Pop ();
-
-				var rt = t as Rotate;
-				if (rt != null) {
-					graphics.Rotate ((float)rt.Angle);
-					continue;
-				}
-				var st = t as Scale;
-				if (st != null) {
-					graphics.Scale ((float)st.Size.Width, (float)st.Size.Height);
-					continue;
-				}
-				var tt = t as Translate;
-				if (tt != null) {
-					graphics.Translate ((float)tt.Size.Width, (float)tt.Size.Height);
-					continue;
-				}
-				throw new NotSupportedException ("Transform " + t);
-			}
+		{			
+			var t = new Matrix ();
+			t.SetValues (new[] {
+				(float)transform.A, (float)transform.C, (float)transform.E,
+				(float)transform.B, (float)transform.D, (float)transform.F,
+				0, 0, 1,
+			});
+			t.PostConcat (graphics.Matrix);
+			graphics.Matrix = t;
 		}
 		public void RestoreState ()
 		{
@@ -252,20 +234,6 @@ namespace NGraphics
 			if (brush == null)
 				return;
 
-//			if (frame.Width < double.MaxValue) {
-//				var paint = GetFontPaint (font, alignment);
-//
-//				var align = global::Android.Text.Layout.Alignment.AlignNormal;
-//				if (alignment == TextAlignment.Center)
-//					align = global::Android.Text.Layout.Alignment.AlignCenter;
-//				else if (alignment == TextAlignment.Right)
-//					align = global::Android.Text.Layout.Alignment.AlignOpposite;
-//
-//				var sl = new global::Android.Text.StaticLayout (text, paint, (int)Math.Floor (frame.Width), align, 1, 0, false);
-//
-//				sl.Draw (graphics);
-//			}
-//			else {
 			var paint = GetFontPaint (font, alignment);
 			var w = paint.MeasureText (text);
 			var fm = paint.GetFontMetrics ();
@@ -274,7 +242,6 @@ namespace NGraphics
 			var fr = new Rect (point, new Size (w, h));
 			AddBrushPaint (paint, brush, fr);
 			graphics.DrawText (text, (float)point.X, (float)point.Y, paint);
-//			}
 		}
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 		{

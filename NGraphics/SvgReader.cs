@@ -340,39 +340,44 @@ namespace NGraphics
 		Transform ReadTransform (string raw)
 		{
 			if (string.IsNullOrWhiteSpace (raw))
-				return null;
+				return Transform.Identity;
 
 			var s = raw.Trim ();
 
 			var calls = s.Split (new[]{ ')' }, StringSplitOptions.RemoveEmptyEntries);
 
-			Transform t = null;
+			var t = Transform.Identity;
 
 			foreach (var c in calls) {
 				var args = c.Split (new[]{ '(', ',', ' ', '\t', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-				Transform nt = null;
+				var nt = Transform.Identity;
 				switch (args [0]) {
 				case "matrix":
 					if (args.Length == 7) {
-						nt = new MatrixTransform (new double[] { ReadNumber(args[1]), 
-							ReadNumber(args[2]), ReadNumber(args[3]), ReadNumber(args[4]), ReadNumber(args[5]), ReadNumber(args[6]) }, t);
+						nt = new Transform (
+							ReadNumber(args[1]), 
+							ReadNumber(args[2]),
+							ReadNumber(args[3]),
+							ReadNumber(args[4]),
+							ReadNumber(args[5]),
+							ReadNumber(args[6]));
 					} else {
 						throw new NotSupportedException ("Matrices are expected to have 6 elements, this one has " + (args.Length - 1));
 					}
 					break;
 				case "translate":
 					if (args.Length >= 3) {
-						nt = new Translate (new Size (ReadNumber (args [1]), ReadNumber (args [2])), t);
+						nt = Transform.Translate (new Size (ReadNumber (args [1]), ReadNumber (args [2])));
 					} else if (args.Length >= 2) {
-						nt = new Translate (new Size (ReadNumber (args [1]), 0), t);
+						nt = Transform.Translate (new Size (ReadNumber (args[1]), 0));
 					}
 					break;
 				case "scale":
 					if (args.Length >= 3) {
-						nt = new Scale (new Size (ReadNumber (args [1]), ReadNumber (args [2])), t);
+						nt = Transform.Scale (new Size (ReadNumber (args[1]), ReadNumber (args[2])));
 					} else if (args.Length >= 2) {
 						var sx = ReadNumber (args [1]);
-						nt = new Scale (new Size (sx, sx), t);
+						nt = Transform.Scale (new Size (sx, sx));
 					}
 					break;
 				case "rotate":
@@ -380,20 +385,18 @@ namespace NGraphics
 					if (args.Length >= 4) {
 						var x = ReadNumber (args [2]);
 						var y = ReadNumber (args [3]);
-						var t1 = new Translate (new Size (x, y), t);
-						var t2 = new Rotate (a, t1);
-						var t3 = new Translate (new Size (-x, -y), t2);
-						nt = t3;
+						var t1 = Transform.Translate (new Size (x, y));
+						var t2 = Transform.Rotate (a);
+						var t3 = Transform.Translate (new Size (-x, -y));
+						nt = t1 * t2 * t3;
 					} else {
-						nt = new Rotate (a, t);
+						nt = Transform.Rotate (a);
 					}
 					break;
 				default:
 					throw new NotSupportedException ("Can't transform " + args[0]);
 				}
-				if (nt != null) {
-					t = nt;
-				}
+				t = t * nt;
 			}
 
 			return t;

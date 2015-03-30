@@ -16,6 +16,7 @@ namespace NGraphics
 			Id = Guid.NewGuid ().ToString ();
 			Pen = pen;
 			Brush = brush;
+			Transform = NGraphics.Transform.Identity;
 		}
 
 		protected abstract void DrawElement (ICanvas canvas);
@@ -26,12 +27,10 @@ namespace NGraphics
 		{
 			var t = Transform;
 			var pushedState = false;
-			if (t != null) {
-				canvas.SaveState ();
-				pushedState = true;
-			}
 			try {
-				if (t != null) {
+				if (t != NGraphics.Transform.Identity) {
+					canvas.SaveState ();
+					pushedState = true;
 					canvas.Transform (t);
 				}
 				DrawElement (canvas);
