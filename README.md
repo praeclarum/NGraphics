@@ -113,6 +113,10 @@ circle.Draw (canvas);
 	- `CGContextCanvas` wraps a `CoreGraphics.CGContext`
 * .NET 4.5 using System.Drawing
 	- `GraphicsCanvas` wraps a `System.Drawing.Graphics`
+* Windows Store 8.1 using Direct2D
+	- `RenderTragetCanvas` wraps a `SharpDX.Direct2D1.RenderTarget`
+* Windows Phone 8.1 using Direct2D
+	- `RenderTragetCanvas` wraps a `SharpDX.Direct2D1.RenderTarget`
 
 
 ## Editor
