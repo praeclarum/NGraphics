@@ -33,8 +33,8 @@ namespace NGraphics
 						Pitch = width * 4,
 						DataPointer = (IntPtr)p,
 					};
-					var bmp = new WIC.Bitmap (factories.WicFactory, width, colors.Length / width, pf, data);
-					return new WicBitmapImage (bmp, factories);
+					var bmp = new WIC.Bitmap (factories.WICFactory, width, colors.Length / width, pf, data);
+					return new WICBitmapSourceImage (bmp, factories);
 				}
 			}
 		}
@@ -42,9 +42,19 @@ namespace NGraphics
 		public IImage LoadImage (Stream stream)
 		{
 			var factories = Direct2DFactories.Shared;
-			var d = new WIC.BitmapDecoder (factories.WicFactory, stream, WIC.DecodeOptions.CacheOnDemand);
-			var b = d.GetFrame (0);
-			return new WicBitmapImage (b, factories);
+			var d = new WIC.BitmapDecoder (factories.WICFactory, stream, WIC.DecodeOptions.CacheOnDemand);
+			WIC.BitmapSource b = d.GetFrame (0);
+
+			var renderFormat = WIC.PixelFormat.Format32bppPBGRA;
+			if (b.PixelFormat != renderFormat) {
+				//System.Diagnostics.Debug.WriteLine ("BMP FORMAT: " + b.PixelFormat);
+				var c = new WIC.FormatConverter (factories.WICFactory);
+				c.Initialize (b, renderFormat);
+				//System.Diagnostics.Debug.WriteLine ("CO  FORMAT: " + c.PixelFormat);
+				b = c;				
+			}
+
+			return new WICBitmapSourceImage (new WIC.Bitmap (factories.WICFactory, b, WIC.BitmapCreateCacheOption.CacheOnLoad), factories);
 		}
 
 		public IImage LoadImage (string path)

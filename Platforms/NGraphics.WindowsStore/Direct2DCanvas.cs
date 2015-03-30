@@ -23,7 +23,7 @@ namespace NGraphics
 		public WicRenderTargetCanvas (Size size, double scale = 1.0, bool transparency = true, Direct2DFactories factories = null)
 			: this (
 				// DIPs = pixels / (DPI/96.0)
-				new WIC.Bitmap ((factories ?? Direct2DFactories.Shared).WicFactory, (int)(Math.Ceiling (size.Width * scale)), (int)(Math.Ceiling (size.Height * scale)), transparency ? WIC.PixelFormat.Format32bppPBGRA : WIC.PixelFormat.Format32bppBGR, WIC.BitmapCreateCacheOption.CacheOnLoad),
+				new WIC.Bitmap ((factories ?? Direct2DFactories.Shared).WICFactory, (int)(Math.Ceiling (size.Width * scale)), (int)(Math.Ceiling (size.Height * scale)), transparency ? WIC.PixelFormat.Format32bppPBGRA : WIC.PixelFormat.Format32bppBGR, WIC.BitmapCreateCacheOption.CacheOnLoad),
 				new D2D1.RenderTargetProperties (D2D1.RenderTargetType.Default, new D2D1.PixelFormat (DXGI.Format.Unknown, D2D1.AlphaMode.Unknown), (float)(96.0 * scale), (float)(96.0 * scale), D2D1.RenderTargetUsage.None, D2D1.FeatureLevel.Level_DEFAULT))
 		{
 		}
@@ -41,7 +41,7 @@ namespace NGraphics
 		public Task<IImage> GetImageAsync ()
 		{
 			renderTarget.EndDraw ();
-			return Task.FromResult<IImage> (new WicBitmapImage (Bmp, factories));
+			return Task.FromResult<IImage> (new WICBitmapSourceImage (Bmp, factories));
 		}
 
 		public Size Size
@@ -55,14 +55,14 @@ namespace NGraphics
 		}
 	}
 
-	public class WicBitmapImage : IImage
+	public class WICBitmapSourceImage : IImage
 	{
 		readonly WIC.BitmapSource bmp;
 		readonly Direct2DFactories factories;
 
 		public WIC.BitmapSource Bitmap { get { return bmp; } }
 
-		public WicBitmapImage (WIC.BitmapSource bmp, Direct2DFactories factories = null)
+		public WICBitmapSourceImage (WIC.BitmapSource bmp, Direct2DFactories factories = null)
 		{
 			if (bmp == null)
 				throw new ArgumentNullException ("bmp");
@@ -82,7 +82,7 @@ namespace NGraphics
 
 		void SaveAsPng (System.IO.Stream stream)
 		{
-			using (var encoder = new WIC.PngBitmapEncoder (factories.WicFactory, stream)) {
+			using (var encoder = new WIC.PngBitmapEncoder (factories.WICFactory, stream)) {
 				using (var bitmapFrameEncode = new WIC.BitmapFrameEncode (encoder)) {
 					bitmapFrameEncode.Initialize ();
 					var size = bmp.Size;
@@ -236,15 +236,15 @@ namespace NGraphics
 			if (image == null)
 				return null;
 
-			var wbi = image as WicBitmapImage;
+			var wbi = image as WICBitmapSourceImage;
 			if (wbi != null) {
 				Guid renderFormat = WIC.PixelFormat.Format32bppPBGRA;
 				if (wbi.Bitmap.PixelFormat != renderFormat) {
-					System.Diagnostics.Debug.WriteLine ("RT  FORMAT: " + renderTarget.PixelFormat.Format);
-					System.Diagnostics.Debug.WriteLine ("BMP FORMAT: " + wbi.Bitmap.PixelFormat);
-					var c = new WIC.FormatConverter (factories.WicFactory);
+					//System.Diagnostics.Debug.WriteLine ("RT  FORMAT: " + renderTarget.PixelFormat.Format);
+					//System.Diagnostics.Debug.WriteLine ("BMP FORMAT: " + wbi.Bitmap.PixelFormat);
+					var c = new WIC.FormatConverter (factories.WICFactory);
 					c.Initialize (wbi.Bitmap, renderFormat);
-					System.Diagnostics.Debug.WriteLine ("CO  FORMAT: " + c.PixelFormat);
+					//System.Diagnostics.Debug.WriteLine ("CO  FORMAT: " + c.PixelFormat);
 					return D2D1.Bitmap.FromWicBitmap (renderTarget, c);
 				}
 				else {
@@ -317,7 +317,7 @@ namespace NGraphics
 
 	public class Direct2DFactories
 	{
-		public readonly SharpDX.WIC.ImagingFactory WicFactory;
+		public readonly SharpDX.WIC.ImagingFactory WICFactory;
 		public readonly D2D1.Factory D2DFactory;
 		//public readonly SharpDX.DirectWrite.Factory _dWriteFactory;
 		//public readonly D2D1.DeviceContext _d2DDeviceContext;
@@ -326,7 +326,7 @@ namespace NGraphics
 
 		public Direct2DFactories ()
 		{
-			WicFactory = new SharpDX.WIC.ImagingFactory ();
+			WICFactory = new SharpDX.WIC.ImagingFactory ();
 			//_dWriteFactory = new SharpDX.DirectWrite.Factory ();
 
 			var d3DDevice = new D3D11.Device (
