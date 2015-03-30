@@ -19,7 +19,7 @@ namespace NGraphics
 
 		public IImageCanvas CreateImageCanvas (Size size, double scale = 1.0, bool transparency = true)
 		{
-			return new WicRenderTargetCanvas (size, scale, transparency);
+			return new WICRenderTargetCanvas (size, scale, transparency);
 		}
 
 		public IImage CreateImage (Color[] colors, int width, double scale = 1.0)

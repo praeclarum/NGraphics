@@ -13,14 +13,14 @@ using WIC = SharpDX.WIC;
 
 namespace NGraphics
 {
-	public class WicRenderTargetCanvas : RenderTargetCanvas, IImageCanvas
+	public class WICRenderTargetCanvas : RenderTargetCanvas, IImageCanvas
 	{
 		protected readonly WIC.Bitmap Bmp;
 		readonly Size size;
 		readonly double scale;
 		readonly Direct2DFactories factories;
 
-		public WicRenderTargetCanvas (Size size, double scale = 1.0, bool transparency = true, Direct2DFactories factories = null)
+		public WICRenderTargetCanvas (Size size, double scale = 1.0, bool transparency = true, Direct2DFactories factories = null)
 			: this (
 				// DIPs = pixels / (DPI/96.0)
 				new WIC.Bitmap ((factories ?? Direct2DFactories.Shared).WICFactory, (int)(Math.Ceiling (size.Width * scale)), (int)(Math.Ceiling (size.Height * scale)), transparency ? WIC.PixelFormat.Format32bppPBGRA : WIC.PixelFormat.Format32bppBGR, WIC.BitmapCreateCacheOption.CacheOnLoad),
@@ -28,7 +28,7 @@ namespace NGraphics
 		{
 		}
 
-		public WicRenderTargetCanvas (WIC.Bitmap bmp, D2D1.RenderTargetProperties properties, Direct2DFactories factories = null)
+		public WICRenderTargetCanvas (WIC.Bitmap bmp, D2D1.RenderTargetProperties properties, Direct2DFactories factories = null)
 			: base (new D2D1.WicRenderTarget ((factories ?? Direct2DFactories.Shared).D2DFactory, bmp, properties))
 		{
 			this.Bmp = bmp;
@@ -163,15 +163,37 @@ namespace NGraphics
 							sink.EndFigure (D2D1.FigureEnd.Open);
 							figureDepth--;
 						}
-						var mop = ((MoveTo)op);
-						sink.BeginFigure (Conversions.ToVector2 (mop.Point), D2D1.FigureBegin.Filled);
+						var mt = ((MoveTo)op);
+						sink.BeginFigure (Conversions.ToVector2 (mt.Point), D2D1.FigureBegin.Filled);
 						figureDepth++;
-						bb.Add (mop.Point);
+						bb.Add (mt.Point);
 					}
 					else if (op is LineTo) {
-						var lop = ((LineTo)op);
-						sink.AddLine (Conversions.ToVector2 (lop.Point));
-						bb.Add (lop.Point);
+						var lt = ((LineTo)op);
+						sink.AddLine (Conversions.ToVector2 (lt.Point));
+						bb.Add (lt.Point);
+					}
+					else if (op is ArcTo) {
+						var ar = ((ArcTo)op);
+						// TODO: Direct2D Arcs
+						//sink.AddArc (new D2D1.ArcSegment {
+						//	Size = Conversions.ToSize2F (ar.Radius),
+						//	Point = Conversions.ToVector2 (ar.Point),
+						//	SweepDirection = ar.SweepClockwise ? D2D1.SweepDirection.Clockwise : D2D1.SweepDirection.CounterClockwise,
+						//});
+						sink.AddLine (Conversions.ToVector2 (ar.Point));
+						bb.Add (ar.Point);
+					}
+					else if (op is CurveTo) {
+						var ct = ((CurveTo)op);
+						sink.AddBezier (new D2D1.BezierSegment {
+							Point1 = Conversions.ToVector2 (ct.Control1),
+							Point2 = Conversions.ToVector2 (ct.Control2),
+							Point3 = Conversions.ToVector2 (ct.Point),
+						});
+						bb.Add (ct.Point);
+						bb.Add (ct.Control1);
+						bb.Add (ct.Control2);
 					}
 					else if (op is ClosePath) {
 						sink.EndFigure (D2D1.FigureEnd.Closed);
@@ -372,6 +394,11 @@ namespace NGraphics
 		public static Vector2 ToVector2 (this Point point)
 		{
 			return new Vector2 ((float)point.X, (float)point.Y);
+		}
+
+		public static Size2F ToSize2F (this Size size)
+		{
+			return new Size2F ((float)size.Width, (float)size.Height);
 		}
 
 		public static RectangleF ToRectangleF (this Rect rect)
