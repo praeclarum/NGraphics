@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Graphics.Imaging;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-using Shapes = Windows.UI.Xaml.Shapes;
+
+using SharpDX;
+using D3D = SharpDX.Direct3D;
+using D3D11 = SharpDX.Direct3D11;
+using D2D1 = SharpDX.Direct2D1;
+using DXGI = SharpDX.DXGI;
+using WIC = SharpDX.WIC;
 
 namespace NGraphics
 {
@@ -23,7 +24,19 @@ namespace NGraphics
 
 		public IImage CreateImage (Color[] colors, int width, double scale = 1.0)
 		{
-			throw new NotImplementedException ();
+			var factories = Direct2DFactories.Shared;
+			var pf = WIC.PixelFormat.Format32bppBGRA;
+
+			unsafe {
+				fixed (Color* p = colors) {
+					var data = new DataRectangle {
+						Pitch = width * 4,
+						DataPointer = (IntPtr)p,
+					};
+					var bmp = new WIC.Bitmap (factories.WicFactory, width, colors.Length / width, pf, data);
+					return new WicBitmapImage (bmp, factories);
+				}
+			}
 		}
 
 		public IImage LoadImage (Stream stream)

@@ -58,18 +58,23 @@ namespace NGraphics.Test
 		public static Func<string, Stream> OpenStream = p => null;
 		public static Func<Stream, Task> CloseStream = s => Task.FromResult<object> (null);
 
-		public async Task SaveImage (IImageCanvas canvas, string name)
+		public async Task SaveImage (IImage i, string name)
 		{
 			var path = GetPath (name);
-			var i = await canvas.GetImageAsync ();
 			using (var s = OpenStream (path)) {
 				if (s == null) {
 					i.SaveAsPng (path);
-				} else {
+				}
+				else {
 					await i.SaveAsPngAsync (s);
 					await CloseStream (s);
 				}
 			}
+		}
+
+		public async Task SaveImage (IImageCanvas canvas, string name)
+		{
+			await SaveImage (await canvas.GetImageAsync (), name);
 		}
 	}
 

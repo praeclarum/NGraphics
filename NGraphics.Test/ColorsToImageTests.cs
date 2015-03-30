@@ -8,6 +8,7 @@ using NUnit.Framework;
 using System.IO;
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace NGraphics.Test
 {
@@ -15,16 +16,16 @@ namespace NGraphics.Test
 	public class ColorsToImageTests : PlatformTest
 	{
 		[Test]
-		public void RGBY ()
+		public async Task RGBY ()
 		{
 			var image = Platform.CreateImage (
 				new[] { Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow },
 				2);
-			image.SaveAsPng (GetPath ("ColorToImage.RGBY.png"));
+			await SaveImage (image, "ColorToImage.RGBY.png");
 		}
 
 		[Test]
-		public void Rand ()
+		public async Task Rand ()
 		{
 			var rand = new Random (1);
 
@@ -34,11 +35,11 @@ namespace NGraphics.Test
 
 			}, new Size (64), scale: 1);
 
-			image.SaveAsPng (GetPath ("ColorToImage.Rand.png"));
+			await SaveImage (image, "ColorToImage.Rand.png");
 		}
 
 		[Test]
-		public void RandAlpha ()
+		public async Task RandAlpha ()
 		{
 			var rand = new Random (1);
 
@@ -48,11 +49,11 @@ namespace NGraphics.Test
 
 			}, new Size (64), scale: 1);
 
-			image.SaveAsPng (GetPath ("ColorToImage.RandAlpha.png"));
+			await SaveImage (image, "ColorToImage.RandAlpha.png");
 		}
 
 		[Test]
-		public void Mandelbrot ()
+		public async Task Mandelbrot ()
 		{
 			var w = 600.0;
 			var h = w * (2 / 3.5);
@@ -76,11 +77,11 @@ namespace NGraphics.Test
 
 			}, new Size (w, h), scale: 1);
 
-			image.SaveAsPng (GetPath ("ColorToImage.Mandelbrot.png"));
+			await SaveImage (image, "ColorToImage.Mandelbrot.png");
 		}
 
 		[Test]
-		public void Circle ()
+		public async Task Circle ()
 		{
 			var d = 64;
 			var r2 = (d / 2) * (d / 2);
@@ -95,11 +96,11 @@ namespace NGraphics.Test
 
 			}, new Size (d + 1, d + 2), scale: 1);
 
-			image.SaveAsPng (GetPath ("ColorToImage.Circle.png"));
+			await SaveImage (image, "ColorToImage.Circle.png");
 		}
 
 		[Test]
-		public void Grid ()
+		public async Task Grid ()
 		{
 			var d = 200;
 			var image = Platforms.Current.CreateImage ((px, py) => {
@@ -112,7 +113,7 @@ namespace NGraphics.Test
 
 			}, new Size (d, d), scale: 1);
 
-			image.SaveAsPng (GetPath ("ColorToImage.Grid.png"));
+			await SaveImage (image, "ColorToImage.Grid.png");
 		}
 	}
 }
