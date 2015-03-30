@@ -12,6 +12,8 @@ using DXGI = SharpDX.DXGI;
 using WIC = SharpDX.WIC;
 using DW = SharpDX.DirectWrite;
 
+using Windows.UI.Xaml.Media.Imaging;
+
 namespace NGraphics
 {
 	public class WICRenderTargetCanvas : RenderTargetCanvas, IImageCanvas
@@ -95,22 +97,43 @@ namespace NGraphics
 		}
 	}
 
+	public class SurfaceImageSourceCanvas : RenderTargetCanvas
+	{
+		DXGI.ISurfaceImageSourceNative sisn;
+
+		public SurfaceImageSourceCanvas (SurfaceImageSource surfaceImageSource, Rect updateRect, Direct2DFactories factories = null)
+			: base (factories)
+		{
+			sisn = ComObject.As<DXGI.ISurfaceImageSourceNative> (surfaceImageSource);
+			SharpDX.Point offset;
+			var surface = sisn.BeginDraw (updateRect.ToRectangle (), out offset);
+
+			var dpi = 96.0;
+			var properties = new D2D1.RenderTargetProperties (D2D1.RenderTargetType.Default, new D2D1.PixelFormat (DXGI.Format.Unknown, D2D1.AlphaMode.Unknown), (float)(dpi), (float)(dpi), D2D1.RenderTargetUsage.None, D2D1.FeatureLevel.Level_DEFAULT);
+			Initialize (new D2D1.RenderTarget (this.factories.D2DFactory, surface, properties));
+		}
+	}
+
 	/// <summary>
 	/// ICanvas wrapper over a Direct2D RenderTarget.
 	/// </summary>
 	public class RenderTargetCanvas : ICanvas
 	{
-		protected readonly D2D1.RenderTarget renderTarget;
-		readonly Direct2DFactories factories;
+		protected D2D1.RenderTarget renderTarget;
+		protected readonly Direct2DFactories factories;
 		readonly Stack<D2D1.DrawingStateBlock> stateStack = new Stack<D2D1.DrawingStateBlock> ();
+
+		protected RenderTargetCanvas (Direct2DFactories factories = null)
+		{
+			this.factories = factories ?? Direct2DFactories.Shared;
+		}
 
 		public RenderTargetCanvas (DXGI.Surface surface, D2D1.RenderTargetProperties properties, Direct2DFactories factories = null)
 		{
 			if (surface == null)
 				throw new ArgumentNullException ("surface");
 			this.factories = factories ?? Direct2DFactories.Shared;
-			this.renderTarget = new D2D1.RenderTarget (this.factories.D2DFactory, surface, properties);
-			renderTarget.BeginDraw ();
+			Initialize (new D2D1.RenderTarget (this.factories.D2DFactory, surface, properties));
 		}
 
 		public RenderTargetCanvas (D2D1.RenderTarget renderTarget, Direct2DFactories factories = null)
@@ -118,6 +141,11 @@ namespace NGraphics
 			if (renderTarget == null)
 				throw new ArgumentNullException ("renderTarget");
 			this.factories = factories ?? Direct2DFactories.Shared;
+			Initialize (renderTarget);
+		}
+
+		protected void Initialize (D2D1.RenderTarget renderTarget)
+		{
 			this.renderTarget = renderTarget;
 			renderTarget.BeginDraw ();
 		}
@@ -412,6 +440,11 @@ namespace NGraphics
 		public static RectangleF ToRectangleF (this Rect rect)
 		{
 			return new RectangleF ((float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height);
+		}
+
+		public static SharpDX.Rectangle ToRectangle (this Rect rect)
+		{
+			return new SharpDX.Rectangle ((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
 		}
 	}
 }
