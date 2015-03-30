@@ -10,6 +10,7 @@ using D3D11 = SharpDX.Direct3D11;
 using D2D1 = SharpDX.Direct2D1;
 using DXGI = SharpDX.DXGI;
 using WIC = SharpDX.WIC;
+using DW = SharpDX.DirectWrite;
 
 namespace NGraphics
 {
@@ -153,7 +154,14 @@ namespace NGraphics
 
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
-			DrawRectangle (frame, pen, brush);
+			var layout = new DW.TextLayout (factories.DWFactory, text, GetTextFormat (font), (float)frame.Width, (float)frame.Height);
+			var h = layout.Metrics.Height;
+			renderTarget.DrawTextLayout ((frame.TopLeft - h*Point.OneY).ToVector2 (), layout, GetBrush (frame, brush));
+		}
+
+		private DW.TextFormat GetTextFormat (Font font)
+		{
+			return new DW.TextFormat (factories.DWFactory, font.Family, (float)font.Size);
 		}
 
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
@@ -344,17 +352,17 @@ namespace NGraphics
 
 	public class Direct2DFactories
 	{
-		public readonly SharpDX.WIC.ImagingFactory WICFactory;
+		public readonly WIC.ImagingFactory WICFactory;
 		public readonly D2D1.Factory D2DFactory;
-		//public readonly SharpDX.DirectWrite.Factory _dWriteFactory;
+		public readonly DW.Factory DWFactory;
 		//public readonly D2D1.DeviceContext _d2DDeviceContext;
 
 		public static readonly Direct2DFactories Shared = new Direct2DFactories ();
 
 		public Direct2DFactories ()
 		{
-			WICFactory = new SharpDX.WIC.ImagingFactory ();
-			//_dWriteFactory = new SharpDX.DirectWrite.Factory ();
+			WICFactory = new WIC.ImagingFactory ();
+			DWFactory = new DW.Factory ();
 
 			var d3DDevice = new D3D11.Device (
 				D3D.DriverType.Hardware,
