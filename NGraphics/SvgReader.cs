@@ -309,7 +309,7 @@ namespace NGraphics
 						if (sb.Color.Alpha == 1)
 							sb.Color = color;
 						else
-							sb.Color = color.WithAlpha (pen.Color.Alpha);
+							sb.Color = color.WithAlpha (sb.Color.Alpha);
 					}
 				} else {
 					var urlM = fillUrlRe.Match (fill);
