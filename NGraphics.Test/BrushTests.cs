@@ -49,6 +49,23 @@ namespace NGraphics.Test
 
 			await SaveImage (canvas, "Brush.RectAbsLinearGradient.png");
 		}
+
+		[Test]
+		public async Task EllipseRadialGradient ()
+		{
+			var canvas = Platforms.Current.CreateImageCanvas (new Size (100));
+
+			var rect = new Rect (0, 10, 100, 80);
+			var brush = new RadialGradientBrush (
+				new Point (0.5, 0.5),
+				new Size (0.5, 0.125),
+				Colors.Green,
+				Colors.LightGray);				
+
+			canvas.DrawEllipse (rect, brush: brush);
+
+			await SaveImage (canvas, "Brush.EllipseRadialGradient.png");
+		}
 	}
 }
 

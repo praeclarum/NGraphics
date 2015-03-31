@@ -83,6 +83,10 @@ namespace NGraphics
 			Stops.Add (new GradientStop (0, startColor));
 			Stops.Add (new GradientStop (1, endColor));
 		}
+		public RadialGradientBrush (Color startColor, Color endColor)
+			: this (new Point (0.5, 0.5), new Size (0.5), startColor, endColor)
+		{
+		}
 		public RadialGradientBrush (Point relCenter, Size relRadius, Color startColor, Color midColor, Color endColor)
 		{
 			Center = relCenter;
@@ -91,6 +95,10 @@ namespace NGraphics
 			Stops.Add (new GradientStop (0, startColor));
 			Stops.Add (new GradientStop (0.5, midColor));
 			Stops.Add (new GradientStop (1, endColor));
+		}
+		public RadialGradientBrush (Color startColor, Color midColor, Color endColor)
+			: this (new Point (0.5, 0.5), new Size (0.5), startColor, midColor, endColor)
+		{
 		}
 		public Point GetAbsoluteCenter (Rect frame)
 		{
@@ -105,7 +113,7 @@ namespace NGraphics
 		public Point GetAbsoluteFocus (Rect frame)
 		{
 			if (Absolute) return Focus;
-			return Focus * frame.Size;
+			return frame.TopLeft + Focus * frame.Size;
 		}
 	}
 
