@@ -6,6 +6,8 @@ namespace NGraphics
 {
 	public interface IImage //: IDrawable
 	{
+		Size Size { get; }
+		double Scale { get; }
 		void SaveAsPng (string path);
 		void SaveAsPng (Stream stream);
 	}	

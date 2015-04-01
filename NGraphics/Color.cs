@@ -81,6 +81,29 @@ namespace NGraphics
 			}
 		}
 
+		public override bool Equals (object obj)
+		{
+			if (obj is Color) {
+				return this == ((Color)obj);
+			}
+			return false;
+		}
+
+		public override int GetHashCode ()
+		{
+			return R.GetHashCode () * 5 + G.GetHashCode () * 13 + B.GetHashCode () * 19 + A.GetHashCode () * 29;
+		}
+
+		public static bool operator == (Color a, Color b)
+		{
+			return a.R == b.R && a.G == b.G && a.B == b.B && a.A == b.A;
+		}
+
+		public static bool operator != (Color a, Color b)
+		{
+			return a.R != b.R || a.G != b.G || a.B != b.B || a.A != b.A;
+		}
+
 		public Color BlendWith (Color other, double otherWeight)
 		{
 			var t = otherWeight;

@@ -48,6 +48,11 @@ namespace NGraphics
 			return false;
 		}
 
+		public override int GetHashCode ()
+		{
+			return 5 * X.GetHashCode () + 11 * Y.GetHashCode ();
+		}
+
 		public static bool operator == (Point a, Point b)
 		{
 			return a.X == b.X && a.Y == b.Y;

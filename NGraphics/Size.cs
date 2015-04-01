@@ -29,6 +29,30 @@ namespace NGraphics
 			Height = size;
 		}
 
+		public override bool Equals (object obj)
+		{
+			if (obj is Size) {
+				var e = this == ((Size)obj);
+				return e;
+			}
+			return false;
+		}
+
+		public override int GetHashCode ()
+		{
+			return Width.GetHashCode () * 5 + Height.GetHashCode () * 13;
+		}
+
+		public static bool operator == (Size a, Size b)
+		{
+			return a.Width == b.Width && a.Height == b.Height;
+		}
+
+		public static bool operator != (Size a, Size b)
+		{
+			return a.Width != b.Width || a.Height != b.Height;
+		}
+
 		public static Size operator - (Size a)
 		{
 			return new Size (-a.Width, -a.Height);

@@ -64,6 +64,8 @@ namespace NGraphics
 
 		class NullImage : IImage
 		{
+			public Size Size { get { return Size.Zero; } }
+			public double Scale { get { return 1.0; } }
 			public void SaveAsPng (string path)
 			{
 			}

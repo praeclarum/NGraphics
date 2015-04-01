@@ -40,6 +40,29 @@ namespace NGraphics
 		{
 		}
 
+		public override bool Equals (object obj)
+		{
+			if (obj is Rect) {
+				return this == ((Rect)obj);
+			}
+			return false;
+		}
+
+		public override int GetHashCode ()
+		{
+			return X.GetHashCode () * 5 + Y.GetHashCode () * 13 + Width.GetHashCode () * 19 + Height.GetHashCode () * 29;
+		}
+
+		public static bool operator == (Rect a, Rect b)
+		{
+			return a.X == b.X && a.Y == b.Y && a.Width == b.Width && a.Height == b.Height;
+		}
+
+		public static bool operator != (Rect a, Rect b)
+		{
+			return a.X != b.X || a.Y != b.Y || a.Width != b.Width || a.Height == b.Height;
+		}
+
 		public static Rect operator * (Rect a, Size s)
 		{
 			return new Rect (a.X * s.Width, a.Y * s.Height, a.Width * s.Width, a.Height * s.Height);
