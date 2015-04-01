@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 
 namespace NGraphics
 {
@@ -19,6 +20,8 @@ namespace NGraphics
 		}
 
 		readonly IPlatform platform;
+		readonly double scale;
+		readonly bool transparency;
 
 		readonly int maxNumEntries;
 		readonly Dictionary<Tuple<Size, double, TKey>, Entry> cache = new Dictionary<Tuple<Size, double, TKey>, Entry> ();
@@ -26,11 +29,15 @@ namespace NGraphics
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DrawImageCache`1"/> class.
 		/// </summary>
-		/// <param name="platform">The graphics platform used to generate images.</param>
 		/// <param name="maxNumEntries">Max number cache entries.</param>
-		public DrawImageCache (IPlatform platform, int maxNumEntries)
+		/// <param name="platform">The graphics platform used to generate images.</param>
+		/// <param name="scale">The image scale.</param>
+		/// <param name="transparent">Whether the image should have a transparent background.</param>
+		public DrawImageCache (int maxNumEntries, IPlatform platform, double scale, bool transparency = true)
 		{
 			this.platform = platform;
+			this.scale = scale;
+			this.transparency = transparency;
 			this.maxNumEntries = Math.Max (1, maxNumEntries);
 		}
 
@@ -48,27 +55,25 @@ namespace NGraphics
 		/// <returns>The image.</returns>
 		/// <param name="key">Key identifying this entry.</param>
 		/// <param name="size">The image size.</param>
-		/// <param name="scale">The image scale.</param>
-		/// <param name="transparent">Whether the image should have a transparent background.</param>
 		/// <param name="draw">The function called to draw the entry.</param>
-		public IImage GetImage (TKey key, Size size, double scale, bool transparent, Action<ICanvas> draw)
+		public IImage GetImage (TKey key, Size size, Action<ICanvas> draw)
 		{
 			var now = DateTime.Now;
 			var fullKey = Tuple.Create (size, scale, key);
 			Entry entry;
 			if (!cache.TryGetValue (fullKey, out entry)) {
-				var canvas = platform.CreateImageCanvas (size, scale, transparent);
+				var canvas = platform.CreateImageCanvas (size, scale, transparency);
 				draw (canvas);
 				entry = new Entry {
 					FullKey = fullKey,
 					LastAccessTime = now,
 					Image = canvas.GetImage (),
 				};
-				//Console.WriteLine ("CACHE " + key);
+				//Debug.WriteLine ("CACHE " + key);
 				cache [fullKey] = entry;
 				while (cache.Count > maxNumEntries) {
 					var oldest = cache.Values.OrderBy (x => x.LastAccessTime).First ();
-					//Console.WriteLine ("EJECT " + oldest.FullKey);
+					//Debug.WriteLine ("EJECT " + oldest.FullKey);
 					cache.Remove (oldest.FullKey);
 				}
 			}
