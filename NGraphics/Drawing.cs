@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NGraphics
 {
-	public delegate void DrawingFunc (ICanvas surface);
+	public delegate void DrawingFunc (ICanvas canvas);
 
 	public class Drawing
 	{
