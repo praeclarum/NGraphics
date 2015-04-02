@@ -245,6 +245,7 @@ namespace NGraphics
 			#endif
 
 			using (var s = new NSAttributedString(text, font: nsFont))
+			using (nsFont)
 			{
 				#if __IOS__
 				var result = s.GetBoundingRect(new CGSize(float.MaxValue, float.MaxValue), NSStringDrawingOptions.UsesDeviceMetrics, null);
