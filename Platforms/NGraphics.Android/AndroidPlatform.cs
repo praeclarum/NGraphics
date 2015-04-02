@@ -75,6 +75,22 @@ namespace NGraphics
 		{
 			bitmap.Compress (Bitmap.CompressFormat.Png, 100, stream);
 		}
+
+		public Size Size
+		{
+			get
+			{
+				return new Size(bitmap.Width, bitmap.Height);
+			}
+		}
+
+		public double Scale
+		{
+			get
+			{
+				return 1;
+			}
+		}
 	}
 
 	public class BitmapCanvas : CanvasCanvas, IImageCanvas
@@ -225,6 +241,15 @@ namespace NGraphics
 			}
 
 			throw new NotSupportedException ("Brush " + brush);
+		}
+
+		public Size MeasureText(string text, Font font)
+		{
+			var paint = GetFontPaint(font, TextAlignment.Left);
+			var w = paint.MeasureText (text);
+			var fm = paint.GetFontMetrics ();
+			var h = fm.Ascent + fm.Descent;
+			return new Size(w, h);
 		}
 
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)

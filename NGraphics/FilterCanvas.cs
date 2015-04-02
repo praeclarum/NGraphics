@@ -30,6 +30,11 @@ namespace NGraphics
 			NextCanvas.RestoreState ();
 		}
 
+		public virtual Size MeasureText(string text, Font font)
+		{
+			return NextCanvas.MeasureText(text, font);
+		}
+
 		public virtual void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
 			NextCanvas.DrawText (text, frame, font, alignment, pen, brush);

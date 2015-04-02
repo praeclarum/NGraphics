@@ -45,6 +45,10 @@ namespace NGraphics
 			public void RestoreState ()
 			{
 			}
+			public Size MeasureText(string text, Font font)
+			{
+				return Size.Zero;
+			}
 			public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 			{
 			}

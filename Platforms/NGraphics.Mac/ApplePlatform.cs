@@ -213,6 +213,48 @@ namespace NGraphics
 			return new CGGradient (cs, comps, locs);
 		}
 
+		private static NSString NSFontAttributeName = new NSString("NSFontAttributeName");
+
+		public Size MeasureText(string text, Font font)
+		{
+			if (string.IsNullOrEmpty(text))
+				return Size.Zero;
+			if (font == null)
+				throw new ArgumentNullException("font");
+
+			string fontName = font.Name;
+			Array availableFonts =
+				#if __IOS__
+				UIKit.UIFont.FontNamesForFamilyName(fontName);
+				#else
+				AppKit.NSFontManager.SharedFontManager.AvailableMembersOfFontFamily (fontName).ToArray ();
+				#endif
+
+			#if __IOS__
+			UIKit.UIFont nsFont;
+			if (availableFonts != null && availableFonts.Length > 0)
+				nsFont = UIKit.UIFont.FromName(font.Name, (nfloat)font.Size);
+			else
+				nsFont = UIKit.UIFont.FromName("Georgia", (nfloat)font.Size);
+			#else
+			AppKit.NSFont nsFont;
+			if (availableFonts != null && availableFonts.Length > 0)
+				nsFont = AppKit.NSFont.FromFontName(font.Name, (nfloat)font.Size);
+			else
+				nsFont = AppKit.NSFont.FromFontName("Georgia", (nfloat)font.Size);
+			#endif
+
+			using (var s = new NSAttributedString(text, font: nsFont))
+			{
+				#if __IOS__
+				var result = s.GetBoundingRect(new CGSize(float.MaxValue, float.MaxValue), NSStringDrawingOptions.UsesDeviceMetrics, null);
+				#else
+				var result = s.BoundingRectWithSize(new CGSize(float.MaxValue, float.MaxValue), NSStringDrawingOptions.UsesDeviceMetrics);
+				#endif
+				return new Size(result.Width, result.Height);
+			}
+		}
+
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
 			if (string.IsNullOrEmpty (text))
