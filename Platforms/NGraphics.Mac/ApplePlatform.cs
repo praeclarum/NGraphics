@@ -429,6 +429,10 @@ namespace NGraphics
 		{
 			return new Point (point.X, point.Y);
 		}
+		public static Point ToPoint (this CGPoint point)
+		{
+			return new Point (point.X, point.Y);
+		}
 		public static Size GetSize (CGSize size)
 		{
 			return new Size (size.Width, size.Height);

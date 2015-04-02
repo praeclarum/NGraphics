@@ -58,6 +58,23 @@ namespace NGraphics
 			return new Size (-a.Width, -a.Height);
 		}
 
+		public static Size operator + (Size a, Size b)
+		{
+			return new Size (a.Width + b.Width, a.Height + b.Height);
+		}
+		public static Size operator - (Size a, Size b)
+		{
+			return new Size (a.Width - b.Width, a.Height - b.Height);
+		}
+		public static Size operator + (Size a, Point b)
+		{
+			return new Size (a.Width + b.X, a.Height + b.Y);
+		}
+		public static Size operator - (Size a, Point b)
+		{
+			return new Size (a.Width - b.X, a.Height - b.Y);
+		}
+
 		public static Size operator * (Size a, Size b)
 		{
 			return new Size (a.Width * b.Width, a.Height * b.Height);

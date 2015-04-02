@@ -86,6 +86,11 @@ namespace NGraphics
 			return new Transform (x, 0, 0, y, 0, 0);
 		}
 
+		public static Transform Scale (double scale)
+		{
+			return new Transform (scale, 0, 0, scale, 0, 0);
+		}
+
 		public static Transform Scale (Size size)
 		{
 			return Scale (size.Width, size.Height);
@@ -102,6 +107,16 @@ namespace NGraphics
 			var ca = Math.Cos (a);
 			var sa = Math.Sin (a);
 			return new Transform (ca, sa, -sa, ca, 0, 0);
+		}
+
+		public Transform GetInverse ()
+		{
+			var det = A * D - B * C;
+			if (det == 0) {
+				throw new InvalidOperationException ("Matrix is singular and cannot be inverted.");
+			}
+			var r = 1.0 / det;
+			return new Transform (D * r, -B * r, -C * r, A * r, -(D * E - C * F) * r, (B * E - A * F) * r);
 		}
 	}
 }
