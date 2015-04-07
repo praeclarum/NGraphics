@@ -121,8 +121,7 @@ namespace NGraphics
 				(float)transform.B, (float)transform.D, (float)transform.F,
 				0, 0, 1,
 			});
-			t.PostConcat (graphics.Matrix);
-			graphics.Matrix = t;
+			graphics.Concat(t);
 		}
 		public void RestoreState ()
 		{
