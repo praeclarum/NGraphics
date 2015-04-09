@@ -25,6 +25,10 @@ namespace NGraphics
 		{
 			throw new NotImplementedException ();
 		}
+		public Size MeasureText(string text, Font font)
+		{
+			throw new NotImplementedException();
+		}
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
 			throw new NotImplementedException ();

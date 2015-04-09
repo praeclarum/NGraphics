@@ -72,6 +72,22 @@ namespace NGraphics
 		{
 			image.Save (stream, ImageFormat.Png);
 		}
+
+		public Size Size
+		{
+			get
+			{
+				return new Size(image.Width, image.Height);
+			}
+		}
+
+		public double Scale
+		{
+			get
+			{
+				return 1;
+			}
+		}
 	}
 
 	public class BitmapCanvas : GraphicsCanvas, IImageCanvas
@@ -132,6 +148,15 @@ namespace NGraphics
 			if (stateStack.Count > 0) {
 				var s = stateStack.Pop ();
 				graphics.Restore (s);
+			}
+		}
+
+		public Size MeasureText(string text, Font font)
+		{
+			using (var netFont = new System.Drawing.Font(font.Name, (float)font.Size, FontStyle.Regular))
+			{
+				var result = graphics.MeasureString(text, netFont);
+				return new Size(result.Width, result.Height);
 			}
 		}
 
