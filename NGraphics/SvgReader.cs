@@ -146,6 +146,16 @@ namespace NGraphics
 					}
 				}
 				break;
+			case "polygon":
+				{
+					var pA = e.Attribute ("points");
+					if (pA != null && !string.IsNullOrWhiteSpace (pA.Value)) {
+						var path = new Path (pen, brush);
+						ReadPolygon (path, pA.Value);
+						r = path;
+					}
+				}
+				break;
 			case "g":
 				{
 					var g = new Group ();
@@ -169,6 +179,7 @@ namespace NGraphics
 			case "title":
 				Graphic.Title = ReadString (e);
 				break;
+			case "desc":
 			case "description":
 				Graphic.Description = ReadString (e);
 				break;
@@ -461,6 +472,27 @@ namespace NGraphics
 			}
 		}
 
+		void ReadPolygon (Path p, string pathDescriptor)
+		{
+			var args = pathDescriptor.Split (new[]{' '}, StringSplitOptions.RemoveEmptyEntries);
+
+			var i = 0;
+			var n = args.Length;
+			if (n == 0)
+				throw new Exception ("Not supported polygon");
+			while (i < n) {
+				var x = ReadNumber (args [i]);
+				var y = ReadNumber (args [i + 1]);
+
+				if (i == 0) {
+					p.MoveTo (x, y);
+				} else
+					p.LineTo (x, y);
+				i += 2;
+
+			}
+			p.Close ();
+		}
 		string ReadString (XElement e, string defaultValue = "")
 		{
 			if (e == null)
