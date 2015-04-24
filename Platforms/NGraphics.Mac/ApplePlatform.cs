@@ -265,31 +265,30 @@ namespace NGraphics
 
 			SetBrush (brush);
 
-			string fontName = font.Name;
-			Array availableFonts =
-				#if __IOS__
-				UIKit.UIFont.FontNamesForFamilyName(fontName);
-				#else
-				AppKit.NSFontManager.SharedFontManager.AvailableMembersOfFontFamily (fontName).ToArray ();
-				#endif
-			if (availableFonts != null && availableFonts.Length > 0)
-				context.SelectFont (font.Name, (nfloat)font.Size, CGTextEncoding.MacRoman);
-			else
-				context.SelectFont ("Georgia", (nfloat)font.Size, CGTextEncoding.MacRoman);
-			
-			context.ShowTextAtPoint ((nfloat)frame.X, (nfloat)frame.Y, text);
+//			string fontName = font.Name;
+//			context.SelectFont (font.Name, (nfloat)font.Size, CGTextEncoding.MacRoman);
+//			
+//			context.ShowTextAtPoint ((nfloat)frame.X, (nfloat)frame.Y, text);
 
-//			using (var atext = new NSMutableAttributedString (text)) {
-//
-//				atext.AddAttributes (new CTStringAttributes {
-//					ForegroundColor = new CGColor (1, 0, 0, 1),
-//				}, new NSRange (0, text.Length));
-//
-//				using (var ct = new CTFramesetter (atext))
-//				using (var path = CGPath.FromRect (Conversions.GetCGRect (frame)))
-//				using (var tframe = ct.GetFrame (new NSRange (0, atext.Length), path, null))
-//					tframe.Draw (context);
-//			}
+			var pt = frame.TopLeft;
+
+			using (var atext = new NSMutableAttributedString (text)) {
+
+				atext.AddAttributes (new CTStringAttributes {
+					ForegroundColorFromContext = true,
+					Font = font.GetCTFont (),
+				}, new NSRange (0, text.Length));
+
+				using (var l = new CTLine (atext)) {
+					nfloat asc, desc, lead;
+					var width = l.GetTypographicBounds (out asc, out desc, out lead);
+					context.SaveState ();
+					context.TranslateCTM ((nfloat)(pt.X - width / 2), (nfloat)(pt.Y + desc));
+					context.TextPosition = CGPoint.Empty;
+					l.Draw (context);
+					context.RestoreState ();
+				}
+			}
 		}
 
 		void DrawElement (Func<Rect> add, Pen pen = null, Brush brush = null)
@@ -464,11 +463,11 @@ namespace NGraphics
 
 	public static class Conversions
 	{
-		public static CGPoint GetCGPoint (Point point)
+		public static CGPoint GetCGPoint (this Point point)
 		{
 			return new CGPoint ((nfloat)point.X, (nfloat)point.Y);
 		}
-		public static Point GetPoint (CGPoint point)
+		public static Point GetPoint (this CGPoint point)
 		{
 			return new Point (point.X, point.Y);
 		}
@@ -476,21 +475,25 @@ namespace NGraphics
 		{
 			return new Point (point.X, point.Y);
 		}
-		public static Size GetSize (CGSize size)
+		public static Size GetSize (this CGSize size)
 		{
 			return new Size (size.Width, size.Height);
 		}
-		public static CGSize GetCGSize (Size size)
+		public static CGSize GetCGSize (this Size size)
 		{
 			return new CGSize ((nfloat)size.Width, (nfloat)size.Height);
 		}
-		public static CGRect GetCGRect (Rect frame)
+		public static CGRect GetCGRect (this Rect frame)
 		{
 			return new CGRect ((nfloat)frame.X, (nfloat)frame.Y, (nfloat)frame.Width, (nfloat)frame.Height);
 		}
-		public static Rect GetRect (CGRect rect)
+		public static Rect GetRect (this CGRect rect)
 		{
 			return new Rect (rect.X, rect.Y, rect.Width, rect.Height);
+		}
+		public static CTFont GetCTFont (this Font font)
+		{
+			return new CTFont (font.Name, (nfloat)font.Size);
 		}
 		#if __IOS__
 		public static UIKit.UIImage GetUIImage (this IImage image)

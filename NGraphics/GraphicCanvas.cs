@@ -31,7 +31,7 @@ namespace NGraphics
 		}
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
-			throw new NotImplementedException ();
+			Graphic.Children.Add (new Text (text, frame, font, alignment, pen, brush));
 		}
 		public void DrawPath (IEnumerable<PathOp> commands, Pen pen = null, Brush brush = null)
 		{
