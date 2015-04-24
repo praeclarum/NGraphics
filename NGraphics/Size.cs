@@ -8,6 +8,9 @@ namespace NGraphics
 		public static readonly Size Zero = new Size ();
 		public static readonly Size One = new Size (1);
 
+		public static readonly Size MinValue = new Size (double.MinValue, double.MinValue);
+		public static readonly Size MaxValue = new Size (double.MaxValue, double.MaxValue);
+
 		public double Width;
 		public double Height;
 

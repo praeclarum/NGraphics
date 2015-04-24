@@ -63,6 +63,15 @@ namespace NGraphics
 			return a.X != b.X || a.Y != b.Y || a.Width != b.Width || a.Height == b.Height;
 		}
 
+		public static Rect operator + (Rect a, Point offset)
+		{
+			return new Rect (a.X + offset.X, a.Y + offset.Y, a.Width, a.Height);
+		}
+		public static Rect operator - (Rect a, Point offset)
+		{
+			return new Rect (a.X - offset.X, a.Y - offset.Y, a.Width, a.Height);
+		}
+
 		public static Rect operator * (Rect a, Size s)
 		{
 			return new Rect (a.X * s.Width, a.Y * s.Height, a.Width * s.Width, a.Height * s.Height);
