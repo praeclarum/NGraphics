@@ -274,12 +274,15 @@ namespace NGraphics
 
 				var bb = new BoundingBoxBuilder ();
 
+				Point? prevPoint = null;
+
 				foreach (var op in ops) {
 					var mt = op as MoveTo;
 					if (mt != null) {
 						var p = mt.Point;
 						path.MoveTo ((float)p.X, (float)p.Y);
 						bb.Add (p);
+						prevPoint = p;
 						continue;
 					}
 					var lt = op as LineTo;
@@ -287,13 +290,43 @@ namespace NGraphics
 						var p = lt.Point;
 						path.LineTo ((float)p.X, (float)p.Y);
 						bb.Add (p);
+						prevPoint = p;
 						continue;
 					}
 					var at = op as ArcTo;
 					if (at != null) {
 						var p = at.Point;
-						path.LineTo ((float)p.X, (float)p.Y);
+
+						if (!prevPoint.HasValue) {
+							throw new NotSupportedException("Cannot begin path with Arc.");
+						}
+
+						var pp = prevPoint.Value;
+
+						Point c1, c2;
+						at.GetCircles(pp, out c1, out c2);
+
+						var circleCenter = at.LargeArc ^ !at.SweepClockwise ? c2 : c1;
+						var rect = new Rect(circleCenter - at.Radius, at.Radius * 2);
+
+						var startAngle = Conversions.RadToDeg((float)Math.Atan2(pp.Y - circleCenter.Y, pp.X - circleCenter.X));
+						var endAngle = Conversions.RadToDeg((float)Math.Atan2(p.Y - circleCenter.Y, p.X - circleCenter.X));
+
+						var sweepAngle = endAngle - startAngle;
+
+						if (at.SweepClockwise && sweepAngle < 0) {
+							// If we want to go CW, sweepAngle needs to be positive
+							sweepAngle += 360.0f;
+						}
+						else if (!at.SweepClockwise && sweepAngle > 0) {
+							// If we want to go CCW, sweepAngle needs to be negative
+							sweepAngle -= 360.0f;
+						}
+
+						path.AddArc(Conversions.GetRectF(rect), startAngle, sweepAngle);
+
 						bb.Add (p);
+						prevPoint = p;
 						continue;
 					}
                     var ct = op as CurveTo;
@@ -305,6 +338,7 @@ namespace NGraphics
 						bb.Add (p);
 						bb.Add (c1);
 						bb.Add (c2);
+						prevPoint = p;
                         continue;
                     }
                     var cp = op as ClosePath;
@@ -376,6 +410,11 @@ namespace NGraphics
 		public static RectF GetRectF (this Rect frame)
 		{
 			return new RectF ((float)frame.X, (float)frame.Y, (float)(frame.X + frame.Width), (float)(frame.Y + frame.Height));
+		}
+		
+		public static float RadToDeg(float rad)
+		{
+			return rad / (float)Math.PI * 180.0f;
 		}
 	}
 }
