@@ -366,7 +366,14 @@ namespace NGraphics
 						var pp = Conversions.GetPoint (context.GetPathCurrentPoint ());
 						Point c1, c2;
 						at.GetCircles (pp, out c1, out c2);
-						context.AddLineToPoint ((nfloat)p.X, (nfloat)p.Y);
+
+						var circleCenter = at.LargeArc ^ !at.SweepClockwise ? c2 : c1;
+
+						var startAngle = (float)Math.Atan2(pp.Y - circleCenter.Y, pp.X - circleCenter.X);
+						var endAngle = (float)Math.Atan2(p.Y - circleCenter.Y, p.X - circleCenter.X);
+
+						context.AddArc((nfloat)circleCenter.X, (nfloat)circleCenter.Y, (nfloat)at.Radius.Min, startAngle, endAngle, at.SweepClockwise);
+
 						bb.Add (p);
 						continue;
 					}
