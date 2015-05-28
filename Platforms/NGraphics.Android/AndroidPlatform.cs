@@ -149,7 +149,7 @@ namespace NGraphics
 			var paint = new TextPaint (PaintFlags.AntiAlias);
 			paint.TextAlign = Paint.Align.Left;
 			if (alignment == TextAlignment.Center)
-				paint.TextAlign = Paint.Align.Left;
+				paint.TextAlign = Paint.Align.Center;
 			else if (alignment == TextAlignment.Right)
 				paint.TextAlign = Paint.Align.Right;
 
@@ -260,7 +260,11 @@ namespace NGraphics
 			var w = paint.MeasureText (text);
 			var fm = paint.GetFontMetrics ();
 			var h = fm.Ascent + fm.Descent;
-			var point = frame.Position;
+			var point = alignment == TextAlignment.Left
+				? frame.TopLeft
+				: alignment == TextAlignment.Center
+					? (frame.TopLeft + frame.TopRight) / 2
+					: frame.TopRight;
 			var fr = new Rect (point, new Size (w, h));
 			AddBrushPaint (paint, brush, fr);
 			graphics.DrawText (text, (float)point.X, (float)point.Y, paint);
