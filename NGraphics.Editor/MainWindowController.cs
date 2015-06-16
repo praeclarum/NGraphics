@@ -3,6 +3,7 @@
 using Foundation;
 using AppKit;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace NGraphics.Editor
 {
@@ -70,20 +71,41 @@ namespace NGraphics.Editor
 
 		void ParseSVG()
 		{
-			SvgReader reader = new SvgReader(new System.IO.StringReader(Code));
-			if (reader.Graphic != null)
-			{
-				this.BeginInvokeOnMainThread (() => {
-					try {
-						if (reader.Graphic.Size.Height == 0 || reader.Graphic.Size.Width == 0)
-							reader.Graphic.Size = new Size(Prev.Bounds.Width, Prev.Bounds.Height);
-						Prev.Drawables = new IDrawable[] { reader.Graphic };
-						Prev.SetNeedsDisplayInRect (Prev.Bounds);
-					} catch (Exception ex) {
-						Console.WriteLine (ex);
-					}
+			Task.Run(() => {
+				string svg = null;
+				CoreGraphics.CGRect previewSize = CoreGraphics.CGRect.Empty;
+				string error = null;
+
+				this.InvokeOnMainThread (() => {
+					Prev.Drawables = null;
+					previewSize = Prev.Bounds;
+					svg = Code;
 				});
-			}
+
+				try {
+					var reader = new SvgReader(new System.IO.StringReader(svg));
+					if (reader.Graphic != null)
+					{
+						if (reader.Graphic.Size.Height == 0 || reader.Graphic.Size.Width == 0)
+							reader.Graphic.Size = new Size(previewSize.Width, previewSize.Height);
+						Prev.Drawables = new IDrawable[] { reader.Graphic };
+					}
+				} catch (Exception ex) {
+					error = ex.Message;
+				}
+				this.BeginInvokeOnMainThread(() => {
+					if (!string.IsNullOrEmpty(error))
+					{
+						Errors.Value = error;
+						Errors.TextColor = NSColor.Red;
+					} else {
+						Errors.Value = "";
+					}
+
+					Prev.SetNeedsDisplayInRect (previewSize);
+
+				});
+			});
 		}
 
 		void HandleThrottledTextChanged ()
