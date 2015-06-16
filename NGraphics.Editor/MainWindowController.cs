@@ -2,6 +2,7 @@
 
 using Foundation;
 using AppKit;
+using System.Text.RegularExpressions;
 
 namespace NGraphics.Editor
 {
@@ -65,9 +66,32 @@ namespace NGraphics.Editor
 			}
 		}
 
+		static readonly Regex svgRe = new Regex (@"<svg.*?>.+<\/svg>", RegexOptions.Singleline);
+
+		void ParseSVG()
+		{
+			SvgReader reader = new SvgReader(new System.IO.StringReader(Code));
+			if (reader.Graphic != null)
+			{
+				this.BeginInvokeOnMainThread (() => {
+					try {
+						if (reader.Graphic.Size.Height == 0 || reader.Graphic.Size.Width == 0)
+							reader.Graphic.Size = new Size(Prev.Bounds.Width, Prev.Bounds.Height);
+						Prev.Drawables = new IDrawable[] { reader.Graphic };
+						Prev.SetNeedsDisplayInRect (Prev.Bounds);
+					} catch (Exception ex) {
+						Console.WriteLine (ex);
+					}
+				});
+			}
+		}
+
 		void HandleThrottledTextChanged ()
 		{
-			CompileCode ();
+			if (svgRe.IsMatch(Code))
+				ParseSVG();
+			else
+				CompileCode ();
 		}
 
 		void CompileCode ()
