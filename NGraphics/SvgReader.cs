@@ -326,25 +326,54 @@ namespace NGraphics
 					var urlM = fillUrlRe.Match (fill);
 					if (urlM.Success) {
 						var id = urlM.Groups [1].Value.Trim ();
-						XElement defE;
-						if (defs.TryGetValue (id, out defE)) {
-							switch (defE.Name.LocalName) {
-							case "linearGradient":
-								brush = CreateLinearGradientBrush (defE);
-								break;
-							case "radialGradient":
-								brush = CreateRadialGradientBrush (defE);
-								break;
-							default:
-								throw new NotSupportedException ("Fill " + defE.Name);
-							}
-						} else {
-							throw new Exception ("Invalid fill url reference: " + id);
-						}
+						brush = GetGradientBrush(id, null);
 					} else {
 						throw new NotSupportedException ("Fill " + fill);
 					}
 				}
+			}
+		}
+
+		protected GradientBrush GetGradientBrush(string fill, GradientBrush child)
+		{
+			XElement defE;
+			if (defs.TryGetValue (fill, out defE)) {
+				GradientBrush brush = null;
+				switch (defE.Name.LocalName) {
+				case "linearGradient":
+					brush = CreateLinearGradientBrush (defE);
+					break;
+				case "radialGradient":
+					brush = CreateRadialGradientBrush (defE);
+					break;
+				default:
+					throw new NotSupportedException ("Fill " + defE.Name);
+				}
+				if (child != null)
+				{	
+					if (child is RadialGradientBrush && brush is RadialGradientBrush)
+					{
+						((RadialGradientBrush)brush).Center = ((RadialGradientBrush)child).Center;
+						((RadialGradientBrush)brush).Focus = ((RadialGradientBrush)child).Focus;
+						((RadialGradientBrush)brush).Radius = ((RadialGradientBrush)child).Radius;
+					} else if (child is LinearGradientBrush && brush is LinearGradientBrush)
+					{
+						((LinearGradientBrush)brush).Start = ((LinearGradientBrush)child).Start;
+						((LinearGradientBrush)brush).End = ((LinearGradientBrush)child).End;
+					}
+
+					brush.AddStops(child.Stops);
+				}
+
+				XNamespace xlink = "http://www.w3.org/1999/xlink";
+				var parent = defE.Attribute(xlink + "href");
+				if (parent != null && !string.IsNullOrEmpty(parent.Value))
+				{
+					brush = GetGradientBrush(parent.Value.Substring(1), brush);
+				}
+				return brush;
+			} else {
+				throw new Exception ("Invalid fill url reference: " + fill);
 			}
 		}
 
@@ -594,6 +623,8 @@ namespace NGraphics
 			return ReadColor (a.Value);
 		}
 
+		Regex rgbRe = new Regex("([0-9]+).*?([0-9]+).*?([0-9]+)");
+
 		Color ReadColor (string raw)
 		{
 			if (string.IsNullOrWhiteSpace (raw) || raw.Equals("none", StringComparison.OrdinalIgnoreCase))
@@ -609,8 +640,21 @@ namespace NGraphics
 				var b = int.Parse (s.Substring (5, 2), NumberStyles.HexNumber, icult);
 
 				return new Color (r / 255.0, g / 255.0, b / 255.0, 1);
-
 			}
+
+			var match = rgbRe.Match(s);
+			if (match.Success && match.Groups.Count == 4)
+			{
+				var r = int.Parse( match.Groups[1].Value );
+				var g = int.Parse( match.Groups[2].Value );
+				var b = int.Parse( match.Groups[3].Value );
+
+				return new Color (r / 255.0, g / 255.0, b / 255.0, 1);
+			}
+
+			Color color;
+			if (Colors.TryParse (s, out color))
+				return color;
 
 			throw new NotSupportedException ("Color " + s);
 		}
