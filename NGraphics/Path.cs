@@ -7,6 +7,7 @@ namespace NGraphics
 	public abstract class PathOp
 	{
 		public abstract Point GetContinueCurveControlPoint ();
+		public abstract Point EndPoint { get; }
 	}
 	public class MoveTo : PathOp
 	{
@@ -24,6 +25,8 @@ namespace NGraphics
 		{
 			return Point;
 		}
+
+		public override Point EndPoint { get { return Point; }}
 	}
 	public class LineTo : PathOp
 	{
@@ -40,6 +43,8 @@ namespace NGraphics
 		{
 			return Point;
 		}
+
+		public override Point EndPoint { get { return Point; }}
 	}
 	public class ArcTo : PathOp
 	{
@@ -58,6 +63,9 @@ namespace NGraphics
 		{
 			return Point;
 		}
+
+		public override Point EndPoint { get { return Point; }}
+
 		public void GetCircles (Point prevPoint, out Point circle1Center, out Point circle2Center)
 		{
 			//Following explanation at http://mathforum.org/library/drmath/view/53027.html'
@@ -100,6 +108,7 @@ namespace NGraphics
 		{
 			return Control2.ReflectedAround (Point);
 		}
+		public override Point EndPoint { get { return Point; }}
 	}
 	public class ClosePath : PathOp
 	{
@@ -107,6 +116,7 @@ namespace NGraphics
 		{
 			throw new NotSupportedException ();
 		}
+		public override Point EndPoint { get { throw new NotSupportedException(); }}
 	}
 
 	public class Path : Element
