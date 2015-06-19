@@ -159,6 +159,9 @@ namespace NGraphics
 			case "g":
 				{
 					var g = new Group ();
+					var groupId = e.Attribute("id");
+					if (groupId != null && !string.IsNullOrEmpty(groupId.Value))
+						g.Id = groupId.Value;
 					AddElements (g.Children, e.Elements (), pen, brush);
 					r = g;
 				}
@@ -493,7 +496,7 @@ namespace NGraphics
 					p.ContinueCurveTo (c, pt);
 				} else if ((op == "A" || op == "a") && args.Length >= 7) {
 					var r = new Size (ReadNumber (args [0]), ReadNumber (args [1]));
-//					var xr = ReadNumber (args [i + 2]);
+//                                     var xr = ReadNumber (args [i + 2]);
 					var laf = ReadNumber (args [3]) != 0;
 					var swf = ReadNumber (args [4]) != 0;
 					var pt = new Point (ReadNumber (args [5]), ReadNumber (args [6]));
