@@ -586,6 +586,12 @@ namespace NGraphics
 			b.End.X = ReadNumber (e.Attribute ("x2"));
 			b.End.Y = ReadNumber (e.Attribute ("y2"));
 
+			var gradientUnits = e.Attribute("gradientUnits");
+			if (gradientUnits != null)
+			{
+				b.Absolute = gradientUnits.Value == "userSpaceOnUse";
+			}
+
 			ReadStops (e, b.Stops);
 
 			return b;
