@@ -535,18 +535,19 @@ namespace NGraphics
 			if (n == 0)
 				throw new Exception ("Not supported polygon");
 			while (i < n) {
-				var x = ReadNumber (args [i]);
-				var y = ReadNumber (args [i + 1]);
+				var xy = args[i].Split(new[]{','}, StringSplitOptions.RemoveEmptyEntries);
+				var x = ReadNumber (xy[0]);
+				var y = ReadNumber (xy[1]);
 
 				if (i == 0) {
 					p.MoveTo (x, y);
 				} else
 					p.LineTo (x, y);
-				i += 2;
-
+				i++;
 			}
 			p.Close ();
 		}
+
 		string ReadString (XElement e, string defaultValue = "")
 		{
 			if (e == null)
