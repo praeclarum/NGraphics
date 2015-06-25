@@ -136,6 +136,9 @@ namespace NGraphics
 					r = new Ellipse (new Point (cx - rr, cy - rr), new Size (2 * rr, 2 * rr), pen, brush);
 				}
 				break;
+			case "clipPath":
+				break;
+
 			case "path":
 				{
 					var dA = e.Attribute ("d");
@@ -151,11 +154,21 @@ namespace NGraphics
 					var pA = e.Attribute ("points");
 					if (pA != null && !string.IsNullOrWhiteSpace (pA.Value)) {
 						var path = new Path (pen, brush);
-						ReadPolygon (path, pA.Value);
+						ReadPoints (path, pA.Value, true);
 						r = path;
 					}
 				}
 				break;
+			case "polyline":
+				{
+					var pA = e.Attribute ("points");
+					if (pA != null && !string.IsNullOrWhiteSpace (pA.Value)) {
+						var path = new Path (pen, brush);
+						ReadPoints (path, pA.Value, false);
+						r = path;
+					}
+				}
+			break;
 			case "g":
 				{
 					var g = new Group ();
@@ -526,14 +539,14 @@ namespace NGraphics
 			}
 		}
 
-		void ReadPolygon (Path p, string pathDescriptor)
+		void ReadPoints (Path p, string pathDescriptor, bool closePath)
 		{
 			var args = pathDescriptor.Split (new[]{' '}, StringSplitOptions.RemoveEmptyEntries);
 
 			var i = 0;
 			var n = args.Length;
 			if (n == 0)
-				throw new Exception ("Not supported polygon");
+				throw new Exception ("Not supported point");
 			while (i < n) {
 				var xy = args[i].Split(new[]{','}, StringSplitOptions.RemoveEmptyEntries);
 				var x = ReadNumber (xy[0]);
@@ -545,7 +558,8 @@ namespace NGraphics
 					p.LineTo (x, y);
 				i++;
 			}
-			p.Close ();
+			if (closePath)
+				p.Close ();
 		}
 
 		string ReadString (XElement e, string defaultValue = "")
