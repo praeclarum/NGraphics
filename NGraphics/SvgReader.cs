@@ -136,8 +136,6 @@ namespace NGraphics
 					r = new Ellipse (new Point (cx - rr, cy - rr), new Size (2 * rr, 2 * rr), pen, brush);
 				}
 				break;
-			case "clipPath":
-				break;
 
 			case "path":
 				{
