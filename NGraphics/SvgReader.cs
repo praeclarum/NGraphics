@@ -216,6 +216,38 @@ namespace NGraphics
 				}
 				break;
 
+				case "foreignObject":
+				{
+					var x = ReadNumber ( e.Attribute("x") );
+					var y = ReadNumber ( e.Attribute("y") );
+					var width = ReadNumber ( e.Attribute("width") );
+					var height = ReadNumber ( e.Attribute("height") );
+					r = new ForeignObject(new Point(x, y), new Size(width, height));
+				}
+				break;
+
+				case "pgf":
+				{
+					var id = e.Attribute("id");
+					System.Diagnostics.Debug.WriteLine("Ignoring pgf element" + (id != null ? ": '" + id.Value + "'" : ""));
+				}
+				break;
+
+				case "switch":
+				{
+					// Evaluate requiredFeatures, requiredExtensions and systemLanguage
+					foreach (var ee in e.Elements())
+					{
+						var requiredFeatures = ee.Attribute("requiredFeatures");
+						var requiredExtensions = ee.Attribute("requiredExtensions");
+						var systemLanguage = ee.Attribute("systemLanguage");
+						// currently no support for any of these restrictions
+						if (requiredFeatures == null && requiredExtensions == null && systemLanguage == null)
+							AddElement (list, ee, pen, brush);
+					}
+				}
+				break;
+
 
 				// color definition that can be referred to by other elements
 				case "linearGradient":
