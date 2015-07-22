@@ -56,6 +56,10 @@ namespace NGraphics
 		{
 			Stops.Add (new GradientStop (offset, color));
 		}
+		public void AddStops (IEnumerable<GradientStop> stops)
+		{
+			Stops.AddRange(stops);
+		}
 	}
 
 	public class RadialGradientBrush : GradientBrush

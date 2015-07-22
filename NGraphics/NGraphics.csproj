@@ -64,6 +64,7 @@
     <Compile Include="Line.cs" />
     <Compile Include="FilterCanvas.cs" />
     <Compile Include="DrawImageCache.cs" />
+    <Compile Include="ForeignObject.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup />

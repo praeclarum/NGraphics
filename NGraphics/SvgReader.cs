@@ -136,6 +136,7 @@ namespace NGraphics
 					r = new Ellipse (new Point (cx - rr, cy - rr), new Size (2 * rr, 2 * rr), pen, brush);
 				}
 				break;
+
 			case "path":
 				{
 					var dA = e.Attribute ("d");
@@ -151,14 +152,27 @@ namespace NGraphics
 					var pA = e.Attribute ("points");
 					if (pA != null && !string.IsNullOrWhiteSpace (pA.Value)) {
 						var path = new Path (pen, brush);
-						ReadPolygon (path, pA.Value);
+						ReadPoints (path, pA.Value, true);
 						r = path;
 					}
 				}
 				break;
+			case "polyline":
+				{
+					var pA = e.Attribute ("points");
+					if (pA != null && !string.IsNullOrWhiteSpace (pA.Value)) {
+						var path = new Path (pen, brush);
+						ReadPoints (path, pA.Value, false);
+						r = path;
+					}
+				}
+			break;
 			case "g":
 				{
 					var g = new Group ();
+					var groupId = e.Attribute("id");
+					if (groupId != null && !string.IsNullOrEmpty(groupId.Value))
+						g.Id = groupId.Value;
 					AddElements (g.Children, e.Elements (), pen, brush);
 					r = g;
 				}
@@ -199,6 +213,38 @@ namespace NGraphics
 					var y1 = ReadNumber ( e.Attribute("y1") );
 					var y2 = ReadNumber ( e.Attribute("y2") );
 					r = new Line(new Point(x1, y1), new Point(x2, y2), pen);
+				}
+				break;
+
+				case "foreignObject":
+				{
+					var x = ReadNumber ( e.Attribute("x") );
+					var y = ReadNumber ( e.Attribute("y") );
+					var width = ReadNumber ( e.Attribute("width") );
+					var height = ReadNumber ( e.Attribute("height") );
+					r = new ForeignObject(new Point(x, y), new Size(width, height));
+				}
+				break;
+
+				case "pgf":
+				{
+					var id = e.Attribute("id");
+					System.Diagnostics.Debug.WriteLine("Ignoring pgf element" + (id != null ? ": '" + id.Value + "'" : ""));
+				}
+				break;
+
+				case "switch":
+				{
+					// Evaluate requiredFeatures, requiredExtensions and systemLanguage
+					foreach (var ee in e.Elements())
+					{
+						var requiredFeatures = ee.Attribute("requiredFeatures");
+						var requiredExtensions = ee.Attribute("requiredExtensions");
+						var systemLanguage = ee.Attribute("systemLanguage");
+						// currently no support for any of these restrictions
+						if (requiredFeatures == null && requiredExtensions == null && systemLanguage == null)
+							AddElement (list, ee, pen, brush);
+					}
 				}
 				break;
 
@@ -326,25 +372,54 @@ namespace NGraphics
 					var urlM = fillUrlRe.Match (fill);
 					if (urlM.Success) {
 						var id = urlM.Groups [1].Value.Trim ();
-						XElement defE;
-						if (defs.TryGetValue (id, out defE)) {
-							switch (defE.Name.LocalName) {
-							case "linearGradient":
-								brush = CreateLinearGradientBrush (defE);
-								break;
-							case "radialGradient":
-								brush = CreateRadialGradientBrush (defE);
-								break;
-							default:
-								throw new NotSupportedException ("Fill " + defE.Name);
-							}
-						} else {
-							throw new Exception ("Invalid fill url reference: " + id);
-						}
+						brush = GetGradientBrush(id, null);
 					} else {
 						throw new NotSupportedException ("Fill " + fill);
 					}
 				}
+			}
+		}
+
+		protected GradientBrush GetGradientBrush(string fill, GradientBrush child)
+		{
+			XElement defE;
+			if (defs.TryGetValue (fill, out defE)) {
+				GradientBrush brush = null;
+				switch (defE.Name.LocalName) {
+				case "linearGradient":
+					brush = CreateLinearGradientBrush (defE);
+					break;
+				case "radialGradient":
+					brush = CreateRadialGradientBrush (defE);
+					break;
+				default:
+					throw new NotSupportedException ("Fill " + defE.Name);
+				}
+				if (child != null)
+				{	
+					if (child is RadialGradientBrush && brush is RadialGradientBrush)
+					{
+						((RadialGradientBrush)brush).Center = ((RadialGradientBrush)child).Center;
+						((RadialGradientBrush)brush).Focus = ((RadialGradientBrush)child).Focus;
+						((RadialGradientBrush)brush).Radius = ((RadialGradientBrush)child).Radius;
+					} else if (child is LinearGradientBrush && brush is LinearGradientBrush)
+					{
+						((LinearGradientBrush)brush).Start = ((LinearGradientBrush)child).Start;
+						((LinearGradientBrush)brush).End = ((LinearGradientBrush)child).End;
+					}
+
+					brush.AddStops(child.Stops);
+				}
+
+				XNamespace xlink = "http://www.w3.org/1999/xlink";
+				var parent = defE.Attribute(xlink + "href");
+				if (parent != null && !string.IsNullOrEmpty(parent.Value))
+				{
+					brush = GetGradientBrush(parent.Value.Substring(1), brush);
+				}
+				return brush;
+			} else {
+				throw new Exception ("Invalid fill url reference: " + fill);
 			}
 		}
 
@@ -417,82 +492,106 @@ namespace NGraphics
 
 		void ReadPath (Path p, string pathDescriptor)
 		{
-			var args = pathDescriptor.Split (WSC, StringSplitOptions.RemoveEmptyEntries);
+			Regex regex = new Regex(@"[MLHVCSQTAZmlhvcsqtaz][0-9\.,\-\s\n]+", RegexOptions.Singleline);
 
-			var i = 0;
-			var n = args.Length;
+			Match m = regex.Match(pathDescriptor);
+			while(m.Success)
+			{
+				var match = m.Value.Trim();
+				var op = match.Substring(0, 1);
+				// make sure negative numbers are split properly
+				match = match.Replace("-", " -");
+				var args = match.Substring(1).Split(WSC, StringSplitOptions.RemoveEmptyEntries);
 
-			while (i < n) {
-				var a = args[i];
-				//
-				// Get the operation
-				//
-				var op = "";
-				if (a.Length == 1) {
-					op = a;
-					i++;
-				} else {
-					op = a.Substring (0, 1);
-					args [i] = a.Substring (1);
-				}
+				Point previousPoint;
+				if (p.Operations.Count > 0 && !(p.Operations.Last() is ClosePath))
+					previousPoint = p.Operations.Last().EndPoint;
 
-				//
-				// Execute
-				//
-				if (op == "M" && i + 1 < n) {
-					p.MoveTo (new Point (ReadNumber (args [i]), ReadNumber (args [i + 1])));
-					i += 2;
-				} else if (op == "L" && i + 1 < n) {
-					p.LineTo (new Point (ReadNumber (args [i]), ReadNumber (args [i + 1])));
-					i += 2;
-				} else if (op == "C" && i + 5 < n) {
-					var c1 = new Point (ReadNumber (args [i]), ReadNumber (args [i + 1]));
-					var c2 = new Point (ReadNumber (args [i + 2]), ReadNumber (args [i + 3]));
-					var pt = new Point (ReadNumber (args [i + 4]), ReadNumber (args [i + 5]));
+				if ((op == "M" || op == "m") && args.Length >= 2) {
+					var point = new Point (ReadNumber (args [0]), ReadNumber (args [1]));
+					if (op == "m")
+						point += previousPoint;
+					p.MoveTo (point);
+				} else if ((op == "L" || op == "l") && args.Length >= 2) {
+					var point = new Point (ReadNumber (args [0]), ReadNumber (args [1]));
+					if (op == "l")
+						point += previousPoint;
+					p.LineTo (point);
+				} else if ((op == "C" || op == "c") && args.Length >= 6) {
+					var c1 = new Point (ReadNumber (args [0]), ReadNumber (args [1]));
+					var c2 = new Point (ReadNumber (args [2]), ReadNumber (args [3]));
+					var pt = new Point (ReadNumber (args [4]), ReadNumber (args [5]));
+					if (op == "c")
+					{
+						c1 += previousPoint;
+						c2 += previousPoint;
+						pt += previousPoint;
+					}
 					p.CurveTo (c1, c2, pt);
-					i += 6;
-				} else if (op == "S" && i + 3 < n) {
-					var c  = new Point (ReadNumber (args [i]), ReadNumber (args [i + 1]));
-					var pt = new Point (ReadNumber (args [i + 2]), ReadNumber (args [i + 3]));
+				} else if ((op == "S" || op == "s") && args.Length >= 4) {
+					var c  = new Point (ReadNumber (args [0]), ReadNumber (args [1]));
+					var pt = new Point (ReadNumber (args [2]), ReadNumber (args [3]));
+					if (op == "s")
+					{
+						c += previousPoint;
+						pt += previousPoint;
+					}
 					p.ContinueCurveTo (c, pt);
-					i += 4;
-				} else if (op == "A" && i + 6 < n) {
-					var r = new Size (ReadNumber (args [i]), ReadNumber (args [i + 1]));
-//					var xr = ReadNumber (args [i + 2]);
-					var laf = ReadNumber (args [i + 3]) != 0;
-					var swf = ReadNumber (args [i + 4]) != 0;
-					var pt = new Point (ReadNumber (args [i + 5]), ReadNumber (args [i + 6]));
+				} else if ((op == "A" || op == "a") && args.Length >= 7) {
+					var r = new Size (ReadNumber (args [0]), ReadNumber (args [1]));
+//                                     var xr = ReadNumber (args [i + 2]);
+					var laf = ReadNumber (args [3]) != 0;
+					var swf = ReadNumber (args [4]) != 0;
+					var pt = new Point (ReadNumber (args [5]), ReadNumber (args [6]));
+					if (op == "a")
+						pt += previousPoint;
 					p.ArcTo (r, laf, swf, pt);
-					i += 7;
+				} else if ((op == "V" || op == "v") && args.Length >= 1 && p.Operations.Count > 0) {
+					var previousX = previousPoint.X;
+					var y = ReadNumber(args[0]);
+					if (op == "v")
+						y += previousPoint.Y;
+					var point = new Point(previousX, y);
+					p.LineTo(point);
+				} else if ((op == "H" || op == "h") && args.Length >= 1 && p.Operations.Count > 0) {
+					var previousY = previousPoint.Y;
+					var x = ReadNumber(args[0]);
+					if (op == "h")
+						x += previousPoint.X;
+					var point = new Point(x, previousY);
+					p.LineTo(point);
 				} else if (op == "z" || op == "Z") {
 					p.Close ();
 				} else {
 					throw new NotSupportedException ("Path Operation " + op);
 				}
+				m = m.NextMatch();
 			}
 		}
 
-		void ReadPolygon (Path p, string pathDescriptor)
+		void ReadPoints (Path p, string pathDescriptor, bool closePath)
 		{
 			var args = pathDescriptor.Split (new[]{' '}, StringSplitOptions.RemoveEmptyEntries);
 
 			var i = 0;
 			var n = args.Length;
 			if (n == 0)
-				throw new Exception ("Not supported polygon");
+				throw new Exception ("Not supported point");
 			while (i < n) {
-				var x = ReadNumber (args [i]);
-				var y = ReadNumber (args [i + 1]);
+				var xy = args[i].Split(new[]{','}, StringSplitOptions.RemoveEmptyEntries);
+				var x = ReadNumber (xy[0]);
+				var y = ReadNumber (xy[1]);
 
 				if (i == 0) {
 					p.MoveTo (x, y);
 				} else
 					p.LineTo (x, y);
-				i += 2;
-
+				i++;
 			}
-			p.Close ();
+			if (closePath)
+				p.Close ();
 		}
+
 		string ReadString (XElement e, string defaultValue = "")
 		{
 			if (e == null)
@@ -531,6 +630,12 @@ namespace NGraphics
 			b.Start.Y = ReadNumber (e.Attribute ("y1"));
 			b.End.X = ReadNumber (e.Attribute ("x2"));
 			b.End.Y = ReadNumber (e.Attribute ("y2"));
+
+			var gradientUnits = e.Attribute("gradientUnits");
+			if (gradientUnits != null)
+			{
+				b.Absolute = gradientUnits.Value == "userSpaceOnUse";
+			}
 
 			ReadStops (e, b.Stops);
 
@@ -572,6 +677,8 @@ namespace NGraphics
 			return ReadColor (a.Value);
 		}
 
+		Regex rgbRe = new Regex("([0-9]+).*?([0-9]+).*?([0-9]+)");
+
 		Color ReadColor (string raw)
 		{
 			if (string.IsNullOrWhiteSpace (raw) || raw.Equals("none", StringComparison.OrdinalIgnoreCase))
@@ -587,8 +694,21 @@ namespace NGraphics
 				var b = int.Parse (s.Substring (5, 2), NumberStyles.HexNumber, icult);
 
 				return new Color (r / 255.0, g / 255.0, b / 255.0, 1);
-
 			}
+
+			var match = rgbRe.Match(s);
+			if (match.Success && match.Groups.Count == 4)
+			{
+				var r = int.Parse( match.Groups[1].Value );
+				var g = int.Parse( match.Groups[2].Value );
+				var b = int.Parse( match.Groups[3].Value );
+
+				return new Color (r / 255.0, g / 255.0, b / 255.0, 1);
+			}
+
+			Color color;
+			if (Colors.TryParse (s, out color))
+				return color;
 
 			throw new NotSupportedException ("Color " + s);
 		}

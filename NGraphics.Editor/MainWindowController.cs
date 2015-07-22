@@ -2,6 +2,8 @@
 
 using Foundation;
 using AppKit;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace NGraphics.Editor
 {
@@ -65,9 +67,53 @@ namespace NGraphics.Editor
 			}
 		}
 
+		static readonly Regex svgRe = new Regex (@"<svg.*?>.+<\/svg>", RegexOptions.Singleline);
+
+		void ParseSVG()
+		{
+			Task.Run(() => {
+				string svg = null;
+				CoreGraphics.CGRect previewSize = CoreGraphics.CGRect.Empty;
+				string error = null;
+
+				this.InvokeOnMainThread (() => {
+					Prev.Drawables = null;
+					previewSize = Prev.Bounds;
+					svg = Code;
+				});
+
+				try {
+					var reader = new SvgReader(new System.IO.StringReader(svg));
+					if (reader.Graphic != null)
+					{
+						if (reader.Graphic.Size.Height == 0 || reader.Graphic.Size.Width == 0)
+							reader.Graphic.Size = new Size(previewSize.Width, previewSize.Height);
+						Prev.Drawables = new IDrawable[] { reader.Graphic };
+					}
+				} catch (Exception ex) {
+					error = ex.Message;
+				}
+				this.BeginInvokeOnMainThread(() => {
+					if (!string.IsNullOrEmpty(error))
+					{
+						Errors.Value = error;
+						Errors.TextColor = NSColor.Red;
+					} else {
+						Errors.Value = "";
+					}
+
+					Prev.SetNeedsDisplayInRect (previewSize);
+
+				});
+			});
+		}
+
 		void HandleThrottledTextChanged ()
 		{
-			CompileCode ();
+			if (svgRe.IsMatch(Code))
+				ParseSVG();
+			else
+				CompileCode ();
 		}
 
 		void CompileCode ()
