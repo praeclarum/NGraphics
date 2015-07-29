@@ -648,6 +648,7 @@ namespace NGraphics
 			foreach (var se in e.Elements (ns + "stop")) {
 				var s = new GradientStop ();
 				s.Offset = ReadNumber (se.Attribute ("offset"));
+				double alpha = 1.0;
 				var styleAttribute = se.Attribute("style");
 				if (styleAttribute != null)
 				{
@@ -657,13 +658,20 @@ namespace NGraphics
 						if (style.Contains("stop-color") && style.IndexOf(':') != -1)
 						{
 							s.Color = ReadColor(style.Substring(style.IndexOf(':')+1));
-							break;
+						}
+						else if (style.Contains("stop-opacity") && style.IndexOf(':') != -1)
+						{
+							alpha = ReadNumber(style.Substring(style.IndexOf(':')+1));
 						}
 					}
 				}
 				var stopColorAttribute = se.Attribute("stop-color");
 				if (stopColorAttribute != null)
 					s.Color = ReadColor (stopColorAttribute.Value);
+				var opacityAttribute = se.Attribute("stop-opacity");
+				if (opacityAttribute != null)
+					alpha = ReadNumber(opacityAttribute.Value);
+				s.Color.Alpha = alpha;
 				stops.Add (s);
 			}
 			stops.Sort ((x, y) => x.Offset.CompareTo (y.Offset));
