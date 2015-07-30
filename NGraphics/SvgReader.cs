@@ -100,14 +100,15 @@ namespace NGraphics
 					var x = ReadNumber (e.Attribute ("x"));
 					var y = ReadNumber (e.Attribute ("y"));
 					var text = e.Value.Trim ();
-					var fontFamilyAttribute = e.Attribute("font-family");
 					var font = new Font ();
-					if (fontFamilyAttribute != null)
-						font.Family = fontFamilyAttribute.Value.Trim('\'');
-					var fontSizeAttribute = e.Attribute("font-size");
-					if (fontSizeAttribute != null)
-						font.Size = ReadNumber(fontSizeAttribute.Value);
-					r = new Text (text, new Rect (new Point (x, y), new Size (double.MaxValue, double.MaxValue)), font, TextAlignment.Left, pen, brush);
+					var fontFamily = ReadTextFontFamily(e);
+					if (!string.IsNullOrEmpty(fontFamily))
+						font.Family = fontFamily;
+					var fontSize = ReadTextFontSize(e);
+					if (fontSize >= 0)
+						font.Size = fontSize;
+					TextAlignment textAlignment = ReadTextAlignment(e);
+					r = new Text (text, new Rect (new Point (x, y), new Size (double.MaxValue, double.MaxValue)), font, textAlignment, pen, brush);
 				}
 				break;
 			case "rect":
@@ -264,9 +265,15 @@ namespace NGraphics
 			}
 		}
 
-		Regex keyValueRe = new Regex (@"\s*(\w+)\s*:\s*(.*)");
+		Regex keyValueRe = new Regex (@"\s*([\w-]+)\s*:\s*(.*)");
 
 		void ApplyStyle (string style, ref Pen pen, out bool hasPen, ref Brush brush, out bool hasBrush)
+		{
+			var d = ParseStyle(style);
+			ApplyStyle (d, ref pen, out hasPen, ref brush, out hasBrush);
+		}
+
+		Dictionary<string, string> ParseStyle(string style)
 		{
 			var d = new Dictionary<string, string> ();
 			var kvs = style.Split (new[]{ ';' }, StringSplitOptions.RemoveEmptyEntries);
@@ -278,7 +285,7 @@ namespace NGraphics
 					d [k] = v;
 				}
 			}
-			ApplyStyle (d, ref pen, out hasPen, ref brush, out hasBrush);
+			return d;
 		}
 
 		string GetString (Dictionary<string, string> style, string name, string defaultValue = "")
@@ -731,6 +738,74 @@ namespace NGraphics
 				return color;
 
 			throw new NotSupportedException ("Color " + s);
+		}
+
+		string ReadTextFontFamily(XElement element)
+		{
+			string value = null;
+			if (element != null)
+			{
+				var attrib = element.Attribute("font-family");
+				if (attrib != null && !string.IsNullOrWhiteSpace(attrib.Value))
+					value = attrib.Value.Trim();
+				else
+				{
+					var style = element.Attribute("style");
+					if (style != null && !string.IsNullOrWhiteSpace(style.Value))
+					{
+						value = GetString(ParseStyle(style.Value), "font-family");
+					}
+				}
+			}
+			return value;
+
+		}
+
+		double ReadTextFontSize(XElement element)
+		{
+			double value = -1;
+			if (element != null)
+			{
+				var attrib = element.Attribute("font-size");
+				if (attrib != null && !string.IsNullOrWhiteSpace(attrib.Value))
+					value = ReadNumber(attrib.Value);
+				else
+				{
+					var style = element.Attribute("style");
+					if (style != null && !string.IsNullOrWhiteSpace(style.Value))
+					{
+						value = ReadNumber(GetString(ParseStyle(style.Value), "font-size", "-1"));
+					}
+				}
+			}
+
+			return value;
+		}
+
+		TextAlignment ReadTextAlignment(XElement element)
+		{
+			string value = null;
+			if (element != null)
+			{
+				var attrib = element.Attribute("text-anchor");
+				if (attrib != null && !string.IsNullOrWhiteSpace(attrib.Value))
+					value = attrib.Value;
+				else
+				{
+					var style = element.Attribute("style");
+					if (style != null && !string.IsNullOrWhiteSpace(style.Value))
+					{
+						value = GetString (ParseStyle(style.Value), "text-anchor");
+					}
+				}
+			}
+
+			if (value == "start")
+				return TextAlignment.Left;
+			else if (value == "end")
+				return TextAlignment.Right;
+			else
+				return TextAlignment.Center;
 		}
 
 		double ReadNumber (XAttribute a)

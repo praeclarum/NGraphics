@@ -283,7 +283,13 @@ namespace NGraphics
 					nfloat asc, desc, lead;
 					var width = l.GetTypographicBounds (out asc, out desc, out lead);
 					context.SaveState ();
-					context.TranslateCTM ((nfloat)(pt.X - width / 2), (nfloat)(pt.Y + desc));
+					if (alignment == TextAlignment.Left)
+						context.TranslateCTM ((nfloat)(pt.X - width), (nfloat)(pt.Y + desc));
+					else if (alignment == TextAlignment.Right)
+						context.TranslateCTM((nfloat)(pt.X), (nfloat)(pt.Y + desc));
+					else
+						context.TranslateCTM ((nfloat)(pt.X - width / 2), (nfloat)(pt.Y + desc));
+
 					context.TextPosition = CGPoint.Empty;
 					l.Draw (context);
 					context.RestoreState ();
