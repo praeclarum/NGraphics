@@ -504,66 +504,78 @@ namespace NGraphics
 				var args = match.Substring(1).Split(WSC, StringSplitOptions.RemoveEmptyEntries);
 
 				Point previousPoint;
-				if (p.Operations.Count > 0 && !(p.Operations.Last() is ClosePath))
-					previousPoint = p.Operations.Last().EndPoint;
 
-				if ((op == "M" || op == "m") && args.Length >= 2) {
-					var point = new Point (ReadNumber (args [0]), ReadNumber (args [1]));
-					if (op == "m")
-						point += previousPoint;
-					p.MoveTo (point);
-				} else if ((op == "L" || op == "l") && args.Length >= 2) {
-					var point = new Point (ReadNumber (args [0]), ReadNumber (args [1]));
-					if (op == "l")
-						point += previousPoint;
-					p.LineTo (point);
-				} else if ((op == "C" || op == "c") && args.Length >= 6) {
-					var c1 = new Point (ReadNumber (args [0]), ReadNumber (args [1]));
-					var c2 = new Point (ReadNumber (args [2]), ReadNumber (args [3]));
-					var pt = new Point (ReadNumber (args [4]), ReadNumber (args [5]));
-					if (op == "c")
-					{
-						c1 += previousPoint;
-						c2 += previousPoint;
-						pt += previousPoint;
+				int index = 0;
+				while(index < args.Length)
+				{
+					if (p.Operations.Count > 0 && !(p.Operations.Last() is ClosePath))
+						previousPoint = p.Operations.Last().EndPoint;
+
+					if ((op == "M" || op == "m") && args.Length >= index+2) {
+						var point = new Point (ReadNumber (args [index]), ReadNumber (args [index+1]));
+						if (op == "m")
+							point += previousPoint;
+						p.MoveTo (point);
+						index += 2;
+					} else if ((op == "L" || op == "l") && args.Length >= index+2) {
+						var point = new Point (ReadNumber (args [index]), ReadNumber (args [index+1]));
+						if (op == "l")
+							point += previousPoint;
+						p.LineTo (point);
+						index += 2;
+					} else if ((op == "C" || op == "c") && args.Length >= index+6) {
+						var c1 = new Point (ReadNumber (args [index]), ReadNumber (args [index+1]));
+						var c2 = new Point (ReadNumber (args [index+2]), ReadNumber (args [index+3]));
+						var pt = new Point (ReadNumber (args [index+4]), ReadNumber (args [index+5]));
+						if (op == "c")
+						{
+							c1 += previousPoint;
+							c2 += previousPoint;
+							pt += previousPoint;
+						}
+						p.CurveTo (c1, c2, pt);
+						index += 6;
+					} else if ((op == "S" || op == "s") && args.Length >= index+4) {
+						var c  = new Point (ReadNumber (args [index]), ReadNumber (args [index+1]));
+						var pt = new Point (ReadNumber (args [index+2]), ReadNumber (args [index+3]));
+						if (op == "s")
+						{
+							c += previousPoint;
+							pt += previousPoint;
+						}
+						p.ContinueCurveTo (c, pt);
+						index += 4;
+					} else if ((op == "A" || op == "a") && args.Length >= index+7) {
+						var r = new Size (ReadNumber (args [index]), ReadNumber (args [index+1]));
+	//                                     var xr = ReadNumber (args [i + 2]);
+						var laf = ReadNumber (args [index+3]) != 0;
+						var swf = ReadNumber (args [index+4]) != 0;
+						var pt = new Point (ReadNumber (args [index+5]), ReadNumber (args [index+6]));
+						if (op == "a")
+							pt += previousPoint;
+						p.ArcTo (r, laf, swf, pt);
+						index += 7;
+					} else if ((op == "V" || op == "v") && args.Length >= index+1 && p.Operations.Count > 0) {
+						var previousX = previousPoint.X;
+						var y = ReadNumber(args[index]);
+						if (op == "v")
+							y += previousPoint.Y;
+						var point = new Point(previousX, y);
+						p.LineTo(point);
+						index += 1;
+					} else if ((op == "H" || op == "h") && args.Length >= index+1 && p.Operations.Count > 0) {
+						var previousY = previousPoint.Y;
+						var x = ReadNumber(args[index]);
+						if (op == "h")
+							x += previousPoint.X;
+						var point = new Point(x, previousY);
+						p.LineTo(point);
+						index += 1;
+					} else if (op == "z" || op == "Z") {
+						p.Close ();
+					} else {
+						throw new NotSupportedException ("Path Operation " + op);
 					}
-					p.CurveTo (c1, c2, pt);
-				} else if ((op == "S" || op == "s") && args.Length >= 4) {
-					var c  = new Point (ReadNumber (args [0]), ReadNumber (args [1]));
-					var pt = new Point (ReadNumber (args [2]), ReadNumber (args [3]));
-					if (op == "s")
-					{
-						c += previousPoint;
-						pt += previousPoint;
-					}
-					p.ContinueCurveTo (c, pt);
-				} else if ((op == "A" || op == "a") && args.Length >= 7) {
-					var r = new Size (ReadNumber (args [0]), ReadNumber (args [1]));
-//                                     var xr = ReadNumber (args [i + 2]);
-					var laf = ReadNumber (args [3]) != 0;
-					var swf = ReadNumber (args [4]) != 0;
-					var pt = new Point (ReadNumber (args [5]), ReadNumber (args [6]));
-					if (op == "a")
-						pt += previousPoint;
-					p.ArcTo (r, laf, swf, pt);
-				} else if ((op == "V" || op == "v") && args.Length >= 1 && p.Operations.Count > 0) {
-					var previousX = previousPoint.X;
-					var y = ReadNumber(args[0]);
-					if (op == "v")
-						y += previousPoint.Y;
-					var point = new Point(previousX, y);
-					p.LineTo(point);
-				} else if ((op == "H" || op == "h") && args.Length >= 1 && p.Operations.Count > 0) {
-					var previousY = previousPoint.Y;
-					var x = ReadNumber(args[0]);
-					if (op == "h")
-						x += previousPoint.X;
-					var point = new Point(x, previousY);
-					p.LineTo(point);
-				} else if (op == "z" || op == "Z") {
-					p.Close ();
-				} else {
-					throw new NotSupportedException ("Path Operation " + op);
 				}
 				m = m.NextMatch();
 			}
