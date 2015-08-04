@@ -814,6 +814,9 @@ namespace NGraphics
 			return ReadNumber (a.Value);
 		}
 
+		Regex unitRe = new Regex("px|pt|em|ex|pc|cm|mm|in");
+		Regex percRe = new Regex("%");
+
 		double ReadNumber (string raw)
 		{
 			if (string.IsNullOrWhiteSpace (raw))
@@ -822,11 +825,10 @@ namespace NGraphics
 			var s = raw.Trim ();
 			var m = 1.0;
 
-			if (s.EndsWith ("px") || s.EndsWith("pt") || s.EndsWith("em") || s.EndsWith("ex") || 
-				s.EndsWith("pc") ||	s.EndsWith("cm") || s.EndsWith("mm") || s.EndsWith("in")) {
+			if (unitRe.IsMatch(s)) {
 				s = s.Substring (0, s.Length - 2);
 			}
-			else if (s.EndsWith ("%")) {
+			else if (percRe.IsMatch(s)) {
 				s = s.Substring (0, s.Length - 1);
 				m = 0.01;
 			}
