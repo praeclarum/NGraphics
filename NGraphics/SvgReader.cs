@@ -496,12 +496,11 @@ namespace NGraphics
 		}
 
 		static readonly char[] WSC = new char[] { ',', ' ', '\t', '\n', '\r' };
+		Regex pathRegex = new Regex(@"[MLHVCSQTAZmlhvcsqtaz][0-9\.,\-\s\n]+", RegexOptions.Singleline);
 
 		void ReadPath (Path p, string pathDescriptor)
 		{
-			Regex regex = new Regex(@"[MLHVCSQTAZmlhvcsqtaz][0-9\.,\-\s\n]+", RegexOptions.Singleline);
-
-			Match m = regex.Match(pathDescriptor);
+			Match m = pathRegex.Match(pathDescriptor);
 			while(m.Success)
 			{
 				var match = m.Value.Trim();
@@ -823,7 +822,8 @@ namespace NGraphics
 			var s = raw.Trim ();
 			var m = 1.0;
 
-			if (s.EndsWith ("px")) {
+			if (s.EndsWith ("px") || s.EndsWith("pt") || s.EndsWith("em") || s.EndsWith("ex") || 
+				s.EndsWith("pc") ||	s.EndsWith("cm") || s.EndsWith("mm") || s.EndsWith("in")) {
 				s = s.Substring (0, s.Length - 2);
 			}
 			else if (s.EndsWith ("%")) {
