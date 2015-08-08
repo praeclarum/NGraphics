@@ -265,11 +265,6 @@ namespace NGraphics
 
 			SetBrush (brush);
 
-//			string fontName = font.Name;
-//			context.SelectFont (font.Name, (nfloat)font.Size, CGTextEncoding.MacRoman);
-//			
-//			context.ShowTextAtPoint ((nfloat)frame.X, (nfloat)frame.Y, text);
-
 			var pt = frame.TopLeft;
 
 			using (var atext = new NSMutableAttributedString (text)) {
@@ -280,10 +275,8 @@ namespace NGraphics
 				}, new NSRange (0, text.Length));
 
 				using (var l = new CTLine (atext)) {
-					nfloat asc, desc, lead;
-					var width = l.GetTypographicBounds (out asc, out desc, out lead);
 					context.SaveState ();
-					context.TranslateCTM ((nfloat)(pt.X - width / 2), (nfloat)(pt.Y + desc));
+					context.TranslateCTM ((nfloat)(pt.X), (nfloat)(pt.Y));
 					context.TextPosition = CGPoint.Empty;
 					l.Draw (context);
 					context.RestoreState ();
