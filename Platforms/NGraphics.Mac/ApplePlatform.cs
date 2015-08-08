@@ -375,6 +375,8 @@ namespace NGraphics
 						if (!IsValid (p.X) || !IsValid (p.Y))
 							continue;
 						var pp = Conversions.GetPoint (context.GetPathCurrentPoint ());
+						if (pp == p)
+							continue;
 						Point c1, c2;
 						at.GetCircles (pp, out c1, out c2);
 
@@ -382,6 +384,11 @@ namespace NGraphics
 
 						var startAngle = (float)Math.Atan2(pp.Y - circleCenter.Y, pp.X - circleCenter.X);
 						var endAngle = (float)Math.Atan2(p.Y - circleCenter.Y, p.X - circleCenter.X);
+
+						if (!IsValid (circleCenter.X) || !IsValid (circleCenter.Y) || !IsValid (startAngle) || !IsValid (endAngle)) {
+							context.MoveTo ((nfloat)p.X, (nfloat)p.Y);
+							continue;
+						}
 
 						context.AddArc((nfloat)circleCenter.X, (nfloat)circleCenter.Y, (nfloat)at.Radius.Min, startAngle, endAngle, at.SweepClockwise);
 
@@ -394,11 +401,11 @@ namespace NGraphics
 						if (!IsValid (p.X) || !IsValid (p.Y))
 							continue;
 						var c1 = ct.Control1;
-						if (!IsValid (c1.X) || !IsValid (c1.Y))
-							continue;
 						var c2 = ct.Control2;
-						if (!IsValid (c2.X) || !IsValid (c2.Y))
+						if (!IsValid (c1.X) || !IsValid (c1.Y) || !IsValid (c2.X) || !IsValid (c2.Y)) {
+							context.MoveTo ((nfloat)p.X, (nfloat)p.Y);
 							continue;
+						}
 						context.AddCurveToPoint ((nfloat)c1.X, (nfloat)c1.Y, (nfloat)c2.X, (nfloat)c2.Y, (nfloat)p.X, (nfloat)p.Y);
 						bb.Add (p);
 						bb.Add (c1);
