@@ -336,6 +336,11 @@ namespace NGraphics
 			}
 		}
 
+		static bool IsValid (double v)
+		{
+			return !double.IsNaN (v) && !double.IsInfinity (v);
+		}
+
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 		{
 			if (pen == null && brush == null)
@@ -349,6 +354,8 @@ namespace NGraphics
 					var mt = op as MoveTo;
 					if (mt != null) {
 						var p = mt.Point;
+						if (!IsValid (p.X) || !IsValid (p.Y))
+							continue;
 						context.MoveTo ((nfloat)p.X, (nfloat)p.Y);
 						bb.Add (p);
 						continue;
@@ -356,6 +363,8 @@ namespace NGraphics
 					var lt = op as LineTo;
 					if (lt != null) {
 						var p = lt.Point;
+						if (!IsValid (p.X) || !IsValid (p.Y))
+							continue;
 						context.AddLineToPoint ((nfloat)p.X, (nfloat)p.Y);
 						bb.Add (p);
 						continue;
@@ -363,6 +372,8 @@ namespace NGraphics
 					var at = op as ArcTo;
 					if (at != null) {
 						var p = at.Point;
+						if (!IsValid (p.X) || !IsValid (p.Y))
+							continue;
 						var pp = Conversions.GetPoint (context.GetPathCurrentPoint ());
 						Point c1, c2;
 						at.GetCircles (pp, out c1, out c2);
@@ -380,8 +391,14 @@ namespace NGraphics
 					var ct = op as CurveTo;
 					if (ct != null) {
 						var p = ct.Point;
+						if (!IsValid (p.X) || !IsValid (p.Y))
+							continue;
 						var c1 = ct.Control1;
+						if (!IsValid (c1.X) || !IsValid (c1.Y))
+							continue;
 						var c2 = ct.Control2;
+						if (!IsValid (c2.X) || !IsValid (c2.Y))
+							continue;
 						context.AddCurveToPoint ((nfloat)c1.X, (nfloat)c1.Y, (nfloat)c2.X, (nfloat)c2.Y, (nfloat)p.X, (nfloat)p.Y);
 						bb.Add (p);
 						bb.Add (c1);
