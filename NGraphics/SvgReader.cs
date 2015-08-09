@@ -503,7 +503,7 @@ namespace NGraphics
 				match = match.Replace("-", " -");
 				var args = match.Substring(1).Split(WSC, StringSplitOptions.RemoveEmptyEntries);
 
-				Point previousPoint;
+				Point previousPoint = new Point ();
 				if (p.Operations.Count > 0 && !(p.Operations.Last() is ClosePath))
 					previousPoint = p.Operations.Last().EndPoint;
 
