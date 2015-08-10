@@ -265,11 +265,6 @@ namespace NGraphics
 
 			SetBrush (brush);
 
-//			string fontName = font.Name;
-//			context.SelectFont (font.Name, (nfloat)font.Size, CGTextEncoding.MacRoman);
-//			
-//			context.ShowTextAtPoint ((nfloat)frame.X, (nfloat)frame.Y, text);
-
 			var pt = frame.TopLeft;
 
 			using (var atext = new NSMutableAttributedString (text)) {
@@ -280,16 +275,8 @@ namespace NGraphics
 				}, new NSRange (0, text.Length));
 
 				using (var l = new CTLine (atext)) {
-					nfloat asc, desc, lead;
-					var width = l.GetTypographicBounds (out asc, out desc, out lead);
 					context.SaveState ();
-					if (alignment == TextAlignment.Left)
-						context.TranslateCTM ((nfloat)(pt.X - width), (nfloat)(pt.Y + desc));
-					else if (alignment == TextAlignment.Right)
-						context.TranslateCTM((nfloat)(pt.X), (nfloat)(pt.Y + desc));
-					else
-						context.TranslateCTM ((nfloat)(pt.X - width / 2), (nfloat)(pt.Y + desc));
-
+					context.TranslateCTM ((nfloat)(pt.X), (nfloat)(pt.Y));
 					context.TextPosition = CGPoint.Empty;
 					l.Draw (context);
 					context.RestoreState ();
@@ -342,6 +329,11 @@ namespace NGraphics
 			}
 		}
 
+		static bool IsValid (double v)
+		{
+			return !double.IsNaN (v) && !double.IsInfinity (v);
+		}
+
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 		{
 			if (pen == null && brush == null)
@@ -355,6 +347,8 @@ namespace NGraphics
 					var mt = op as MoveTo;
 					if (mt != null) {
 						var p = mt.Point;
+						if (!IsValid (p.X) || !IsValid (p.Y))
+							continue;
 						context.MoveTo ((nfloat)p.X, (nfloat)p.Y);
 						bb.Add (p);
 						continue;
@@ -362,6 +356,8 @@ namespace NGraphics
 					var lt = op as LineTo;
 					if (lt != null) {
 						var p = lt.Point;
+						if (!IsValid (p.X) || !IsValid (p.Y))
+							continue;
 						context.AddLineToPoint ((nfloat)p.X, (nfloat)p.Y);
 						bb.Add (p);
 						continue;
@@ -369,7 +365,11 @@ namespace NGraphics
 					var at = op as ArcTo;
 					if (at != null) {
 						var p = at.Point;
+						if (!IsValid (p.X) || !IsValid (p.Y))
+							continue;
 						var pp = Conversions.GetPoint (context.GetPathCurrentPoint ());
+						if (pp == p)
+							continue;
 						Point c1, c2;
 						at.GetCircles (pp, out c1, out c2);
 
@@ -377,6 +377,11 @@ namespace NGraphics
 
 						var startAngle = (float)Math.Atan2(pp.Y - circleCenter.Y, pp.X - circleCenter.X);
 						var endAngle = (float)Math.Atan2(p.Y - circleCenter.Y, p.X - circleCenter.X);
+
+						if (!IsValid (circleCenter.X) || !IsValid (circleCenter.Y) || !IsValid (startAngle) || !IsValid (endAngle)) {
+							context.MoveTo ((nfloat)p.X, (nfloat)p.Y);
+							continue;
+						}
 
 						context.AddArc((nfloat)circleCenter.X, (nfloat)circleCenter.Y, (nfloat)at.Radius.Min, startAngle, endAngle, at.SweepClockwise);
 
@@ -386,8 +391,14 @@ namespace NGraphics
 					var ct = op as CurveTo;
 					if (ct != null) {
 						var p = ct.Point;
+						if (!IsValid (p.X) || !IsValid (p.Y))
+							continue;
 						var c1 = ct.Control1;
 						var c2 = ct.Control2;
+						if (!IsValid (c1.X) || !IsValid (c1.Y) || !IsValid (c2.X) || !IsValid (c2.Y)) {
+							context.MoveTo ((nfloat)p.X, (nfloat)p.Y);
+							continue;
+						}
 						context.AddCurveToPoint ((nfloat)c1.X, (nfloat)c1.Y, (nfloat)c2.X, (nfloat)c2.Y, (nfloat)p.X, (nfloat)p.Y);
 						bb.Add (p);
 						bb.Add (c1);

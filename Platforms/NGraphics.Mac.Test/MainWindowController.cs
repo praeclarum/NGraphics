@@ -50,10 +50,16 @@ namespace NGraphics.Mac.Test
 				var test = Activator.CreateInstance (t);
 				var ms = t.GetMethods ().Where (m => m.GetCustomAttributes (tat, true).Length > 0);
 				foreach (var m in ms) {
-					var r = m.Invoke (test, null);
-					var ta = r as Task;
-					if (ta != null)
-						await ta;
+					try {
+						var r = m.Invoke (test, null);
+						var ta = r as Task;
+						if (ta != null)
+							await ta;
+					}
+					catch (Exception ex) {
+						Console.WriteLine ("TEST {0} ERROR", m.Name);
+						Console.WriteLine (ex);
+					}
 				}
 			}
 

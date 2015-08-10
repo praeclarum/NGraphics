@@ -42,7 +42,7 @@ namespace NGraphics
 		public IImage GetImage ()
 		{
 			renderTarget.EndDraw ();
-			return new WICBitmapSourceImage (Bmp, factories);
+			return new WICBitmapSourceImage (Bmp, scale, factories);
 		}
 
 		public Size Size
@@ -60,14 +60,19 @@ namespace NGraphics
 	{
 		readonly WIC.BitmapSource bmp;
 		readonly Direct2DFactories factories;
+		readonly double scale;
 
 		public WIC.BitmapSource Bitmap { get { return bmp; } }
 
-		public WICBitmapSourceImage (WIC.BitmapSource bmp, Direct2DFactories factories = null)
+		public Size Size { get { return Conversions.ToSize (bmp.Size); } }
+		public double Scale { get { return scale; } }
+
+		public WICBitmapSourceImage (WIC.BitmapSource bmp, double scale, Direct2DFactories factories = null)
 		{
 			if (bmp == null)
 				throw new ArgumentNullException ("bmp");
 			this.bmp = bmp;
+			this.scale = scale;
 			this.factories = factories ?? Direct2DFactories.Shared;
 		}
 
@@ -171,6 +176,14 @@ namespace NGraphics
 				var s = stateStack.Pop ();
 				renderTarget.RestoreDrawingState (s);
 			}
+		}
+
+		public Size MeasureText (string text, Font font)
+		{
+			float maxWidth = float.MaxValue;
+			float maxHeight = float.MaxValue;
+			var layout = new DW.TextLayout (factories.DWFactory, text, GetTextFormat (font), maxWidth, maxHeight);
+			return new Size (layout.Metrics.Width, layout.Metrics.Height);
 		}
 
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
@@ -433,6 +446,16 @@ namespace NGraphics
 		public static Size2F ToSize2F (this Size size)
 		{
 			return new Size2F ((float)size.Width, (float)size.Height);
+		}
+
+		public static Size ToSize (this Size2F size)
+		{
+			return new Size (size.Width, size.Height);
+		}
+
+		public static Size ToSize (this Size2 size)
+		{
+			return new Size (size.Width, size.Height);
 		}
 
 		public static RectangleF ToRectangleF (this Rect rect)

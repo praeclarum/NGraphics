@@ -34,7 +34,7 @@ namespace NGraphics
 						DataPointer = (IntPtr)p,
 					};
 					var bmp = new WIC.Bitmap (factories.WICFactory, width, colors.Length / width, pf, data);
-					return new WICBitmapSourceImage (bmp, factories);
+					return new WICBitmapSourceImage (bmp, scale, factories);
 				}
 			}
 		}
@@ -55,7 +55,7 @@ namespace NGraphics
 			}
 
 			// Convert the BitmapSource to a Bitmap so we can allow the decoder to go out of memory
-			return new WICBitmapSourceImage (new WIC.Bitmap (factories.WICFactory, b, WIC.BitmapCreateCacheOption.CacheOnLoad), factories);
+			return new WICBitmapSourceImage (new WIC.Bitmap (factories.WICFactory, b, WIC.BitmapCreateCacheOption.CacheOnLoad), 1.0, factories);
 		}
 
 		public IImage LoadImage (string path)
