@@ -117,6 +117,12 @@ namespace NGraphics.Test
 		{
 			await ReadAndDraw ("repeat.svg");
 		}
+
+		[Test]
+		public async Task SliderThumb ()
+		{
+			await ReadAndDraw ("sliderThumb.svg");
+		}
 	}
 }
 
