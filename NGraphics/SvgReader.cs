@@ -12,13 +12,15 @@ namespace NGraphics
 	{
 		readonly IFormatProvider icult = System.Globalization.CultureInfo.InvariantCulture;
 
+		public double PixelsPerInch { get; private set; }
 		public Graphic Graphic { get; private set; }
 
 		readonly Dictionary<string, XElement> defs = new Dictionary<string, XElement> ();
 //		readonly XNamespace ns;
 
-		public SvgReader (System.IO.TextReader reader)
+		public SvgReader (System.IO.TextReader reader, double pixelsPerInch = 160.0)
 		{
+			PixelsPerInch = pixelsPerInch;
 			Read (XDocument.Load (reader));
 		}
 
@@ -726,10 +728,24 @@ namespace NGraphics
 			var s = raw.Trim ();
 			var m = 1.0;
 
-			if (s.EndsWith ("px")) {
+			if (s.EndsWith ("px", StringComparison.Ordinal)) {
 				s = s.Substring (0, s.Length - 2);
-			}
-			else if (s.EndsWith ("%")) {
+			} else if (s.EndsWith ("in", StringComparison.Ordinal)) {
+				s = s.Substring (0, s.Length - 2);
+				m = PixelsPerInch;
+			} else if (s.EndsWith ("cm", StringComparison.Ordinal)) {
+				s = s.Substring (0, s.Length - 2);
+				m = PixelsPerInch / 2.54;
+			} else if (s.EndsWith ("mm", StringComparison.Ordinal)) {
+				s = s.Substring (0, s.Length - 2);
+				m = PixelsPerInch / 25.4;
+			} else if (s.EndsWith ("pt", StringComparison.Ordinal)) {
+				s = s.Substring (0, s.Length - 2);
+				m = PixelsPerInch / 72.0;
+			} else if (s.EndsWith ("pc", StringComparison.Ordinal)) {
+				s = s.Substring (0, s.Length - 2);
+				m = PixelsPerInch / 6.0;
+			} else if (s.EndsWith ("%", StringComparison.Ordinal)) {
 				s = s.Substring (0, s.Length - 1);
 				m = 0.01;
 			}
