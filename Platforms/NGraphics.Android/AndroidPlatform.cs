@@ -366,17 +366,30 @@ namespace NGraphics
 				}
 			}
 		}
-		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
+		public void DrawRectangle (Rect frame, Size corner, Pen pen = null, Brush brush = null)
 		{
+			var left = (float)(frame.X);
+			var top = (float)(frame.Y);
+			var right = (float)(frame.X + frame.Width);
+			var bottom = (float)(frame.Y + frame.Height);
+			var rx = (float)corner.Width;
+			var ry = (float)corner.Height;
 			if (brush != null) {
 				var paint = GetBrushPaint (brush, frame);
-				graphics.DrawRect ((float)(frame.X), (float)(frame.Y), (float)(frame.X + frame.Width), (float)(frame.Y + frame.Height), paint);
+				if (rx > 0 || ry > 0) {
+					graphics.DrawRoundRect (new RectF (left, top, right, bottom), rx, ry, paint);
+				} else {
+					graphics.DrawRect (left, top, right, bottom, paint);
+				}
 			}
 			if (pen != null) {
 				var paint = GetPenPaint (pen);
-				graphics.DrawRect ((float)(frame.X), (float)(frame.Y), (float)(frame.X + frame.Width), (float)(frame.Y + frame.Height), paint);
+				if (rx > 0 || ry > 0) {
+					graphics.DrawRoundRect (new RectF (left, top, right, bottom), rx, ry, paint);
+				} else {
+					graphics.DrawRect (left, top, right, bottom, paint);
+				}
 			}
-
 		}
 		public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)
 		{

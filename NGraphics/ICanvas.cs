@@ -13,7 +13,7 @@ namespace NGraphics
 		Size MeasureText (string text, Font font);
 		void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null);
 		void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null);
-		void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null);
+		void DrawRectangle (Rect frame, Size corner, Pen pen = null, Brush brush = null);
 		void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null);
 		void DrawImage (IImage image, Rect frame, double alpha = 1.0);
 	}
@@ -104,7 +104,10 @@ namespace NGraphics
 			}
 		}
 
-
+		public static void DrawRectangle (this ICanvas canvas, Rect frame, Pen pen = null, Brush brush = null)
+		{
+			canvas.DrawRectangle (frame, Size.Zero, pen, brush);
+		}
 		public static void DrawRectangle (this ICanvas canvas, double x, double y, double width, double height, Pen pen = null, Brush brush = null)
 		{
 			canvas.DrawRectangle (new Rect (x, y, width, height), pen, brush);

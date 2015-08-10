@@ -55,7 +55,7 @@ namespace NGraphics
 			public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 			{
 			}
-			public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
+			public void DrawRectangle (Rect frame, Size corner, Pen pen = null, Brush brush = null)
 			{
 			}
 			public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)

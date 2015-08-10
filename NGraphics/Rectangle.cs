@@ -6,11 +6,23 @@ namespace NGraphics
 	public class Rectangle : Element
 	{
 		Rect frame;
+		Size corner;
+
+		public Rect Frame { get { return frame; } }
+		public Size Corner { get { return corner; } }
+
+		public Rectangle (Rect frame, Size corner, Pen pen = null, Brush brush = null)
+			: base (pen, brush)
+		{
+			this.frame = frame;
+			this.corner = corner;
+		}
 
 		public Rectangle (Rect frame, Pen pen = null, Brush brush = null)
 			: base (pen, brush)
 		{
 			this.frame = frame;
+			this.corner = Size.Zero;
 		}
 
 		public Rectangle (Point position, Size size, Pen pen = null, Brush brush = null)
@@ -30,7 +42,7 @@ namespace NGraphics
 
 		protected override void DrawElement (ICanvas canvas)
 		{
-			canvas.DrawRectangle (frame, Pen, Brush);
+			canvas.DrawRectangle (frame, corner, Pen, Brush);
 		}
 
 		public override string ToString ()

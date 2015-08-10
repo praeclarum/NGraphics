@@ -268,15 +268,33 @@ namespace NGraphics
 			}			
 		}
 
-		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
+		public void DrawRectangle (Rect frame, Size corner, Pen pen = null, Brush brush = null)
 		{
 			var p = GetBrush (pen);
 			var b = GetBrush (frame, brush);
 			if (b != null) {
-				renderTarget.FillRectangle (frame.ToRectangleF (), b);
+				if (corner.Width > 0 || corner.Height > 0) {
+					var rr = new D2D1.RoundedRectangle ();
+					rr.Rect = frame.ToRectangleF ();
+					rr.RadiusX = (float)corner.Width;
+					rr.RadiusY = (float)corner.Height;
+					renderTarget.FillRoundedRectangle (ref rr, b);
+				}
+				else {
+					renderTarget.FillRectangle (frame.ToRectangleF (), b);
+				}
 			}
 			if (p != null) {
-				renderTarget.DrawRectangle (frame.ToRectangleF (), p, (float)pen.Width, GetStrokeStyle (pen));
+				if (corner.Width > 0 || corner.Height > 0) {
+					var rr = new D2D1.RoundedRectangle ();
+					rr.Rect = frame.ToRectangleF ();
+					rr.RadiusX = (float)corner.Width;
+					rr.RadiusY = (float)corner.Height;
+					renderTarget.DrawRoundedRectangle (ref rr, p, (float)pen.Width, GetStrokeStyle (pen));
+				}
+				else {
+					renderTarget.DrawRectangle (frame.ToRectangleF (), p, (float)pen.Width, GetStrokeStyle (pen));
+				}
 			}
 		}
 

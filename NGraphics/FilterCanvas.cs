@@ -55,9 +55,9 @@ namespace NGraphics
 			NextCanvas.DrawPath (ops, GetPen (pen), GetBrush (brush));
 		}
 
-		public virtual void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
+		public virtual void DrawRectangle (Rect frame, Size corner, Pen pen = null, Brush brush = null)
 		{
-			NextCanvas.DrawRectangle (frame, GetPen (pen), GetBrush (brush));
+			NextCanvas.DrawRectangle (frame, corner, GetPen (pen), GetBrush (brush));
 		}
 
 		public virtual void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)

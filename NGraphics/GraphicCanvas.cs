@@ -37,9 +37,9 @@ namespace NGraphics
 		{
 			Graphic.Children.Add (new Path (commands, pen, brush));
 		}
-		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
+		public void DrawRectangle (Rect frame, Size corner, Pen pen = null, Brush brush = null)
 		{
-			Graphic.Children.Add (new Rectangle (frame, pen, brush));
+			Graphic.Children.Add (new Rectangle (frame, corner, pen, brush));
 		}
 		public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)
 		{

@@ -418,13 +418,32 @@ namespace NGraphics
 
 			}, pen, brush);
 		}
-		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
+		// http://stackoverflow.com/a/2835659/338
+		void AddRoundedRect (CGRect rrect, CGSize corner)
+		{
+			var rx = corner.Width;
+			if (rx * 2 > rrect.Width) {
+				rx = rrect.Width / 2;
+			}
+			var ry = corner.Height;
+			if (ry * 2 > rrect.Height) {
+				ry = rrect.Height / 2;
+			}
+			var path = CGPath.FromRoundedRect (rrect, rx, ry);
+			context.AddPath (path);
+		}
+		public void DrawRectangle (Rect frame, Size corner, Pen pen = null, Brush brush = null)
 		{
 			if (pen == null && brush == null)
 				return;
 
 			DrawElement (() => {
-				context.AddRect (Conversions.GetCGRect (frame));
+				if (corner.Width > 0 || corner.Height > 0) {
+					AddRoundedRect (Conversions.GetCGRect (frame), Conversions.GetCGSize (corner));
+				}
+				else {
+					context.AddRect (Conversions.GetCGRect (frame));
+				}
 				return frame;
 			}, pen, brush);
 		}

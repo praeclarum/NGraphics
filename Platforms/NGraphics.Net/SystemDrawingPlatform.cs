@@ -229,19 +229,55 @@ namespace NGraphics
 					graphics.FillPath (brush.GetBrush (frame), path);
 				}
 				if (pen != null) {
-					var r = Conversions.GetRectangleF (frame);
 					graphics.DrawPath (pen.GetPen (), path);
 				}
 			}
 		}
-		public void DrawRectangle (Rect frame, Pen pen = null, Brush brush = null)
+		public void DrawRectangle (Rect frame, Size corner, Pen pen = null, Brush brush = null)
 		{
-			if (brush != null) {
-				graphics.FillRectangle (brush.GetBrush (frame), Conversions.GetRectangleF (frame));
+			if (corner.Width > 0 || corner.Height > 0) {
+				using (var path = new GraphicsPath ()) {
+					var xdia = corner.Width * 2;
+					var ydia = corner.Height * 2;
+					if(xdia > frame.Width)    xdia = frame.Width;
+					if(ydia > frame.Height)   ydia = frame.Height;
+
+					// define a corner 
+					var Corner = Conversions.GetRectangleF (frame);
+
+					path.AddArc (Corner, 180, 90);    
+
+					// top right
+					Corner.X += (float)(frame.Width - xdia);
+					path.AddArc (Corner, 270, 90);    
+    
+					// bottom right
+					Corner.Y += (float)(frame.Height - ydia);
+					path.AddArc (Corner,   0, 90);    
+    
+					// bottom left
+					Corner.X -= (float)(frame.Width - xdia);
+					path.AddArc (Corner,  90, 90);
+
+					// end path
+					path.CloseFigure ();
+
+					if (brush != null) {
+						graphics.FillPath (brush.GetBrush (frame), path);
+					}
+					if (pen != null) {
+						graphics.DrawPath (pen.GetPen (), path);
+					}
+				}
 			}
-			if (pen != null) {
-				var r = Conversions.GetRectangleF (frame);
-				graphics.DrawRectangle (pen.GetPen (), r.X, r.Y, r.Width, r.Height);
+			else {
+				if (brush != null) {
+					graphics.FillRectangle (brush.GetBrush (frame), Conversions.GetRectangleF (frame));
+				}
+				if (pen != null) {
+					var r = Conversions.GetRectangleF (frame);
+					graphics.DrawRectangle (pen.GetPen (), r.X, r.Y, r.Width, r.Height);
+				}
 			}
 		}
 		public void DrawEllipse (Rect frame, Pen pen = null, Brush brush = null)

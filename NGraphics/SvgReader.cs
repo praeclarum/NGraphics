@@ -118,7 +118,12 @@ namespace NGraphics
 					var y = ReadNumber (e.Attribute ("y"));
 					var width = ReadNumber (e.Attribute ("width"));
 					var height = ReadNumber (e.Attribute ("height"));
-					r = new Rectangle (new Point (x, y), new Size (width, height), pen, brush);
+					var rx = ReadNumber (e.Attribute ("rx"));
+					var ry = ReadNumber (e.Attribute ("ry"));
+					if (ry == 0) {
+						ry = rx;
+					}
+					r = new Rectangle (new Rect (new Point (x, y), new Size (width, height)), new Size (rx, ry), pen, brush);
 				}
 				break;
 			case "ellipse":
