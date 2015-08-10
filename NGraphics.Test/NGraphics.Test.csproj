@@ -76,5 +76,6 @@
     <EmbeddedResource Include="Inputs\Smile.svg" />
     <EmbeddedResource Include="Inputs\ErulisseuiinSpaceshipPack.svg" />
     <EmbeddedResource Include="Inputs\cat.png" />
+    <EmbeddedResource Include="Inputs\repeat.svg" />
   </ItemGroup>
 </Project>

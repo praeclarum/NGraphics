@@ -111,6 +111,12 @@ namespace NGraphics.Test
 		{
 			await ReadAndDraw ("ErulisseuiinSpaceshipPack.svg");
 		}
+
+		[Test]
+		public async Task Repeat ()
+		{
+			await ReadAndDraw ("repeat.svg");
+		}
 	}
 }
 
