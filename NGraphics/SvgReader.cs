@@ -102,7 +102,6 @@ namespace NGraphics
 					var x = ReadNumber (e.Attribute ("x"));
 					var y = ReadNumber (e.Attribute ("y"));
 					var text = e.Value.Trim ();
-					var fontFamilyAttribute = e.Attribute("font-family");
 					var font = new Font ();
 					var fontFamily = ReadTextFontFamily(e);
 					if (!string.IsNullOrEmpty(fontFamily))
@@ -637,10 +636,24 @@ namespace NGraphics
 
 			b.Center.X = ReadNumber (e.Attribute ("cx"));
 			b.Center.Y = ReadNumber (e.Attribute ("cy"));
-			b.Focus.X = ReadNumber (e.Attribute ("fx"));
-			b.Focus.Y = ReadNumber (e.Attribute ("fy"));
+			if (e.Attribute ("fx") != null)
+				b.Focus.X = ReadNumber (e.Attribute ("fx"));
+			else
+				b.Focus.X = b.Center.X;
+			if (e.Attribute ("fy") != null)
+				b.Focus.Y = ReadNumber (e.Attribute ("fy"));
+			else
+				b.Focus.Y = b.Center.Y;
 			var r = ReadNumber (e.Attribute ("r"));
 			b.Radius = new Size (r);
+
+			var gradientUnits = e.Attribute("gradientUnits");
+			if (gradientUnits != null)
+			{
+				b.Absolute = gradientUnits.Value == "userSpaceOnUse";
+			}
+
+			// TODO: check gradientTransform attribute
 
 			ReadStops (e, b.Stops);
 
@@ -661,6 +674,8 @@ namespace NGraphics
 			{
 				b.Absolute = gradientUnits.Value == "userSpaceOnUse";
 			}
+
+			// TODO: check gradientTransform attribute
 
 			ReadStops (e, b.Stops);
 
