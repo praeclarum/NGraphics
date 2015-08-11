@@ -12,13 +12,15 @@ namespace NGraphics
 	{
 		readonly IFormatProvider icult = System.Globalization.CultureInfo.InvariantCulture;
 
+		public double PixelsPerInch { get; private set; }
 		public Graphic Graphic { get; private set; }
 
 		readonly Dictionary<string, XElement> defs = new Dictionary<string, XElement> ();
 //		readonly XNamespace ns;
 
-		public SvgReader (System.IO.TextReader reader)
+		public SvgReader (System.IO.TextReader reader, double pixelsPerInch = 160.0)
 		{
+			PixelsPerInch = pixelsPerInch;
 			Read (XDocument.Load (reader));
 		}
 
@@ -497,22 +499,23 @@ namespace NGraphics
 		}
 
 		static readonly char[] WSC = new char[] { ',', ' ', '\t', '\n', '\r' };
-		static Regex pathRegex = new Regex(@"[MLHVCSQTAZmlhvcsqtaz](?:[0-9\.,\-\s]|$)+", RegexOptions.Singleline);
+
+		static Regex pathRegex = new Regex(@"[MLHVCSQTAZmlhvcsqtaz][^MLHVCSQTAZmlhvcsqtaz]*", RegexOptions.Singleline);
 
 		void ReadPath (Path p, string pathDescriptor)
 		{
 			Match m = pathRegex.Match(pathDescriptor);
 			while(m.Success)
 			{
-				var match = m.Value.Trim();
-				var op = match.Substring(0, 1);
+				var match = m.Value.TrimStart ();
+				var op = match[0];
 
-				if (op == "z" || op == "Z") {
+				if (op == 'z' || op == 'Z') {
 					p.Close ();
 				} else {
 					// make sure negative numbers are split properly
-					match = match.Replace("-", " -");
-					var args = match.Substring(1).Split(WSC, StringSplitOptions.RemoveEmptyEntries);
+					match = match.Substring(1).Replace("-", " -");
+					var args = match.Split(WSC, StringSplitOptions.RemoveEmptyEntries);
 
 					Point previousPoint = new Point ();
 					int index = 0;
@@ -521,23 +524,23 @@ namespace NGraphics
 						if (p.Operations.Count > 0 && !(p.Operations.Last() is ClosePath))
 							previousPoint = p.Operations.Last().EndPoint;
 
-						if ((op == "M" || op == "m") && args.Length >= index+2) {
+						if ((op == 'M' || op == 'm') && args.Length >= index+2) {
 							var point = new Point (ReadNumber (args [index]), ReadNumber (args [index+1]));
-							if (op == "m")
+							if (op == 'm')
 								point += previousPoint;
 							p.MoveTo (point);
 							index += 2;
-						} else if ((op == "L" || op == "l") && args.Length >= index+2) {
+						} else if ((op == 'L' || op == 'l') && args.Length >= index+2) {
 							var point = new Point (ReadNumber (args [index]), ReadNumber (args [index+1]));
-							if (op == "l")
+							if (op == 'l')
 								point += previousPoint;
 							p.LineTo (point);
 							index += 2;
-						} else if ((op == "C" || op == "c") && args.Length >= index+6) {
+						} else if ((op == 'C' || op == 'c') && args.Length >= index+6) {
 							var c1 = new Point (ReadNumber (args [index]), ReadNumber (args [index+1]));
 							var c2 = new Point (ReadNumber (args [index+2]), ReadNumber (args [index+3]));
 							var pt = new Point (ReadNumber (args [index+4]), ReadNumber (args [index+5]));
-							if (op == "c")
+							if (op == 'c')
 							{
 								c1 += previousPoint;
 								c2 += previousPoint;
@@ -545,38 +548,38 @@ namespace NGraphics
 							}
 							p.CurveTo (c1, c2, pt);
 							index += 6;
-						} else if ((op == "S" || op == "s") && args.Length >= index+4) {
+						} else if ((op == 'S' || op == 's') && args.Length >= index+4) {
 							var c  = new Point (ReadNumber (args [index]), ReadNumber (args [index+1]));
 							var pt = new Point (ReadNumber (args [index+2]), ReadNumber (args [index+3]));
-							if (op == "s")
+							if (op == 's')
 							{
 								c += previousPoint;
 								pt += previousPoint;
 							}
 							p.ContinueCurveTo (c, pt);
 							index += 4;
-						} else if ((op == "A" || op == "a") && args.Length >= index+7) {
+						} else if ((op == 'A' || op == 'a') && args.Length >= index+7) {
 							var r = new Size (ReadNumber (args [index]), ReadNumber (args [index+1]));
 	//                                     var xr = ReadNumber (args [i + 2]);
 							var laf = ReadNumber (args [index+3]) != 0;
 							var swf = ReadNumber (args [index+4]) != 0;
 							var pt = new Point (ReadNumber (args [index+5]), ReadNumber (args [index+6]));
-							if (op == "a")
+							if (op == 'a')
 								pt += previousPoint;
 							p.ArcTo (r, laf, swf, pt);
 							index += 7;
-						} else if ((op == "V" || op == "v") && args.Length >= index+1 && p.Operations.Count > 0) {
+						} else if ((op == 'V' || op == 'v') && args.Length >= index+1 && p.Operations.Count > 0) {
 							var previousX = previousPoint.X;
 							var y = ReadNumber(args[index]);
-							if (op == "v")
+							if (op == 'v')
 								y += previousPoint.Y;
 							var point = new Point(previousX, y);
 							p.LineTo(point);
 							index += 1;
-						} else if ((op == "H" || op == "h") && args.Length >= index+1 && p.Operations.Count > 0) {
+						} else if ((op == 'H' || op == 'h') && args.Length >= index+1 && p.Operations.Count > 0) {
 							var previousY = previousPoint.Y;
 							var x = ReadNumber(args[index]);
-							if (op == "h")
+							if (op == 'h')
 								x += previousPoint.X;
 							var point = new Point(x, previousY);
 							p.LineTo(point);
@@ -683,8 +686,8 @@ namespace NGraphics
 						else if (style.Contains("stop-opacity") && style.IndexOf(':') != -1)
 						{
 							alpha = ReadNumber(style.Substring(style.IndexOf(':')+1));
+						}
 					}
-				}
 				}
 				var stopColorAttribute = se.Attribute("stop-color");
 				if (stopColorAttribute != null)
@@ -829,9 +832,19 @@ namespace NGraphics
 			var m = 1.0;
 
 			if (unitRe.IsMatch(s)) {
+				if (s.EndsWith ("in", StringComparison.Ordinal)) {
+					m = PixelsPerInch;
+				} else if (s.EndsWith ("cm", StringComparison.Ordinal)) {
+					m = PixelsPerInch / 2.54;
+				} else if (s.EndsWith ("mm", StringComparison.Ordinal)) {
+					m = PixelsPerInch / 25.4;
+				} else if (s.EndsWith ("pt", StringComparison.Ordinal)) {
+					m = PixelsPerInch / 72.0;
+				} else if (s.EndsWith ("pc", StringComparison.Ordinal)) {
+					m = PixelsPerInch / 6.0;
+				}
 				s = s.Substring (0, s.Length - 2);
-			}
-			else if (percRe.IsMatch(s)) {
+			} else if (percRe.IsMatch(s)) {
 				s = s.Substring (0, s.Length - 1);
 				m = 0.01;
 			}
