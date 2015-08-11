@@ -41,6 +41,20 @@
     <file src="Platforms/NGraphics.Net/bin/Release/NGraphics.Net.dll"     target="lib\net45\NGraphics.Net.dll" />
     <file src="Platforms/NGraphics.Net/bin/Release/NGraphics.Net.xml"     target="lib\net45\NGraphics.Net.xml" />
     <file src="Platforms/NGraphics.Net/bin/Release/NGraphics.Net.dll.mdb" target="lib\net45\NGraphics.Net.dll.mdb" />   
+    <!-- Windows Store -->
+    <file src="NGraphics/bin/Release/NGraphics.dll"                                     target="lib\win81\NGraphics.dll" />
+    <file src="NGraphics/bin/Release/NGraphics.xml"                                     target="lib\win81\NGraphics.xml" />
+    <file src="NGraphics/bin/Release/NGraphics.dll.mdb"                                 target="lib\win81\NGraphics.dll.mdb" />   
+    <file src="Platforms/NGraphics.WindowsStore/bin/Release/NGraphics.WindowsStore.dll" target="lib\win81\NGraphics.WindowsStore.dll" />
+    <file src="Platforms/NGraphics.WindowsStore/bin/Release/NGraphics.WindowsStore.xml" target="lib\win81\NGraphics.WindowsStore.xml" />
+    <file src="Platforms/NGraphics.WindowsStore/bin/Release/NGraphics.WindowsStore.pdb" target="lib\win81\NGraphics.WindowsStore.dll.mdb" />   
+    <!-- Windows Phone -->
+    <file src="NGraphics/bin/Release/NGraphics.dll"                                     target="lib\wpa81\NGraphics.dll" />
+    <file src="NGraphics/bin/Release/NGraphics.xml"                                     target="lib\wpa81\NGraphics.xml" />
+    <file src="NGraphics/bin/Release/NGraphics.dll.mdb"                                 target="lib\wpa81\NGraphics.dll.mdb" />   
+    <file src="Platforms/NGraphics.WindowsPhone/bin/Release/NGraphics.WindowsPhone.dll" target="lib\wpa81\NGraphics.WindowsPhone.dll" />
+    <file src="Platforms/NGraphics.WindowsPhone/bin/Release/NGraphics.WindowsPhone.xml" target="lib\wpa81\NGraphics.WindowsPhone.xml" />
+    <file src="Platforms/NGraphics.WindowsPhone/bin/Release/NGraphics.WindowsPhone.pdb" target="lib\wpa81\NGraphics.WindowsPhone.dll.mdb" />   
     <!-- Xamarin.Mac -->
     <file src="NGraphics/bin/Release/NGraphics.dll"                       target="lib\Xamarin.Mac20\NGraphics.dll" />
     <file src="NGraphics/bin/Release/NGraphics.xml"                       target="lib\Xamarin.Mac20\NGraphics.xml" />
