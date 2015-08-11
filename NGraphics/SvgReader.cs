@@ -501,6 +501,7 @@ namespace NGraphics
 		static readonly char[] WSC = new char[] { ',', ' ', '\t', '\n', '\r' };
 
 		static Regex pathRegex = new Regex(@"[MLHVCSQTAZmlhvcsqtaz][^MLHVCSQTAZmlhvcsqtaz]*", RegexOptions.Singleline);
+		static Regex negativeNumberRe = new Regex("(?<=[0-9])-");
 
 		void ReadPath (Path p, string pathDescriptor)
 		{
@@ -514,7 +515,7 @@ namespace NGraphics
 					p.Close ();
 				} else {
 					// make sure negative numbers are split properly
-					match = match.Substring(1).Replace("-", " -");
+					match = negativeNumberRe.Replace(match.Substring(1), " -");
 					var args = match.Split(WSC, StringSplitOptions.RemoveEmptyEntries);
 
 					Point previousPoint = new Point ();
