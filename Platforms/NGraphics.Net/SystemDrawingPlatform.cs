@@ -169,13 +169,13 @@ namespace NGraphics
 
         public void DrawText(string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
         {
-            if (brush == null)  throw new ArgumentNullException(nameof(brush)); 
-
+            if (brush == null)
+                throw new ArgumentNullException(nameof(brush));
             var sdfont = new System.Drawing.Font(font.Family, (float)font.Size, FontStyle.Regular, GraphicsUnit.Point);
             var sz = graphics.MeasureString(text, sdfont);
             var point = frame.Position;
             var fr = new Rect(point, new Size(sz.Width, sz.Height));
-            graphics.DrawString(text, sdfont, Conversions.GetBrush(brush, fr), Conversions.GetPointF(point));// - new Point(0, sdfont.Height)));
+            graphics.DrawString(text, sdfont, Conversions.GetBrush(brush, fr), Conversions.GetPointF(point));
         }
         public void DrawPath(IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
         {
@@ -421,4 +421,3 @@ namespace NGraphics
         }
     }
 }
-
