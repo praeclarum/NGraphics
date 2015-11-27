@@ -163,7 +163,7 @@ namespace NGraphics
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
 			if (brush == null)
-				throw new ArgumentNullException(nameof(brush));
+				throw new ArgumentNullException(nameof(brush) );
 			var sdfont = new System.Drawing.Font (font.Family, (float)font.Size, FontStyle.Regular, GraphicsUnit.Point);
 			var sz = graphics.MeasureString (text, sdfont);
 			var point = frame.Position;
