@@ -153,7 +153,7 @@ namespace NGraphics
 
 		public Size MeasureText(string text, Font font)
 		{
-			using (var netFont = new System.Drawing.Font(font.Name, (float)font.Size, FontStyle.Regular))
+			using (var netFont = new System.Drawing.Font (font.Name, (float)font.Size, FontStyle.Regular, GraphicsUnit.Point))
 			{
 				var result = graphics.MeasureString(text, netFont);
 				return new Size(result.Width, result.Height);
@@ -163,12 +163,12 @@ namespace NGraphics
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
 			if (brush == null)
-				return;
-			var sdfont = new System.Drawing.Font (font.Family, (float)font.Size, FontStyle.Regular, GraphicsUnit.Pixel);
+				throw new ArgumentNullException(nameof(brush) );
+			var sdfont = new System.Drawing.Font (font.Family, (float)font.Size, FontStyle.Regular, GraphicsUnit.Point);
 			var sz = graphics.MeasureString (text, sdfont);
 			var point = frame.Position;
             var fr = new Rect (point, new Size (sz.Width, sz.Height));
-            graphics.DrawString (text, sdfont, Conversions.GetBrush (brush, fr), Conversions.GetPointF (point - new Point (0, sdfont.Height)));
+			graphics.DrawString (text, sdfont, Conversions.GetBrush (brush, fr), Conversions.GetPointF (point));
 		}
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 		{
