@@ -224,13 +224,13 @@ namespace NGraphics
 
 			string fontName = font.Name;
 			Array availableFonts =
-				#if __IOS__
+				#if __IOS__ || __TVOS__
 				UIKit.UIFont.FontNamesForFamilyName(fontName);
 				#else
 				AppKit.NSFontManager.SharedFontManager.AvailableMembersOfFontFamily (fontName).ToArray ();
 				#endif
 
-			#if __IOS__
+			#if __IOS__ || __TVOS__
 			UIKit.UIFont nsFont;
 			if (availableFonts != null && availableFonts.Length > 0)
 				nsFont = UIKit.UIFont.FromName(font.Name, (nfloat)font.Size);
@@ -247,7 +247,7 @@ namespace NGraphics
 			using (var s = new NSAttributedString(text, font: nsFont))
 			using (nsFont)
 			{
-				#if __IOS__
+				#if __IOS__ || __TVOS__
 				var result = s.GetBoundingRect(new CGSize(float.MaxValue, float.MaxValue), NSStringDrawingOptions.UsesDeviceMetrics, null);
 				#else
 				var result = s.BoundingRectWithSize(new CGSize(float.MaxValue, float.MaxValue), NSStringDrawingOptions.UsesDeviceMetrics);
@@ -538,7 +538,7 @@ namespace NGraphics
 		{
 			return new CTFont (font.Name, (nfloat)font.Size);
 		}
-		#if __IOS__
+		#if __IOS__ || __TVOS__
 		public static UIKit.UIImage GetUIImage (this IImage image)
 		{
 			var c = (CGImageImage)image;
