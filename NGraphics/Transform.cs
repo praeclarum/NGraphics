@@ -45,7 +45,7 @@ namespace NGraphics
 
 		public override string ToString ()
 		{
-			return string.Format ("matrix({0}, {1}, {2}, {3}, {4}, {5})", A, B, C, D, E, F);
+			return string.Format ("Transform ({0}, {1}, {2}, {3}, {4}, {5})", A, B, C, D, E, F);
 		}
 
 		public Point TransformPoint (Point point)
