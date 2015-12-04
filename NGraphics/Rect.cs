@@ -72,6 +72,15 @@ namespace NGraphics
 			return new Rect (a.X - offset.X, a.Y - offset.Y, a.Width, a.Height);
 		}
 
+		public static Rect operator + (Rect a, Size offset)
+		{
+			return new Rect (a.X + offset.Width, a.Y + offset.Height, a.Width, a.Height);
+		}
+		public static Rect operator - (Rect a, Size offset)
+		{
+			return new Rect (a.X - offset.Width, a.Y - offset.Height, a.Width, a.Height);
+		}
+
 		public static Rect operator * (Rect a, Size s)
 		{
 			return new Rect (a.X * s.Width, a.Y * s.Height, a.Width * s.Width, a.Height * s.Height);
