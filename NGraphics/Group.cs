@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NGraphics
 {
@@ -18,6 +19,11 @@ namespace NGraphics
 			foreach (var c in Children) {
 				c.Draw (canvas);
 			}
+		}
+
+		public override string ToString ()
+		{
+			return "[" + string.Join (", ", Children.Select (x => x.ToString ())) + "]";
 		}
 	}
 	
