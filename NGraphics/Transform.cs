@@ -55,6 +55,16 @@ namespace NGraphics
 				B * point.X + D * point.Y + F);
 		}
 
+		public Rect TransformRect (Rect rect)
+		{
+			var bbb = new BoundingBoxBuilder ();
+			bbb.Add (TransformPoint (rect.TopLeft));
+			bbb.Add (TransformPoint (rect.BottomLeft));
+			bbb.Add (TransformPoint (rect.BottomRight));
+			bbb.Add (TransformPoint (rect.TopRight));
+			return bbb.BoundingBox;
+		}
+
 		public static Transform operator * (Transform x, Transform y)
 		{
 			return new Transform (
@@ -107,6 +117,14 @@ namespace NGraphics
 			var ca = Math.Cos (a);
 			var sa = Math.Sin (a);
 			return new Transform (ca, sa, -sa, ca, 0, 0);
+		}
+
+		public static Transform StretchFitRect (Rect sourceRect, Rect destRect)
+		{
+			var t1 = Transform.Translate (-sourceRect.TopLeft);
+			var s = Transform.Scale (destRect.Width / sourceRect.Width, destRect.Height / sourceRect.Height);
+			var t2 = Transform.Translate (destRect.TopLeft);
+			return t2 * s * t1;
 		}
 
 		public Transform GetInverse ()

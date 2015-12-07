@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace NGraphics
 {
@@ -49,6 +50,27 @@ namespace NGraphics
 		{
 			return string.Format (CultureInfo.InvariantCulture, "Rectangle ({0})", frame);
 		}
+
+		#region ISampleable implementation
+
+		public override Point[] GetSamples (double tolerance, int minSamples, int maxSamples)
+		{
+			var r = new List<Point> ();
+			r.AddRange (SampleLine (Frame.TopLeft, Frame.BottomLeft, false, tolerance, minSamples, maxSamples));
+			r.AddRange (SampleLine (Frame.BottomLeft, Frame.BottomRight, false, tolerance, minSamples, maxSamples));
+			r.AddRange (SampleLine (Frame.BottomRight, Frame.TopRight, false, tolerance, minSamples, maxSamples));
+			r.AddRange (SampleLine (Frame.TopRight, Frame.TopLeft, false, tolerance, minSamples, maxSamples));
+			return r.ToArray ();
+		}
+
+		[System.Runtime.Serialization.IgnoreDataMember]
+		public override Rect SampleableBox {
+			get {
+				return Transform.TransformRect (Frame);
+			}
+		}
+
+		#endregion
 	}
 }
 

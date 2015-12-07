@@ -24,6 +24,22 @@ namespace NGraphics
 		{
 			return string.Format (CultureInfo.InvariantCulture, "Line ({0}-{1})", start, end);
 		}
+
+		#region implemented abstract members of Element
+
+		public override Point[] GetSamples (double tolerance, int minSamples, int maxSamples)
+		{
+			return SampleLine (start, end, true, tolerance, minSamples, maxSamples);
+		}
+
+		public override Rect SampleableBox {
+			get {
+				var bb = new Rect (start, Size.Zero);
+				return bb.Union (end);
+			}
+		}
+
+		#endregion
 	}
 }
 

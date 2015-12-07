@@ -15,7 +15,18 @@ namespace NGraphics
 
 		protected override void DrawElement (ICanvas canvas)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
+		}
+
+		public override Point[] GetSamples (double tolerance, int minSamples, int maxSamples)
+		{
+			throw new NotSupportedException ();
+		}
+
+		public override Rect SampleableBox {
+			get {
+				return new Rect (pos, size);
+			}
 		}
 	}
 }

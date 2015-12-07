@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NGraphics
 {
-	public class Graphic : IDrawable
+	public class Graphic : IDrawable, ISampleable
 	{
 		public readonly List<IDrawable> Children = new List<IDrawable> ();
 
@@ -73,5 +73,25 @@ namespace NGraphics
 				return "Graphic with errors!";
 			}
 		}
+
+		#region ISampleable implementation
+
+		public Point[] GetSamples (double tolerance, int minSamples, int maxSamples)
+		{
+			var r = new List<Point> ();
+			foreach (var c in Children.OfType<ISampleable> ()) {
+				r.AddRange (c.GetSamples (tolerance, minSamples, maxSamples));
+			}
+			return r.ToArray ();
+		}
+
+		[System.Runtime.Serialization.IgnoreDataMember]
+		public Rect SampleableBox {
+			get {
+				return ViewBox;
+			}
+		}
+
+		#endregion
 	}
 }

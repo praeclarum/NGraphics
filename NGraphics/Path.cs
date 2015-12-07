@@ -230,6 +230,17 @@ namespace NGraphics
 		{
 			return string.Format (CultureInfo.InvariantCulture, "Path ([{0}])", Operations.Count);
 		}
+
+		public override Rect SampleableBox {
+			get {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public override Point[] GetSamples (double tolerance, int minSamples, int maxSamples)
+		{
+			throw new NotImplementedException ();
+		}
 	}
 }
 

@@ -36,6 +36,11 @@ namespace NGraphics
 			return point - d;
 		}
 
+		public double DistanceTo (Point p)
+		{
+			return Math.Sqrt ((X - p.X) * (X - p.X) + (Y - p.Y) * (Y - p.Y));
+		}
+
 		public double Distance {
 			get { return Math.Sqrt (X * X + Y * Y); }
 		}
