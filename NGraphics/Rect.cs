@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace NGraphics
 {
@@ -103,6 +104,15 @@ namespace NGraphics
 			Height += 2*dy;
 		}
 
+		public Rect Union (Rect p)
+		{
+			var x = Math.Min (p.X, X);
+			var y = Math.Min (p.Y, Y);
+			var r = Math.Max (p.Right, Right);
+			var b = Math.Max (p.Bottom, Bottom);
+			return new Rect (x, y, r - x, b - y);
+		}
+
 		public Rect Union (Point p)
 		{
 			var x = Math.Min (p.X, X);
@@ -110,6 +120,21 @@ namespace NGraphics
 			var r = Math.Max (p.X, Right);
 			var b = Math.Max (p.Y, Bottom);
 			return new Rect (x, y, r - x, b - y);
+		}
+
+		public static Rect Union (IEnumerable<Rect> rects)
+		{
+			var res = new Rect ();
+			var hasr = false;
+			foreach (var r in rects) {
+				if (hasr) {
+					res = res.Union (r);
+				} else {
+					res = r;
+					hasr = true;
+				}
+			}
+			return res;
 		}
 
 		public Rect MoveInto (Rect frame)
