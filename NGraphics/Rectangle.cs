@@ -53,7 +53,7 @@ namespace NGraphics
 
 		#region ISampleable implementation
 
-		public override Point[] GetSamples (double tolerance, int minSamples, int maxSamples)
+		public override Point[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
 		{
 			var r = new List<Point> ();
 			r.AddRange (SampleLine (Frame.TopLeft, Frame.BottomLeft, false, tolerance, minSamples, maxSamples));

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace NGraphics
 {
-	public abstract class Element : IDrawable, ISampleable
+	public abstract class Element : IDrawable, IEdgeSampleable
 	{
 		public string Id { get; set; }
 		public Transform Transform { get; set; }
@@ -65,7 +65,7 @@ namespace NGraphics
 			return r.ToArray ();
 		}
 
-		public abstract Point[] GetSamples (double tolerance, int minSamples, int maxSamples);
+		public abstract Point[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples);
 
 		[System.Runtime.Serialization.IgnoreDataMember]
 		public abstract Rect SampleableBox {

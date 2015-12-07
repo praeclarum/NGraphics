@@ -18,7 +18,7 @@ namespace NGraphics
 			throw new NotSupportedException();
 		}
 
-		public override Point[] GetSamples (double tolerance, int minSamples, int maxSamples)
+		public override Point[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
 		{
 			throw new NotSupportedException ();
 		}

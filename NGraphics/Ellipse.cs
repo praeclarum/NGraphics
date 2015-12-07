@@ -42,7 +42,7 @@ namespace NGraphics
 			}
 		}
 
-		public override Point[] GetSamples (double tolerance, int minSamples, int maxSamples)
+		public override Point[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
 		{
 			//https://en.wikipedia.org/wiki/Ellipse#Circumference
 			var a = frame.Width / 2;

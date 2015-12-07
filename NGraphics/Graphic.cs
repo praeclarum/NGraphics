@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NGraphics
 {
-	public class Graphic : IDrawable, ISampleable
+	public class Graphic : IDrawable, IEdgeSampleable
 	{
 		public readonly List<IDrawable> Children = new List<IDrawable> ();
 
@@ -76,11 +76,11 @@ namespace NGraphics
 
 		#region ISampleable implementation
 
-		public Point[] GetSamples (double tolerance, int minSamples, int maxSamples)
+		public Point[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
 		{
 			var r = new List<Point> ();
-			foreach (var c in Children.OfType<ISampleable> ()) {
-				r.AddRange (c.GetSamples (tolerance, minSamples, maxSamples));
+			foreach (var c in Children.OfType<IEdgeSampleable> ()) {
+				r.AddRange (c.GetEdgeSamples (tolerance, minSamples, maxSamples));
 			}
 			return r.ToArray ();
 		}

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace NGraphics
 {
-	public class Group : Element, ISampleable
+	public class Group : Element, IEdgeSampleable
 	{
 		public readonly List<IDrawable> Children = new List<IDrawable> ();
 
@@ -28,11 +28,11 @@ namespace NGraphics
 
 		#region ISampleable implementation
 
-		public override Point[] GetSamples (double tolerance, int minSamples, int maxSamples)
+		public override Point[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
 		{
 			var points = new List<Point> ();
-			foreach (var c in Children.OfType<ISampleable> ()) {
-				points.AddRange (c.GetSamples (tolerance, minSamples, maxSamples));
+			foreach (var c in Children.OfType<IEdgeSampleable> ()) {
+				points.AddRange (c.GetEdgeSamples (tolerance, minSamples, maxSamples));
 			}
 			for (int i = 0; i < points.Count; i++) {
 				var p = Transform.TransformPoint (points [i]);
@@ -44,7 +44,7 @@ namespace NGraphics
 		[System.Runtime.Serialization.IgnoreDataMember]
 		public override Rect SampleableBox {
 			get {
-				var r = Rect.Union (Children.OfType<ISampleable> ().Select (x => x.SampleableBox));
+				var r = Rect.Union (Children.OfType<IEdgeSampleable> ().Select (x => x.SampleableBox));
 				return Transform.TransformRect (r);
 			}
 		}
