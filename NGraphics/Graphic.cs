@@ -6,7 +6,7 @@ namespace NGraphics
 {
 	public class Graphic : IDrawable, IEdgeSampleable
 	{
-		public readonly List<IDrawable> Children = new List<IDrawable> ();
+		public readonly List<Element> Children = new List<Element> ();
 
 		public Size Size;
 		public Rect ViewBox;
@@ -76,9 +76,9 @@ namespace NGraphics
 
 		#region ISampleable implementation
 
-		public Point[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
+		public EdgeSamples[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
 		{
-			var r = new List<Point> ();
+			var r = new List<EdgeSamples> ();
 			foreach (var c in Children.OfType<IEdgeSampleable> ()) {
 				r.AddRange (c.GetEdgeSamples (tolerance, minSamples, maxSamples));
 			}

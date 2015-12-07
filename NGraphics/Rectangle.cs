@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NGraphics
 {
@@ -53,14 +54,18 @@ namespace NGraphics
 
 		#region ISampleable implementation
 
-		public override Point[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
+		public override EdgeSamples[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
 		{
 			var r = new List<Point> ();
 			r.AddRange (SampleLine (Frame.TopLeft, Frame.BottomLeft, false, tolerance, minSamples, maxSamples));
 			r.AddRange (SampleLine (Frame.BottomLeft, Frame.BottomRight, false, tolerance, minSamples, maxSamples));
 			r.AddRange (SampleLine (Frame.BottomRight, Frame.TopRight, false, tolerance, minSamples, maxSamples));
-			r.AddRange (SampleLine (Frame.TopRight, Frame.TopLeft, false, tolerance, minSamples, maxSamples));
-			return r.ToArray ();
+			r.AddRange (SampleLine (Frame.TopRight, Frame.TopLeft, true, tolerance, minSamples, maxSamples));
+			for (int i = 0; i < r.Count; i++) {
+				var p = Transform.TransformPoint (r [i]);
+				r [i] = p;
+			}
+			return new[] { new EdgeSamples { Points = r.ToArray () } };
 		}
 
 		[System.Runtime.Serialization.IgnoreDataMember]

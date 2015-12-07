@@ -237,7 +237,7 @@ namespace NGraphics
 			}
 		}
 
-		public override Point[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
+		public override EdgeSamples[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
 		{
 			throw new NotImplementedException ();
 		}

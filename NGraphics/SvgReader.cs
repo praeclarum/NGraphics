@@ -69,13 +69,13 @@ namespace NGraphics
 			AddElements (Graphic.Children, svg.Elements (), null, Brushes.Black);
 		}
 
-		void AddElements (IList<IDrawable> list, IEnumerable<XElement> es, Pen inheritPen, Brush inheritBrush)
+		void AddElements (IList<Element> list, IEnumerable<XElement> es, Pen inheritPen, Brush inheritBrush)
 		{
 			foreach (var e in es)
 				AddElement (list, e, inheritPen, inheritBrush);
 		}
 
-		void AddElement (IList<IDrawable> list, XElement e, Pen inheritPen, Brush inheritBrush)
+		void AddElement (IList<Element> list, XElement e, Pen inheritPen, Brush inheritBrush)
 		{
 			//
 			// Style
@@ -190,9 +190,9 @@ namespace NGraphics
 					if (!string.IsNullOrWhiteSpace (href)) {
 						XElement useE;
 						if (defs.TryGetValue (href.Trim ().Replace ("#", ""), out useE)) {
-							var useList = new List<IDrawable> ();
+							var useList = new List<Element> ();
 							AddElement (useList, useE, pen, brush);
-							r = useList.OfType<Element> ().FirstOrDefault ();
+							r = useList.FirstOrDefault ();
 						}
 					}
 				}

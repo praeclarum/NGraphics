@@ -161,6 +161,11 @@ namespace NGraphics
 					(Bottom >= other.Top && Top <= other.Bottom));
 		}
 
+		public double DistanceTo (Point point)
+		{
+			throw new NotImplementedException ();
+		}
+
 		public override string ToString ()
 		{
 			return string.Format (CultureInfo.InvariantCulture, "Rect ({0}, {1}, {2}, {3})", X, Y, Width, Height);

@@ -27,14 +27,14 @@ namespace NGraphics
 
 		#region implemented abstract members of Element
 
-		public override Point[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
+		public override EdgeSamples[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
 		{
-			throw new NotImplementedException ();
+			return new EdgeSamples[0];
 		}
 
 		public override Rect SampleableBox {
 			get {
-				throw new NotImplementedException ();
+				return Frame;
 			}
 		}
 

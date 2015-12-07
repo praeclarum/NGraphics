@@ -42,7 +42,7 @@ namespace NGraphics
 			}
 		}
 
-		public override Point[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
+		public override EdgeSamples[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
 		{
 			//https://en.wikipedia.org/wiki/Ellipse#Circumference
 			var a = frame.Width / 2;
@@ -54,14 +54,14 @@ namespace NGraphics
 				n = minSamples;
 			if (n > maxSamples)
 				n = maxSamples;
-			var da = 2 * Math.PI / n;
+			var da = 2 * Math.PI / (n - 1);
 			var r = new List<Point> ();
 			for (var i = 0; i < n; i++) {
 				var x = center.X + a * Math.Cos (i * da);
 				var y = center.Y + b * Math.Sin (i * da);
 				r.Add (Transform.TransformPoint (new Point (x, y)));
 			}
-			return r.ToArray ();
+			return new[]{ new EdgeSamples { Points = r.ToArray () } };
 		}
 	}
 }

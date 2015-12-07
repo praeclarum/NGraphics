@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace NGraphics
 {
-	public class Group : Element, IEdgeSampleable
+	public class Group : Element
 	{
-		public readonly List<IDrawable> Children = new List<IDrawable> ();
+		public readonly List<Element> Children = new List<Element> ();
 
 		public Group ()
 			: base (null, null)
@@ -28,17 +28,19 @@ namespace NGraphics
 
 		#region ISampleable implementation
 
-		public override Point[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
+		public override EdgeSamples[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
 		{
-			var points = new List<Point> ();
+			var edges = new List<EdgeSamples> ();
 			foreach (var c in Children.OfType<IEdgeSampleable> ()) {
-				points.AddRange (c.GetEdgeSamples (tolerance, minSamples, maxSamples));
+				edges.AddRange (c.GetEdgeSamples (tolerance, minSamples, maxSamples));
 			}
-			for (int i = 0; i < points.Count; i++) {
-				var p = Transform.TransformPoint (points [i]);
-				points [i] = p;
+			for (int i = 0; i < edges.Count; i++) {
+				for (int j = 0; j < edges [i].Points.Length; j++) {
+					var p = Transform.TransformPoint (edges [i].Points[j]);
+					edges [i].Points[j] = p;
+				}
 			}
-			return points.ToArray ();
+			return edges.ToArray ();
 		}
 
 		[System.Runtime.Serialization.IgnoreDataMember]
