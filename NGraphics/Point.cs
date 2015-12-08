@@ -41,10 +41,12 @@ namespace NGraphics
 			return Math.Sqrt ((X - p.X) * (X - p.X) + (Y - p.Y) * (Y - p.Y));
 		}
 
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public double Distance {
 			get { return Math.Sqrt (X * X + Y * Y); }
 		}
 
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public double DistanceSquared {
 			get { return X * X + Y * Y; }
 		}

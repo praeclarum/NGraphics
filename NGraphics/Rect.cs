@@ -11,18 +11,29 @@ namespace NGraphics
 		public double Width;
 		public double Height;
 
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public double Left { get { return X; } }
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public double Top { get { return Y; } }
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public double Right { get { return X + Width; } }
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public double Bottom { get { return Y + Height; } }
 
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public Point Position { get { return new Point (X, Y); } }
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public Size Size { get { return new Size (Width, Height); } }
 
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public Point TopLeft { get { return new Point (X, Y); } }
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public Point BottomLeft { get { return new Point (X, Y + Height); } }
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public Point Center { get { return new Point (X + Width/2, Y + Height/2); } }
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public Point TopRight { get { return new Point (X + Width, Y); } }
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public Point BottomRight { get { return new Point (X + Width, Y + Height); } }
 
 		public Rect (double x, double y, double width, double height)
