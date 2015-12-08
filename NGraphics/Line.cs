@@ -30,6 +30,10 @@ namespace NGraphics
 		public override EdgeSamples[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
 		{
 			var ps = SampleLine (start, end, true, tolerance, minSamples, maxSamples);
+			for (int i = 0; i < ps.Length; i++) {
+				var p = Transform.TransformPoint (ps [i]);
+				ps [i] = p;
+			}
 			return new[] { new EdgeSamples { Points = ps } };
 		}
 
