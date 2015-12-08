@@ -52,6 +52,30 @@ namespace NGraphics
 			return string.Format (CultureInfo.InvariantCulture, "Rectangle ({0})", frame);
 		}
 
+		protected override Element CreateUninitializedClone ()
+		{
+			return new Rectangle (frame);
+		}
+
+		public override Element TransformGeometry (Transform transform)
+		{
+			var p = new Path ();
+			base.SetCloneData (p);
+			p.Transform = Transform.Identity;
+			p.MoveTo (frame.TopLeft);
+			p.LineTo (frame.BottomLeft);
+			p.LineTo (frame.BottomRight);
+			p.LineTo (frame.TopRight);
+			p.Close ();
+			var tp = p.TransformGeometry (transform * Transform);
+			return tp;
+		}
+
+		public override bool Contains (Point localPoint)
+		{
+			return frame.Contains (localPoint);
+		}
+
 		#region ISampleable implementation
 
 		public override EdgeSamples[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)

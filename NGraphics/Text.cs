@@ -20,6 +20,21 @@ namespace NGraphics
 			Alignment = alignment;
 		}
 
+		protected override Element CreateUninitializedClone ()
+		{
+			return new Text (String, Frame, Font, Alignment);
+		}
+
+		public override Element TransformGeometry (Transform transform)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override bool Contains (Point point)
+		{
+			throw new NotImplementedException ();
+		}
+
 		protected override void DrawElement (ICanvas canvas)
 		{
 			canvas.DrawText (String, Frame, Font, Alignment, Pen, Brush);

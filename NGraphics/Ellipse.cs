@@ -36,6 +36,23 @@ namespace NGraphics
 			return string.Format (CultureInfo.InvariantCulture, "Ellipse ({0})", frame);
 		}
 
+		protected override Element CreateUninitializedClone ()
+		{
+			return new Ellipse (frame);
+		}
+
+		public override Element TransformGeometry (Transform transform)
+		{
+			var e = (Ellipse)Clone ();
+			e.frame = transform.TransformRect (frame);
+			return e;
+		}
+
+		public override bool Contains (Point point)
+		{
+			throw new NotImplementedException ();
+		}
+
 		public override Rect SampleableBox {
 			get {
 				return Transform.TransformRect (frame);

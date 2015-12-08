@@ -13,6 +13,23 @@ namespace NGraphics
 			this.size = size;
 		}
 
+		protected override Element CreateUninitializedClone ()
+		{
+			return new ForeignObject (pos, size);
+		}
+
+		public override Element TransformGeometry (Transform transform)
+		{
+			var frame = new Rect (pos, size);
+			var tframe = transform.TransformRect (frame);
+			return new ForeignObject (tframe.TopLeft, tframe.Size);
+		}
+
+		public override bool Contains (Point point)
+		{
+			return false;
+		}
+
 		protected override void DrawElement (ICanvas canvas)
 		{
 			throw new NotSupportedException();

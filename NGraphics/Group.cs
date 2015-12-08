@@ -26,6 +26,32 @@ namespace NGraphics
 			return "[" + string.Join (", ", Children.Select (x => x.ToString ())) + "]";
 		}
 
+		protected override Element CreateUninitializedClone ()
+		{
+			return new Group ();
+		}
+
+		protected override void SetCloneData (Element clone)
+		{
+			base.SetCloneData (clone);
+			((Group)clone).Children.AddRange (Children.Select (x => x.Clone ()));
+		}
+
+		public override Element TransformGeometry (Transform transform)
+		{
+			var clone = (Group)Clone ();
+			clone.Transform = Transform.Identity;
+			var tt = transform * Transform;
+			clone.Children.Clear ();
+			clone.Children.AddRange (Children.Select (x => x.TransformGeometry (tt)));
+			return clone;
+		}
+
+		public override bool Contains (Point point)
+		{
+			throw new NotImplementedException ();
+		}
+
 		#region ISampleable implementation
 
 		public override EdgeSamples[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)

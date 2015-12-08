@@ -8,11 +8,34 @@ namespace NGraphics
 		protected Point start;
 		protected Point end;
 
-		public Line (Point start, Point end, Pen pen)
+		public Line (Point start, Point end, Pen pen = null)
 			: base (pen, null)
 		{
 			this.start = start;
 			this.end = end;
+		}
+
+		protected override Element CreateUninitializedClone ()
+		{
+			return new Line (start, end);
+		}
+
+		protected override void SetCloneData (Element clone)
+		{
+			base.SetCloneData (clone);
+		}
+
+		public override Element TransformGeometry (Transform transform)
+		{			
+			var clone = (Line)Clone ();
+			clone.start = transform.TransformPoint (start);
+			clone.end = transform.TransformPoint (end);
+			return clone;
+		}
+
+		public override bool Contains (Point point)
+		{
+			return false;
 		}
 
 		protected override void DrawElement (ICanvas canvas)

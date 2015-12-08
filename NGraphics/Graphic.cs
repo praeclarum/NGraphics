@@ -24,6 +24,26 @@ namespace NGraphics
 		{
 		}
 
+		public Graphic Clone ()
+		{
+			var g = new Graphic (Size, ViewBox) {
+				Title = Title,
+				Description = Description,
+			};
+
+			g.Children.AddRange (Children.Select (x => x.Clone ()));
+
+			return g;
+		}
+
+		public Graphic TransformGeometry (Transform transform)
+		{
+			var clone = Clone ();
+			clone.Children.Clear ();
+			clone.Children.AddRange (Children.Select (x => x.TransformGeometry (transform)));
+			return clone;
+		}
+
 		public void Draw (ICanvas canvas)
 		{
 			canvas.SaveState ();
@@ -72,6 +92,11 @@ namespace NGraphics
 			} catch {
 				return "Graphic with errors!";
 			}
+		}
+
+		public Element[] HitTest (Point worldPoint)
+		{
+			return Children.Where (x => x.HitTest (worldPoint)).Reverse().ToArray ();
 		}
 
 		#region ISampleable implementation

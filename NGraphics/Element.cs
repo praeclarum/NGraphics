@@ -21,6 +21,25 @@ namespace NGraphics
 
 		protected abstract void DrawElement (ICanvas canvas);
 
+		protected virtual void SetCloneData (Element clone)
+		{
+			clone.Id = Id;
+			clone.Transform = Transform;
+			clone.Pen = Pen;
+			clone.Brush = Brush;
+		}
+		protected abstract Element CreateUninitializedClone ();
+		public Element Clone ()
+		{
+			var r = CreateUninitializedClone ();
+			SetCloneData (r);
+			return r;
+		}
+
+		public abstract Element TransformGeometry (Transform transform);
+
+		public abstract bool Contains (Point localPoint);
+
 		#region IDrawable implementation
 
 		public void Draw (ICanvas canvas)
@@ -73,6 +92,12 @@ namespace NGraphics
 		}
 
 		#endregion
+
+		public bool HitTest (Point worldPoint)
+		{
+			var localPoint = Transform.GetInverse ().TransformPoint (worldPoint);
+			return Contains (localPoint);
+		}
 	}
 
 
