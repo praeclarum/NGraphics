@@ -581,17 +581,28 @@ namespace NGraphics
 			var i = 0;
 			var n = args.Length;
 			if (n == 0)
-				throw new Exception ("Not supported point");
+				throw new Exception ("No points specified");
 			while (i < n) {
 				var xy = args[i].Split(new[]{','}, StringSplitOptions.RemoveEmptyEntries);
-				var x = ReadNumber (xy[0]);
-				var y = ReadNumber (xy[1]);
+				var x = 0.0;
+				var y = 0.0;
+				var di = 1;
+				if (xy.Length == 1) {
+					x = ReadNumber (args [i]);
+					y = ReadNumber (args [i + 1]);
+					di = 2;
+				}
+				else {
+					x = ReadNumber (xy[0]);
+					y = ReadNumber (xy[1]);
+				}
 
 				if (i == 0) {
 					p.MoveTo (x, y);
-				} else
+				} else {
 					p.LineTo (x, y);
-				i++;
+				}
+				i += di;
 			}
 			if (closePath)
 				p.Close ();

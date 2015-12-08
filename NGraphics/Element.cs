@@ -45,7 +45,7 @@ namespace NGraphics
 
 		#region ISampleable implementation
 
-		protected Point[] SampleLine (Point begin, Point end, bool includeEnd, double tolerance, int minSamples, int maxSamples)
+		public static Point[] SampleLine (Point begin, Point end, bool includeEnd, double tolerance, int minSamples, int maxSamples)
 		{
 			var r = new List<Point> ();
 			var d = end - begin;

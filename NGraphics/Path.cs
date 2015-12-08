@@ -7,7 +7,9 @@ namespace NGraphics
 	public abstract class PathOp
 	{
 		public abstract Point GetContinueCurveControlPoint ();
-		public abstract Point EndPoint { get; }
+		public abstract Point GetEndPoint (Point startPoint);
+		public Point EndPoint { get { return GetEndPoint (Point.Zero); } }
+		public abstract EdgeSamples[] GetEdgeSamples (Point startPoint, Point prevPoint, double tolerance, int minSamples, int maxSamples);
 	}
 	public class MoveTo : PathOp
 	{
@@ -26,7 +28,12 @@ namespace NGraphics
 			return Point;
 		}
 
-		public override Point EndPoint { get { return Point; }}
+		public override Point GetEndPoint (Point startPoint) { return Point; }
+
+		public override EdgeSamples[] GetEdgeSamples (Point startPoint, Point prevPoint, double tolerance, int minSamples, int maxSamples)
+		{
+			return new EdgeSamples[0];
+		}
 	}
 	public class LineTo : PathOp
 	{
@@ -44,7 +51,13 @@ namespace NGraphics
 			return Point;
 		}
 
-		public override Point EndPoint { get { return Point; }}
+		public override Point GetEndPoint (Point startPoint) { return Point; }
+
+		public override EdgeSamples[] GetEdgeSamples (Point startPoint, Point prevPoint, double tolerance, int minSamples, int maxSamples)
+		{
+			var ps = Element.SampleLine (prevPoint, Point, true, tolerance, minSamples, maxSamples);
+			return new [] { new EdgeSamples { Points = ps } };
+		}
 	}
 	public class ArcTo : PathOp
 	{
@@ -64,7 +77,7 @@ namespace NGraphics
 			return Point;
 		}
 
-		public override Point EndPoint { get { return Point; }}
+		public override Point GetEndPoint (Point startPoint) { return Point; }
 
 		public void GetCircles (Point prevPoint, out Point circle1Center, out Point circle2Center)
 		{
@@ -92,6 +105,11 @@ namespace NGraphics
 			circle1Center = new Point (p3.X - yd * dp.Y / q, p3.Y + xd * dp.X / q);
 			circle2Center = new Point (p3.X + yd * dp.Y / q, p3.Y - xd * dp.X / q);
 		}
+
+		public override EdgeSamples[] GetEdgeSamples (Point startPoint, Point prevPoint, double tolerance, int minSamples, int maxSamples)
+		{
+			throw new NotSupportedException ();
+		}
 	}
 	public class CurveTo : PathOp
 	{
@@ -108,7 +126,11 @@ namespace NGraphics
 		{
 			return Control2.ReflectedAround (Point);
 		}
-		public override Point EndPoint { get { return Point; }}
+		public override Point GetEndPoint (Point startPoint) { return Point; }
+		public override EdgeSamples[] GetEdgeSamples (Point startPoint, Point prevPoint, double tolerance, int minSamples, int maxSamples)
+		{
+			throw new NotSupportedException ();
+		}
 	}
 	public class ClosePath : PathOp
 	{
@@ -116,7 +138,15 @@ namespace NGraphics
 		{
 			throw new NotSupportedException ();
 		}
-		public override Point EndPoint { get { throw new NotSupportedException(); }}
+		public override Point GetEndPoint (Point startPoint) { return startPoint; }
+		public override EdgeSamples[] GetEdgeSamples (Point startPoint, Point prevPoint, double tolerance, int minSamples, int maxSamples)
+		{
+			if (prevPoint.DistanceTo (startPoint) < tolerance) {
+				return new EdgeSamples[0];
+			}
+			var ps = Element.SampleLine (prevPoint, startPoint, true, tolerance, minSamples, maxSamples);
+			return new [] { new EdgeSamples { Points = ps } };
+		}
 	}
 
 	public class Path : Element
@@ -233,13 +263,34 @@ namespace NGraphics
 
 		public override Rect SampleableBox {
 			get {
-				throw new NotImplementedException ();
+				throw new NotSupportedException ();
 			}
 		}
 
 		public override EdgeSamples[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
 		{
-			throw new NotImplementedException ();
+			var edges = new List<EdgeSamples> ();
+
+			var startPoint = Point.Zero;
+			var prevPoint = startPoint;
+
+			foreach (var op in Operations) {
+				if (op is MoveTo) {
+					startPoint = op.EndPoint;
+				}
+				edges.AddRange (op.GetEdgeSamples (startPoint, prevPoint, tolerance, minSamples, maxSamples));
+				prevPoint = op.GetEndPoint (startPoint);
+			}
+
+			for (int i = 0; i < edges.Count; i++) {
+				var e = edges [i];
+				for (int j = 0; j < e.Points.Length; j++) {
+					var p = Transform.TransformPoint (e.Points [j]);
+					e.Points [j] = p;
+				}
+			}
+
+			return edges.ToArray ();
 		}
 	}
 }
