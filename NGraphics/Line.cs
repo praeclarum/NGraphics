@@ -40,7 +40,7 @@ namespace NGraphics
 		public override Rect SampleableBox {
 			get {
 				var bb = new Rect (start, Size.Zero);
-				return bb.Union (end);
+				return Transform.TransformRect (bb.Union (end));
 			}
 		}
 
