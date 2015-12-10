@@ -14,6 +14,30 @@ namespace NGraphics
 		{			
 		}
 
+		public override Pen Pen {
+			get {
+				return base.Pen;
+			}
+			set {
+				base.Pen = value;
+				foreach (var c in Children) {
+					c.Pen = value;
+				}
+			}
+		}
+
+		public override Brush Brush {
+			get {
+				return base.Brush;
+			}
+			set {
+				base.Brush = value;
+				foreach (var c in Children) {
+					c.Brush = value;
+				}
+			}
+		}
+
 		protected override void DrawElement (ICanvas canvas)
 		{
 			foreach (var c in Children) {
@@ -47,9 +71,13 @@ namespace NGraphics
 			return clone;
 		}
 
-		public override bool Contains (Point point)
+		public override bool Contains (Point localPoint)
 		{
-			throw new NotImplementedException ();
+			foreach (var c in Children) {
+				if (c.HitTest (localPoint))
+					return true;
+			}
+			return false;
 		}
 
 		#region ISampleable implementation

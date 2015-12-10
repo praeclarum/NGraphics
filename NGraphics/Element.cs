@@ -8,8 +8,8 @@ namespace NGraphics
 	{
 		public string Id { get; set; }
 		public Transform Transform { get; set; }
-		public Pen Pen { get; set; }
-		public Brush Brush { get; set; }
+		public virtual Pen Pen { get; set; }
+		public virtual Brush Brush { get; set; }
 
 		protected Element (Pen pen, Brush brush)
 		{

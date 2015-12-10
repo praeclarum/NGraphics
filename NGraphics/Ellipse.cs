@@ -48,9 +48,13 @@ namespace NGraphics
 			return e;
 		}
 
-		public override bool Contains (Point point)
+		public override bool Contains (Point localPoint)
 		{
-			throw new NotImplementedException ();
+			var a = frame.Width / 2;
+			var b = frame.Height / 2;
+			var p = localPoint - frame.Center;
+			var d = p.X * p.X / (a * a) + p.Y * p.Y / (b * b);
+			return d <= 1;
 		}
 
 		public override Rect SampleableBox {
