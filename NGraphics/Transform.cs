@@ -91,9 +91,24 @@ namespace NGraphics
 			return Translate (point.X, point.Y);
 		}
 
-		public static Transform Scale (double x, double y)
+		public static Transform Scale (double sx, double sy)
 		{
-			return new Transform (x, 0, 0, y, 0, 0);
+			return new Transform (sx, 0, 0, sy, 0, 0);
+		}
+
+		public static Transform ScaleAt (double sx, double sy, double x, double y)
+		{
+			return Transform.Translate (x, y) * Transform.Scale (sx, sy) * Transform.Translate (-x, -y);
+		}
+
+		public static Transform ScaleAt (double sx, double sy, Point p)
+		{
+			return ScaleAt (sx, sy, p.X, p.Y);
+		}
+
+		public static Transform ScaleAt (double scale, Point p)
+		{
+			return ScaleAt (scale, scale, p.X, p.Y);
 		}
 
 		public static Transform Scale (double scale)
