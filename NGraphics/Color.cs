@@ -121,6 +121,16 @@ namespace NGraphics
 			return new Color (R, G, B, a);
 		}
 
+		public static Color FromRGB (double red, double green, double blue, double alpha = 1)
+		{
+			return new Color (red, green, blue, alpha);
+		}
+
+		public static Color FromWhite (double white, double alpha = 1)
+		{
+			return new Color (white, white, white, alpha);
+		}
+
 		public static Color FromRGB (int rgb)
 		{
 			var w = 1.0 / 255;
