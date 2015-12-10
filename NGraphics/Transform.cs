@@ -134,12 +134,27 @@ namespace NGraphics
 			return new Transform (ca, sa, -sa, ca, 0, 0);
 		}
 
-		public static Transform StretchFitRect (Rect sourceRect, Rect destRect)
+		public static Transform StretchFillRect (Rect sourceRect, Rect destRect)
 		{
 			var t1 = Transform.Translate (-sourceRect.TopLeft);
 			var s = Transform.Scale (destRect.Width / sourceRect.Width, destRect.Height / sourceRect.Height);
 			var t2 = Transform.Translate (destRect.TopLeft);
 			return t2 * s * t1;
+		}
+
+		public static Transform AspectFillRect (Rect sourceRect, Rect destRect)
+		{
+			var scalex = destRect.Width / sourceRect.Width;
+			var scaley = destRect.Height / sourceRect.Height;
+			var scale = Math.Min (scalex, scaley);
+
+			var t1 = Transform.Translate (-sourceRect.TopLeft);
+			var s = Transform.Scale (scale);
+			var t2 = Transform.Translate (destRect.TopLeft);
+			var t3 = Transform.Translate (
+				(destRect.Width - scale * sourceRect.Width)/2,
+				(destRect.Height - scale * sourceRect.Height)/2);
+			return t3 * t2 * s * t1;
 		}
 
 		public Transform GetInverse ()

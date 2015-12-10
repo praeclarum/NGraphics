@@ -102,6 +102,18 @@ namespace NGraphics
 			return new Rect (a.X * s.Width, a.Y * s.Height, a.Width * s.Width, a.Height * s.Height);
 		}
 
+		public Rect GetInflated (double dx, double dy)
+		{
+			var r = this;
+			r.Inflate (dx, dy);
+			return r;
+		}
+
+		public Rect GetInflated (Size padding)
+		{
+			return GetInflated (padding.Width, padding.Height);
+		}
+
 		public void Inflate (Size padding)
 		{
 			Inflate (padding.Width, padding.Height);
