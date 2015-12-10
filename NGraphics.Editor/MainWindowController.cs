@@ -82,6 +82,7 @@ namespace NGraphics.Editor
 					svg = Code;
 				});
 
+				DateTime startParse = DateTime.Now;
 				try {
 					var reader = new SvgReader(new System.IO.StringReader(svg));
 					if (reader.Graphic != null)
@@ -96,10 +97,11 @@ namespace NGraphics.Editor
 				this.BeginInvokeOnMainThread(() => {
 					if (!string.IsNullOrEmpty(error))
 					{
-						Errors.Value = error;
 						Errors.TextColor = NSColor.Red;
+						Errors.Value = error;
 					} else {
-						Errors.Value = "";
+						Errors.TextColor = NSColor.Black;
+						Errors.Value = "Content parsed in " + (DateTime.Now - startParse).TotalMilliseconds.ToString() + "ms";
 					}
 
 					Prev.SetNeedsDisplayInRect (previewSize);
