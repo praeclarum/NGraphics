@@ -36,6 +36,12 @@ namespace NGraphics
 			return g;
 		}
 
+		public Transform Transform {
+			get {
+				return Transform.StretchFillRect (ViewBox, new Rect (Point.Zero, Size));
+			}
+		}
+
 		public Graphic TransformGeometry (Transform transform)
 		{
 			var clone = Clone ();
@@ -51,17 +57,7 @@ namespace NGraphics
 			//
 			// Scale the viewBox into the size
 			//
-			var sx = 1.0;
-			if (ViewBox.Width > 0) {
-				sx = Size.Width / ViewBox.Width;
-			}
-			var sy = 1.0;
-			if (ViewBox.Height > 0) {
-				sy = Size.Height / ViewBox.Height;
-			}
-
-			canvas.Scale (sx, sy);
-			canvas.Translate (-ViewBox.X, -ViewBox.Y);
+			canvas.Transform (Transform);
 
 			//
 			// Draw
