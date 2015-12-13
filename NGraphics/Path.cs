@@ -203,9 +203,32 @@ namespace NGraphics
 			throw new NotSupportedException ();
 		}
 
+		public Point GetPoint (Point prevPoint, double t)
+		{
+			var u = 1 - t;
+			return
+				u * u * u * prevPoint +
+				3 * u * u * t * Control1 +
+				3 * u * t * t * Control2 +
+				t * t * t * Point;
+		}
+
 		public override double DistanceTo (Point startPoint, Point prevPoint, Point point)
 		{
-			throw new NotSupportedException ();
+			var maxIter = 16;
+			var dt = 1.0 / (maxIter - 1);
+
+			var minD = double.MaxValue;
+
+			for (var i = 0; i < maxIter; i++) {
+				var t = i * dt;
+				var d = GetPoint (prevPoint, t).DistanceTo (point);
+				if (d < minD) {
+					minD = d;
+				}
+			}
+
+			return minD;
 		}
 
 		public override string ToString ()
