@@ -13,6 +13,7 @@ namespace NGraphics
 		public abstract EdgeSamples[] GetEdgeSamples (Point startPoint, Point prevPoint, double tolerance, int minSamples, int maxSamples);
 		public abstract PathOp Clone ();
 		public abstract void TransformGeometry (Point prevPoint, Transform transform);
+		public abstract double DistanceTo (Point startPoint, Point prevPoint, Point point);
 	}
 	public class MoveTo : PathOp
 	{
@@ -46,6 +47,11 @@ namespace NGraphics
 		public override void TransformGeometry (Point prevPoint, Transform transform)
 		{
 			Point = transform.TransformPoint (Point);
+		}
+
+		public override double DistanceTo (Point startPoint, Point prevPoint, Point point)
+		{
+			return point.DistanceTo (Point);
 		}
 
 		public override string ToString ()
@@ -84,6 +90,11 @@ namespace NGraphics
 		public override void TransformGeometry (Point prevPoint, Transform transform)
 		{
 			Point = transform.TransformPoint (Point);
+		}
+
+		public override double DistanceTo (Point startPoint, Point prevPoint, Point point)
+		{
+			return point.DistanceToLineSegment (prevPoint, Point);
 		}
 
 		public override string ToString ()
@@ -152,6 +163,11 @@ namespace NGraphics
 			throw new NotSupportedException ();
 		}
 
+		public override double DistanceTo (Point startPoint, Point prevPoint, Point point)
+		{
+			throw new NotSupportedException ();
+		}
+
 		public override string ToString ()
 		{
 			return string.Format ("ArcTo ({0})", Point);
@@ -187,6 +203,11 @@ namespace NGraphics
 			throw new NotSupportedException ();
 		}
 
+		public override double DistanceTo (Point startPoint, Point prevPoint, Point point)
+		{
+			throw new NotSupportedException ();
+		}
+
 		public override string ToString ()
 		{
 			return string.Format ("CurveTo ({0})", Point);
@@ -213,6 +234,10 @@ namespace NGraphics
 		}
 		public override void TransformGeometry (Point prevPoint, Transform transform)
 		{
+		}
+		public override double DistanceTo (Point startPoint, Point prevPoint, Point point)
+		{
+			return point.DistanceToLineSegment (prevPoint, startPoint);
 		}
 		public override string ToString ()
 		{
@@ -327,6 +352,33 @@ namespace NGraphics
 			return c;
 		}
 
+		public double DistanceToLocal (Point localPoint)
+		{
+			var startPoint = Point.Zero;
+			var prevPoint = startPoint;
+
+			var minD = double.MaxValue;
+
+			foreach (var op in Operations) {
+				if (op is MoveTo) {
+					startPoint = op.EndPoint;
+				}
+
+				var d = op.DistanceTo (startPoint, prevPoint, localPoint);
+
+				minD = Math.Min (d, minD);
+
+				prevPoint = op.GetEndPoint (startPoint);
+			}
+
+			return minD;
+		}
+
+		public double DistanceTo (Point worldPoint)
+		{
+			return DistanceToLocal (Transform.GetInverse ().TransformPoint (worldPoint));
+		}
+
 		public override string ToString ()
 		{
 			return string.Format (CultureInfo.InvariantCulture, "Path ([{0}])", Operations.Count);
@@ -396,6 +448,7 @@ namespace NGraphics
 
 			return edges.ToArray ();
 		}
+
 	}
 }
 
