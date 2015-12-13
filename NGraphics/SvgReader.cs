@@ -268,6 +268,10 @@ namespace NGraphics
 
 			if (r != null) {
 				r.Transform = ReadTransform (ReadString (e.Attribute ("transform")));
+				var ida = e.Attribute("id");
+				if (ida != null && !string.IsNullOrEmpty (ida.Value)) {
+					r.Id = ida.Value.Trim ();
+				}
 				list.Add (r);
 			}
 		}
