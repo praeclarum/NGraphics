@@ -36,6 +36,17 @@ namespace NGraphics
 			return point - d;
 		}
 
+		[System.Runtime.Serialization.IgnoreDataMember]
+		public Point Normalized {
+			get {
+				var d = Distance;
+				if (d == 0) {
+					return new Point (1, 0);
+				}
+				return this / d;
+			}
+		}
+
 		public double DistanceTo (Point p)
 		{
 			return Math.Sqrt ((X - p.X) * (X - p.X) + (Y - p.Y) * (Y - p.Y));
