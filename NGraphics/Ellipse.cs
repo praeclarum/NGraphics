@@ -8,6 +8,8 @@ namespace NGraphics
 	{
 		Rect frame;
 
+		public Rect Frame { get { return frame; } }
+
 		public Ellipse (Rect frame, Pen pen = null, Brush brush = null)
 			: base (pen, brush)
 		{
