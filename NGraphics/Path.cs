@@ -196,11 +196,29 @@ namespace NGraphics
 		public override Point GetEndPoint (Point startPoint) { return Point; }
 		public override EdgeSamples[] GetEdgeSamples (Point startPoint, Point prevPoint, double tolerance, int minSamples, int maxSamples)
 		{
-			throw new NotSupportedException ();
+			var n = (3*prevPoint.DistanceTo (Point)) / tolerance;
+			if (n < minSamples)
+				n = minSamples;
+			if (n > maxSamples)
+				n = maxSamples;
+
+			var r = new List<Point> ();
+
+			var dt = 1.0 / (n - 1);
+
+			for (var i = 0; i < n; i++) {
+				var t = i * dt;
+				var p = GetPoint (prevPoint, t);
+				r.Add (p);
+			}
+
+			return new[]{ new EdgeSamples { Points = r.ToArray () } };
 		}
 		public override void TransformGeometry (Point prevPoint, Transform transform)
 		{
-			throw new NotSupportedException ();
+			Point = transform.TransformPoint (Point);
+			Control1 = transform.TransformPoint (Control1);
+			Control2 = transform.TransformPoint (Control2);
 		}
 
 		public Point GetPoint (Point prevPoint, double t)
@@ -215,20 +233,8 @@ namespace NGraphics
 
 		public override double DistanceTo (Point startPoint, Point prevPoint, Point point)
 		{
-			var maxIter = 16;
-			var dt = 1.0 / (maxIter - 1);
-
-			var minD = double.MaxValue;
-
-			for (var i = 0; i < maxIter; i++) {
-				var t = i * dt;
-				var d = GetPoint (prevPoint, t).DistanceTo (point);
-				if (d < minD) {
-					minD = d;
-				}
-			}
-
-			return minD;
+			var edges = GetEdgeSamples (startPoint, prevPoint, 1, 16, 16);
+			return edges [0].DistanceTo (point);
 		}
 
 		public override string ToString ()
@@ -442,7 +448,12 @@ namespace NGraphics
 
 		public override Rect SampleableBox {
 			get {
-				throw new NotSupportedException ();
+				var edges = GetEdgeSamples (1, 2, 8);
+				var bbb = new BoundingBoxBuilder ();
+				foreach (var e in edges) {
+					bbb.Add (e.Points);
+				}
+				return bbb.BoundingBox;
 			}
 		}
 

@@ -210,5 +210,11 @@ namespace NGraphics
 			}
 			nbb++;
 		}
+		public void Add (IEnumerable<Point> points)
+		{
+			foreach (var p in points) {
+				Add (p);
+			}
+		}
 	}
 }
