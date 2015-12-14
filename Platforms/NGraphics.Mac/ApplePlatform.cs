@@ -538,7 +538,26 @@ namespace NGraphics
 		{
 			return new CTFont (font.Name, (nfloat)font.Size);
 		}
+		public static CGColor GetCGColor (this Color color)
+		{
+			return new CGColor ((nfloat)color.Red, (nfloat)color.Green, (nfloat)color.Blue, (nfloat)color.Alpha);
+		}
+		public static Color GetColor (this CGColor color)
+		{
+			var c = color.Components;
+			return Color.FromRGB (c[0], c[1], c[2], c[3]);
+		}
 		#if __IOS__ || __TVOS__
+		public static UIKit.UIColor GetUIColor (this Color color)
+		{
+			return UIKit.UIColor.FromRGBA (color.R, color.G, color.B, color.A);
+		}
+		public static Color GetColor (this UIKit.UIColor color)
+		{
+			nfloat r, g, b, a;
+			color.GetRGBA (out r, out g, out b, out a);
+			return Color.FromRGB (r, g, b, a);
+		}
 		public static UIKit.UIImage GetUIImage (this IImage image)
 		{
 			var c = (CGImageImage)image;
