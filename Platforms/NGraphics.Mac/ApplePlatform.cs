@@ -265,7 +265,7 @@ namespace NGraphics
 
 			SetBrush (brush);
 
-			var pt = frame.TopLeft;
+
 
 			using (var atext = new NSMutableAttributedString (text)) {
 
@@ -275,6 +275,18 @@ namespace NGraphics
 				}, new NSRange (0, text.Length));
 
 				using (var l = new CTLine (atext)) {
+					var bounds = l.GetImageBounds (context);
+					var pt = frame.TopLeft;
+
+					switch (alignment) {
+					case TextAlignment.Center:
+						pt.X = frame.X + (frame.Width - bounds.Width) / 2;
+						break;
+					case TextAlignment.Right:
+						pt.X = frame.Right - bounds.Width;
+						break;
+					}
+
 					context.SaveState ();
 					context.TranslateCTM ((nfloat)(pt.X), (nfloat)(pt.Y));
 					context.TextPosition = CGPoint.Empty;
