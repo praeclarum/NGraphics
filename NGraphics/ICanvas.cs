@@ -244,5 +244,10 @@ namespace NGraphics
 		{
 			canvas.DrawText (text, new Rect (point, Size.MaxValue), font, brush: new SolidBrush (color));
 		}
+
+		public static void DrawText (this ICanvas canvas, string text, Rect frame, Font font, TextAlignment alignment, Color color)
+		{
+			canvas.DrawText (text, frame, font, alignment, brush: new SolidBrush (color));
+		}
 	}
 }
