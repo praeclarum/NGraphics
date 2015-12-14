@@ -12,9 +12,13 @@ namespace NGraphics
 		public byte R;
         public byte A;
 
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public double Red { get { return R / 255.0; } set { R = Round (value); } }
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public double Green { get { return G / 255.0; } set { G = Round (value); } }
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public double Blue { get { return B / 255.0; } set { B = Round (value); } }
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public double Alpha { get { return A / 255.0; } set { A = Round (value); } }
 
 		static byte Round (double c)
@@ -22,16 +26,19 @@ namespace NGraphics
 			return (byte)(Math.Min (255, Math.Max (0, (int)(c * 255 + 0.5))));
 		}
 
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public int Argb {
 			get {
 				return (A << 24) | (R << 16) | (G << 8) | B;
 			}
 		}
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public int Rgba {
 			get {
 				return (R << 24) | (G << 16) | (B << 8) | A;
 			}
 		}
+		[System.Runtime.Serialization.IgnoreDataMember]
 		public int Abgr {
 			get {
 				return (A << 24) | (B << 16) | (G << 8) | R;
