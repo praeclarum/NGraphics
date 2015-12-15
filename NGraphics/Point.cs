@@ -87,6 +87,13 @@ namespace NGraphics
 			return X * b.X + Y * b.Y;
 		}
 
+		public Point MoveInto (Rect rect)
+		{
+			var x = Math.Min (Math.Max (X, rect.Left), rect.Right);
+			var y = Math.Min (Math.Max (Y, rect.Top), rect.Bottom);
+			return new Point (x, y);
+		}
+
 		public override bool Equals (object obj)
 		{
 			if (obj is Point) {
