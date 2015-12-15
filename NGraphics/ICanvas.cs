@@ -104,6 +104,10 @@ namespace NGraphics
 			}
 		}
 
+		public static void DrawRectangle (this ICanvas canvas, Rect frame, Color color, double width = 1)
+		{
+			canvas.DrawRectangle (frame, Size.Zero, new Pen (color, width), null);
+		}
 		public static void DrawRectangle (this ICanvas canvas, Rect frame, Pen pen = null, Brush brush = null)
 		{
 			canvas.DrawRectangle (frame, Size.Zero, pen, brush);
@@ -137,6 +141,10 @@ namespace NGraphics
 			canvas.DrawRectangle (frame, pen: new Pen (color, width));
 		}
 
+		public static void DrawEllipse (this ICanvas canvas, Rect frame, Color color, double width = 1)
+		{
+			canvas.DrawEllipse (frame, new Pen (color, width), null);
+		}
 		public static void DrawEllipse (this ICanvas canvas, double x, double y, double width, double height, Pen pen = null, Brush brush = null)
 		{
 			canvas.DrawEllipse (new Rect (x, y, width, height), pen, brush);
