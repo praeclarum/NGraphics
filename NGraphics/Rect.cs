@@ -109,6 +109,13 @@ namespace NGraphics
 			return r;
 		}
 
+		public Rect GetInflated (double d)
+		{
+			var r = this;
+			r.Inflate (d, d);
+			return r;
+		}
+
 		public Rect GetInflated (Size padding)
 		{
 			return GetInflated (padding.Width, padding.Height);
