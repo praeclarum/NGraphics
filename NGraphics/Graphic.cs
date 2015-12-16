@@ -80,6 +80,12 @@ namespace NGraphics
 			return svgr.Graphic;
 		}
 
+		public void WriteSvg (System.IO.TextWriter writer)
+		{
+			var w = new SvgWriter (this, writer);
+			w.Write ();
+		}
+
 		public override string ToString ()
 		{
 			try {

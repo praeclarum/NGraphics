@@ -16,15 +16,20 @@ namespace NGraphics
 
 		readonly Dictionary<object, string> defs = new Dictionary<object, string> ();
 
+		bool wrote = false;
+
 		public SvgWriter (Graphic graphic, System.IO.TextWriter writer)
 		{
 			Graphic = graphic;
 			w = new CodeWriter (writer, "    ");
-			Write ();
 		}
 
-		void Write ()
+		public void Write ()
 		{
+			if (wrote)
+				return;
+			wrote = true;
+
 			w.WriteLine ("\n<?xml version=\"1.0\" encoding=\"{0}\" standalone=\"no\"?>", w.Encoding.WebName.ToUpperInvariant ());
 			w.WriteLine ("<svg width=\"{0}px\" height=\"{1}px\" viewBox=\"{2} {3} {4} {5}\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">",
 				Graphic.Size.Width, Graphic.Size.Height,
