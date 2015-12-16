@@ -275,15 +275,19 @@ namespace NGraphics
 				}, new NSRange (0, text.Length));
 
 				using (var l = new CTLine (atext)) {
-					var bounds = l.GetImageBounds (context);
+					nfloat asc, desc, lead;
+					var len = l.GetTypographicBounds (out asc, out desc, out lead);
 					var pt = frame.TopLeft;
 
 					switch (alignment) {
+					case TextAlignment.Left:
+						pt.X = frame.X;
+						break;
 					case TextAlignment.Center:
-						pt.X = frame.X + (frame.Width - bounds.Width) / 2;
+						pt.X = frame.X + (frame.Width - len) / 2;
 						break;
 					case TextAlignment.Right:
-						pt.X = frame.Right - bounds.Width;
+						pt.X = frame.Right - len;
 						break;
 					}
 
