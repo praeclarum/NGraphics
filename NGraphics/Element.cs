@@ -114,14 +114,12 @@ namespace NGraphics
 		void Visit (Group group);
 		void Visit (Path path);
 		void Visit (Text text);
-		void Visit (Line line);
 		void Visit (ForeignObject foreignObject);
 		void EndVisit (Rectangle rectangle);
 		void EndVisit (Ellipse ellipse);
 		void EndVisit (Group group);
 		void EndVisit (Path path);
 		void EndVisit (Text text);
-		void EndVisit (Line line);
 		void EndVisit (ForeignObject foreignObject);
 	}
 	public class BaseElementVisitor : IElementVisitor
@@ -152,10 +150,6 @@ namespace NGraphics
 		{
 			VisitElement (text);
 		}
-		public virtual void Visit (Line line)
-		{
-			VisitElement (line);
-		}
 		public virtual void Visit (ForeignObject foreignObject)
 		{
 			VisitElement (foreignObject);
@@ -179,10 +173,6 @@ namespace NGraphics
 		public virtual void EndVisit (Text text)
 		{
 			EndVisitElement (text);
-		}
-		public virtual void EndVisit (Line line)
-		{
-			EndVisitElement (line);
 		}
 		public virtual void EndVisit (ForeignObject foreignObject)
 		{

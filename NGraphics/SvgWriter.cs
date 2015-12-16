@@ -269,19 +269,6 @@ namespace NGraphics
 			w.WriteLine ("</text>");
 		}
 
-		public void Visit (Line line)
-		{
-			WriteStartElement ("line", line);
-			w.Write (" x1=\"{0}\" y1=\"{1}\" x2=\"{2}\" y2=\"{3}\"",
-				line.Start.X, line.Start.Y,
-				line.End.X, line.End.Y);
-		}
-
-		public void EndVisit (Line e)
-		{
-			w.WriteLine (" />");
-		}
-
 		public void Visit (ForeignObject foreignObject)
 		{
 			WriteStartElement ("foreignObject", foreignObject);

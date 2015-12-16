@@ -220,7 +220,10 @@ namespace NGraphics
 					var x2 = ReadNumber ( e.Attribute("x2") );
 					var y1 = ReadNumber ( e.Attribute("y1") );
 					var y2 = ReadNumber ( e.Attribute("y2") );
-					r = new Line(new Point(x1, y1), new Point(x2, y2), pen);
+					var p = new Path (pen, null);
+					p.MoveTo (x1, y1);
+					p.LineTo (x2, y2);
+					r = p;
 				}
 				break;
 

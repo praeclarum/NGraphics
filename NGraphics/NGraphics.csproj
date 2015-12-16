@@ -59,7 +59,6 @@
     <Compile Include="Text.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="Font.cs" />
-    <Compile Include="Line.cs" />
     <Compile Include="FilterCanvas.cs" />
     <Compile Include="DrawImageCache.cs" />
     <Compile Include="ForeignObject.cs" />
