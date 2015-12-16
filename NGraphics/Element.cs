@@ -13,7 +13,7 @@ namespace NGraphics
 
 		protected Element (Pen pen, Brush brush)
 		{
-			Id = Guid.NewGuid ().ToString ();
+			Id = "";
 			Pen = pen;
 			Brush = brush;
 			Transform = NGraphics.Transform.Identity;
