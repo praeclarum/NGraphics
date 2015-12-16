@@ -98,7 +98,95 @@ namespace NGraphics
 			var localPoint = Transform.GetInverse ().TransformPoint (worldPoint);
 			return Contains (localPoint);
 		}
+
+		protected abstract void AcceptVisitor (IElementVisitor visitor);
+
+		public void Accept (IElementVisitor visitor)
+		{
+			AcceptVisitor (visitor);
+		}
 	}
 
-
+	public interface IElementVisitor
+	{
+		void Visit (Rectangle rectangle);
+		void Visit (Ellipse ellipse);
+		void Visit (Group group);
+		void Visit (Path path);
+		void Visit (Text text);
+		void Visit (Line line);
+		void Visit (ForeignObject foreignObject);
+		void EndVisit (Rectangle rectangle);
+		void EndVisit (Ellipse ellipse);
+		void EndVisit (Group group);
+		void EndVisit (Path path);
+		void EndVisit (Text text);
+		void EndVisit (Line line);
+		void EndVisit (ForeignObject foreignObject);
+	}
+	public class BaseElementVisitor : IElementVisitor
+	{
+		public virtual void VisitElement (Element element)
+		{
+		}
+		public virtual void EndVisitElement (Element element)
+		{
+		}
+		public virtual void Visit (Rectangle rectangle)
+		{
+			VisitElement (rectangle);
+		}
+		public virtual void Visit (Ellipse ellipse)
+		{
+			VisitElement (ellipse);
+		}
+		public virtual void Visit (Group group)
+		{
+			VisitElement (group);
+		}
+		public virtual void Visit (Path path)
+		{
+			VisitElement (path);
+		}
+		public virtual void Visit (Text text)
+		{
+			VisitElement (text);
+		}
+		public virtual void Visit (Line line)
+		{
+			VisitElement (line);
+		}
+		public virtual void Visit (ForeignObject foreignObject)
+		{
+			VisitElement (foreignObject);
+		}
+		public virtual void EndVisit (Rectangle rectangle)
+		{
+			EndVisitElement (rectangle);
+		}
+		public virtual void EndVisit (Ellipse ellipse)
+		{
+			EndVisitElement (ellipse);
+		}
+		public virtual void EndVisit (Group group)
+		{
+			EndVisitElement (group);
+		}
+		public virtual void EndVisit (Path path)
+		{
+			EndVisitElement (path);
+		}
+		public virtual void EndVisit (Text text)
+		{
+			EndVisitElement (text);
+		}
+		public virtual void EndVisit (Line line)
+		{
+			EndVisitElement (line);
+		}
+		public virtual void EndVisit (ForeignObject foreignObject)
+		{
+			EndVisitElement (foreignObject);
+		}
+	}
 }

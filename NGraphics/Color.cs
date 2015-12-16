@@ -347,6 +347,13 @@ namespace NGraphics
 			return new Color (r1 + m, g1 + m, b1 + m, alpha);
 		}
 
+		public string HtmlString
+		{
+			get {
+				return string.Format ("#{0:X2}{1:X2}{2:X2}", R, G, B);
+			}
+		}
+
 		public override string ToString ()
 		{
 			return string.Format (CultureInfo.InvariantCulture, "Color ({0}, {1}, {2}, {3})", Red, Green, Blue, Alpha);

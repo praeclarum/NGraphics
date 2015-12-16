@@ -14,6 +14,15 @@ namespace NGraphics
 		{			
 		}
 
+		protected override void AcceptVisitor (IElementVisitor visitor)
+		{
+			visitor.Visit (this);
+			foreach (var c in Children) {
+				c.Accept (visitor);
+			}
+			visitor.EndVisit (this);
+		}
+
 		public override Pen Pen {
 			get {
 				return base.Pen;

@@ -24,6 +24,11 @@ namespace NGraphics
 		{
 		}
 
+		public Graphic ()
+			: this (new Size ())
+		{
+		}
+
 		public Graphic Clone ()
 		{
 			var g = new Graphic (Size, ViewBox) {

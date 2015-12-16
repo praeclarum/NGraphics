@@ -28,6 +28,12 @@ namespace NGraphics
 		{
 		}
 
+		protected override void AcceptVisitor (IElementVisitor visitor)
+		{
+			visitor.Visit (this);
+			visitor.EndVisit (this);
+		}
+
 		protected override void DrawElement (ICanvas canvas)
 		{
 			canvas.DrawEllipse (frame, Pen, Brush);

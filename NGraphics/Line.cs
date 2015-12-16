@@ -5,19 +5,25 @@ namespace NGraphics
 {
 	public class Line : Element
 	{
-		protected Point start;
-		protected Point end;
+		public Point Start;
+		public Point End;
 
 		public Line (Point start, Point end, Pen pen = null)
 			: base (pen, null)
 		{
-			this.start = start;
-			this.end = end;
+			this.Start = start;
+			this.End = end;
+		}
+
+		protected override void AcceptVisitor (IElementVisitor visitor)
+		{
+			visitor.Visit (this);
+			visitor.EndVisit (this);
 		}
 
 		protected override Element CreateUninitializedClone ()
 		{
-			return new Line (start, end);
+			return new Line (Start, End);
 		}
 
 		protected override void SetCloneData (Element clone)
@@ -28,8 +34,8 @@ namespace NGraphics
 		public override Element TransformGeometry (Transform transform)
 		{			
 			var clone = (Line)Clone ();
-			clone.start = transform.TransformPoint (start);
-			clone.end = transform.TransformPoint (end);
+			clone.Start = transform.TransformPoint (Start);
+			clone.End = transform.TransformPoint (End);
 			return clone;
 		}
 
@@ -40,19 +46,19 @@ namespace NGraphics
 
 		protected override void DrawElement (ICanvas canvas)
 		{
-			canvas.DrawLine(start, end, Pen);
+			canvas.DrawLine (Start, End, Pen);
 		}
 
 		public override string ToString ()
 		{
-			return string.Format (CultureInfo.InvariantCulture, "Line ({0}-{1})", start, end);
+			return string.Format (CultureInfo.InvariantCulture, "Line ({0}, {1})", Start, End);
 		}
 
 		#region implemented abstract members of Element
 
 		public override EdgeSamples[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)
 		{
-			var ps = SampleLine (start, end, true, tolerance, minSamples, maxSamples);
+			var ps = SampleLine (Start, End, true, tolerance, minSamples, maxSamples);
 			for (int i = 0; i < ps.Length; i++) {
 				var p = Transform.TransformPoint (ps [i]);
 				ps [i] = p;
@@ -62,8 +68,8 @@ namespace NGraphics
 
 		public override Rect SampleableBox {
 			get {
-				var bb = new Rect (start, Size.Zero);
-				return Transform.TransformRect (bb.Union (end));
+				var bb = new Rect (Start, Size.Zero);
+				return Transform.TransformRect (bb.Union (End));
 			}
 		}
 

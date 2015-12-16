@@ -13,6 +13,12 @@ namespace NGraphics
 			this.size = size;
 		}
 
+		protected override void AcceptVisitor (IElementVisitor visitor)
+		{
+			visitor.Visit (this);
+			visitor.EndVisit (this);
+		}
+
 		protected override Element CreateUninitializedClone ()
 		{
 			return new ForeignObject (pos, size);
@@ -25,9 +31,10 @@ namespace NGraphics
 			return new ForeignObject (tframe.TopLeft, tframe.Size);
 		}
 
-		public override bool Contains (Point point)
+		public override bool Contains (Point localPoint)
 		{
-			return false;
+			var frame = new Rect (pos, size);
+			return frame.Contains (localPoint);
 		}
 
 		protected override void DrawElement (ICanvas canvas)

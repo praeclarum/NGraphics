@@ -64,6 +64,8 @@
     <Compile Include="DrawImageCache.cs" />
     <Compile Include="ForeignObject.cs" />
     <Compile Include="EdgeSampling.cs" />
+    <Compile Include="SvgWriter.cs" />
+    <Compile Include="CodeWriter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup />

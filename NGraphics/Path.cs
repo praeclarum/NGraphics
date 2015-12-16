@@ -14,6 +14,10 @@ namespace NGraphics
 		public abstract PathOp Clone ();
 		public abstract void TransformGeometry (Point prevPoint, Transform transform);
 		public abstract double DistanceTo (Point startPoint, Point prevPoint, Point point);
+		protected abstract void AcceptVisitor (IPathOpVisitor visitor);
+		public void Accept (IPathOpVisitor visitor) {
+			AcceptVisitor (visitor);
+		}
 	}
 	public class MoveTo : PathOp
 	{
@@ -21,6 +25,10 @@ namespace NGraphics
 		public MoveTo (Point point)
 		{
 			Point = point;
+		}
+		protected override void AcceptVisitor (IPathOpVisitor visitor)
+		{
+			visitor.Visit (this);
 		}
 		public MoveTo (double x, double y)
 			: this (new Point (x, y))
@@ -70,6 +78,10 @@ namespace NGraphics
 			: this (new Point (x, y))
 		{
 		}
+		protected override void AcceptVisitor (IPathOpVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
 		public override PathOp Clone ()
 		{
 			return new LineTo (Point);
@@ -114,6 +126,10 @@ namespace NGraphics
 			LargeArc = largeArc;
 			SweepClockwise = sweepClockwise;
 			Point = point;
+		}
+		protected override void AcceptVisitor (IPathOpVisitor visitor)
+		{
+			visitor.Visit (this);
 		}
 		public override PathOp Clone ()
 		{
@@ -184,6 +200,10 @@ namespace NGraphics
 			Control2 = control2;
 			Point = point;
 		}
+		protected override void AcceptVisitor (IPathOpVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
 		public override PathOp Clone ()
 		{
 			return new CurveTo (Control1, Control2, Point);
@@ -244,6 +264,10 @@ namespace NGraphics
 	}
 	public class ClosePath : PathOp
 	{
+		protected override void AcceptVisitor (IPathOpVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
 		public override PathOp Clone ()
 		{
 			return new ClosePath ();
@@ -274,6 +298,15 @@ namespace NGraphics
 		}
 	}
 
+	public interface IPathOpVisitor
+	{
+		void Visit (MoveTo moveTo);
+		void Visit (LineTo lineTo);
+		void Visit (CurveTo curveTo);
+		void Visit (ArcTo arcTo);
+		void Visit (ClosePath closePath);
+	}
+
 	public class Path : Element
 	{
 		public readonly List<PathOp> Operations = new List<PathOp> ();
@@ -286,6 +319,19 @@ namespace NGraphics
 		public Path (Pen pen = null, Brush brush = null)
 			: base (pen, brush)
 		{
+		}
+
+		protected override void AcceptVisitor (IElementVisitor visitor)
+		{
+			visitor.Visit (this);
+			visitor.EndVisit (this);
+		}
+
+		public void AcceptPathOpVisitor (IPathOpVisitor visitor)
+		{
+			foreach (var op in Operations) {
+				op.Accept (visitor);
+			}
 		}
 
 		protected override void DrawElement (ICanvas canvas)

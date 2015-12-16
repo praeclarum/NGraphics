@@ -20,6 +20,12 @@ namespace NGraphics
 			Alignment = alignment;
 		}
 
+		protected override void AcceptVisitor (IElementVisitor visitor)
+		{
+			visitor.Visit (this);
+			visitor.EndVisit (this);
+		}
+
 		protected override Element CreateUninitializedClone ()
 		{
 			return new Text (String, Frame, Font, Alignment);
