@@ -140,6 +140,13 @@ namespace NGraphics
 			} else {
 				w.Write (" fill=\"none\"");
 			}
+			var t = element.Transform;
+			if (t != Transform.Identity) {
+				w.Write (" transform=\"matrix({0}, {1}, {2}, {3}, {4}, {5})\"",
+					t.A, t.B,
+					t.C, t.D,
+					t.E, t.F);
+			}
 		}
 
 		#region IElementVisitor implementation
@@ -288,4 +295,18 @@ namespace NGraphics
 		#endregion
 	}
 
+
+//	public class TestSvgWriter
+//	{
+//		public string Result;
+//		public TestSvgWriter ()
+//		{
+//			var g = Graphic.LoadSvg (new StreamReader ("/Users/fak/Dropbox/Projects/NGraphics/NGraphics.Test/Inputs/MocastIcon.svg"));
+//			var w = new StringWriter ();
+//			var sw = new SvgWriter (g, w);
+//			sw.Write ();
+//			System.Console.WriteLine (w);
+//			Result = w.ToString ();
+//		}
+//	}
 }
