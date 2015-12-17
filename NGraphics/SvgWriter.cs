@@ -30,7 +30,7 @@ namespace NGraphics
 				return;
 			wrote = true;
 
-			w.WriteLine ("\n<?xml version=\"1.0\" encoding=\"{0}\" standalone=\"no\"?>", w.Encoding.WebName.ToUpperInvariant ());
+			w.WriteLine ("<?xml version=\"1.0\" encoding=\"{0}\" standalone=\"no\"?>", w.Encoding.WebName.ToUpperInvariant ());
 			w.WriteLine ("<svg width=\"{0}px\" height=\"{1}px\" viewBox=\"{2} {3} {4} {5}\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">",
 				Graphic.Size.Width, Graphic.Size.Height,
 				Graphic.ViewBox.Y, Graphic.ViewBox.X,
