@@ -11,7 +11,7 @@ namespace NGraphics
 
 		public Task<Stream> OpenFileStreamForWritingAsync (string path)
 		{
-			throw new NotSupportedException ();
+			return Task.FromResult ((Stream)new MemoryStream ());
 		}
 
 		public IImageCanvas CreateImageCanvas (Size size, double scale = 1.0, bool transparency = true)

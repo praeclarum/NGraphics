@@ -81,7 +81,9 @@ namespace NGraphics.Test
 		{
 			var path = GetPath (name, ".svg");
 			using (var s = await Platforms.Current.OpenFileStreamForWritingAsync (path)) {
-				canvas.Graphic.WriteSvg (new System.IO.StreamWriter (s));
+				using (var w = new System.IO.StreamWriter (s)) {
+					canvas.Graphic.WriteSvg (w);
+				}
 			}
 		}
 	}
