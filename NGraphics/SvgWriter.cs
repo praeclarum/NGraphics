@@ -135,7 +135,7 @@ namespace NGraphics
 						w.Write (" fill-opacity=\"{0}\"", sb.Color.Alpha);
 					}
 				} else {
-					w.Write (" fill=\"{0}\"", defs[element.Brush]);
+					w.Write (" fill=\"url(#{0})\"", defs[element.Brush]);
 				}
 			} else {
 				w.Write (" fill=\"none\"");
