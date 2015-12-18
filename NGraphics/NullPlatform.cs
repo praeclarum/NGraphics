@@ -9,6 +9,11 @@ namespace NGraphics
 	{
 		public string Name { get { return "Null"; } }
 
+		public Task<Stream> OpenFileStreamForWritingAsync (string path)
+		{
+			throw new NotSupportedException ();
+		}
+
 		public IImageCanvas CreateImageCanvas (Size size, double scale = 1.0, bool transparency = true)
 		{
 			return new NullImageSurface ();

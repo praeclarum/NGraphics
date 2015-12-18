@@ -32,4 +32,15 @@ namespace NGraphics
 			}
 		}
 	}
+
+	public static class GraphicFilesEx
+	{
+		public static void WriteSvg (this Graphic g, string path)
+		{
+			using (var w = new System.IO.StreamWriter (path, false, System.Text.Encoding.UTF8)) {
+				g.WriteSvg (w);
+			}
+		}
+	}
 }
+

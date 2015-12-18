@@ -12,6 +12,11 @@ namespace NGraphics
 	{
 		public string Name { get { return "Net"; } }
 
+		public Task<Stream> OpenFileStreamForWritingAsync (string path)
+		{
+			return Task.FromResult ((Stream)new FileStream (path, FileMode.Create, FileAccess.Write, FileShare.Read));
+		}
+
 		public IImageCanvas CreateImageCanvas (Size size, double scale = 1.0, bool transparency = true)
 		{
 			var pixelWidth = (int)Math.Ceiling (size.Width * scale);

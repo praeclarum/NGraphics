@@ -29,12 +29,12 @@ namespace NGraphics.Test
 #endif
 
 		public static string ResultsDirectory = "";
-		public static string GetPath (string filename)
+		public static string GetPath (string filename, string ext)
 		{
 			var name = (filename.EndsWith (".png", StringComparison.Ordinal)) ?
 				System.IO.Path.GetFileNameWithoutExtension (filename) :
 				filename;
-			var path = System.IO.Path.Combine (ResultsDirectory, name + "-" + Platform.Name + ".png");
+			var path = System.IO.Path.Combine (ResultsDirectory, name + "-" + Platform.Name + ext);
 			Debug.WriteLine (path);
 			return path;
 		}
@@ -60,7 +60,7 @@ namespace NGraphics.Test
 
 		public async Task SaveImage (IImage i, string name)
 		{
-			var path = GetPath (name);
+			var path = GetPath (name, ".png");
 			using (var s = OpenStream (path)) {
 				if (s == null) {
 					i.SaveAsPng (path);
@@ -72,9 +72,17 @@ namespace NGraphics.Test
 			}
 		}
 
-		public async Task SaveImage (IImageCanvas canvas, string name)
+		public Task SaveImage (IImageCanvas canvas, string name)
 		{
-			await SaveImage (canvas.GetImage (), name);
+			return SaveImage (canvas.GetImage (), name);
+		}
+
+		public async Task SaveSvg (GraphicCanvas canvas, string name)
+		{
+			var path = GetPath (name, ".svg");
+			using (var s = await Platforms.Current.OpenFileStreamForWritingAsync (path)) {
+				canvas.Graphic.WriteSvg (new System.IO.StreamWriter (s));
+			}
 		}
 	}
 

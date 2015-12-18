@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace NGraphics
 {
@@ -10,6 +11,7 @@ namespace NGraphics
 		IImage LoadImage (string path);
 		IImage LoadImage (Stream stream);
 		IImage CreateImage (Color[] colors, int pixelWidth, double scale = 1.0);
+		Task<Stream> OpenFileStreamForWritingAsync (string path);
 	}
 
 	public static class PlatformEx

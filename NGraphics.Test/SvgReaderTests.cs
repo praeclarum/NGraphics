@@ -29,9 +29,17 @@ namespace NGraphics.Test
 		async Task ReadAndDraw (string path)
 		{
 			var g = Read (path);
+
+			//
+			// Draw Image
+			//
 			var c = Platform.CreateImageCanvas (g.Size);
 			g.Draw (c);
 			await SaveImage (c, path);
+
+			var c2 = new GraphicCanvas (g.Size);
+			g.Draw (c2);
+			await SaveSvg (c2, path);
 		}
 
 		[Test]
