@@ -844,12 +844,14 @@ namespace NGraphics
 				}
 			}
 
-			if (value == "start")
-				return TextAlignment.Left;
-			else if (value == "end")
+			switch (value) {
+			case "end":
 				return TextAlignment.Right;
-			else
+			case "middle":
 				return TextAlignment.Center;
+			default:
+				return TextAlignment.Left;
+			}
 		}
 
 		double ReadNumber (XAttribute a)

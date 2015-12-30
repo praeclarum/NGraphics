@@ -270,12 +270,11 @@ namespace NGraphics
 
 			SetBrush (brush);
 
-
-
 			using (var atext = new NSMutableAttributedString (text)) {
 
 				atext.AddAttributes (new CTStringAttributes {
 					ForegroundColorFromContext = true,
+					StrokeColor = pen != null ? pen.Color.GetCGColor () : null, 
 					Font = font.GetCTFont (),
 				}, new NSRange (0, text.Length));
 
