@@ -80,9 +80,19 @@ namespace NGraphics.Test
 		public async Task SaveSvg (GraphicCanvas canvas, string name)
 		{
 			var path = GetPath (name, ".svg");
-			using (var s = await Platforms.Current.OpenFileStreamForWritingAsync (path)) {
-				using (var w = new System.IO.StreamWriter (s)) {
+			using (var s = OpenStream (path)) {
+				if (s == null) {
+					using (var ss = await Platforms.Current.OpenFileStreamForWritingAsync (path)) {
+						using (var w = new System.IO.StreamWriter (ss)) {
+							canvas.Graphic.WriteSvg (w);
+						}
+					}
+				}
+				else {
+					var w = new System.IO.StreamWriter (s);
 					canvas.Graphic.WriteSvg (w);
+					await w.FlushAsync ();
+					await CloseStream (s);
 				}
 			}
 		}

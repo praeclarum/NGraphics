@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace NGraphics
 {
@@ -35,15 +36,13 @@ namespace NGraphics
 
 	public static class GraphicFilesEx
 	{
-		public static void WriteSvg (this Graphic g, string path)
+		public static async Task WriteSvgAsync (this Graphic g, string path)
 		{
-#if NETFX_CORE
-			throw new NotSupportedException ("Blame Microsoft for making a stupid decision to remove a critical API");
-#else
-			using (var w = new System.IO.StreamWriter (path, false, System.Text.Encoding.UTF8)) {
-				g.WriteSvg (w);
+			using (var s = await Platforms.Current.OpenFileStreamForWritingAsync (path)) {
+				using (var w = new System.IO.StreamWriter (s, System.Text.Encoding.UTF8)) {
+					g.WriteSvg (w);
+				}
 			}
-#endif
 		}
 	}
 }
