@@ -62,5 +62,11 @@ namespace NGraphics
 		{
 			throw new NotSupportedException ("WinRT cannot load images from file paths. Use the Stream overload instead.");
 		}
+
+		public async Task<Stream> OpenFileStreamForWritingAsync (string path)
+		{
+			var folder = await Windows.Storage.StorageFolder.GetFolderFromPathAsync (System.IO.Path.GetDirectoryName (path));
+			return await folder.OpenStreamForWriteAsync (System.IO.Path.GetFileName (path), Windows.Storage.CreationCollisionOption.ReplaceExisting);
+		}
 	}
 }
