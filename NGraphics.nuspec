@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>NGraphics</id>
-    <version>0.3.1</version>
-    <releaseNotes>SVG improvements</releaseNotes>
+    <version>0.4.0</version>
+    <releaseNotes>SVG writing added</releaseNotes>
     <title>NGraphics</title>
     <authors>Frank A. Krueger, et al</authors>
     <owners>Frank A. Krueger</owners>

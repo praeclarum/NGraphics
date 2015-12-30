@@ -23,6 +23,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGraphics.Android.Test", "P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGraphics.Editor", "NGraphics.Editor\NGraphics.Editor.csproj", "{FBCD4FB5-DE2B-4840-8D2F-5862E7C19242}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B724C98A-C1C9-4C1F-AC39-5C2D7E552228}"
+	ProjectSection(SolutionItems) = preProject
+		NGraphics.nuspec = NGraphics.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -234,5 +239,7 @@ Global
 		{FE4491D7-0609-4D6F-957B-9DDA3FA03D9F}.Release|iPhone.Build.0 = Release|Any CPU
 		{FE4491D7-0609-4D6F-957B-9DDA3FA03D9F}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{FE4491D7-0609-4D6F-957B-9DDA3FA03D9F}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal
