@@ -65,7 +65,11 @@ namespace NGraphics.Android.Test
 			}
 
 			var client = new System.Net.WebClient ();
-			var pngs = System.IO.Directory.GetFiles (PlatformTest.ResultsDirectory, "*.png");
+			var pngs = System.IO.Directory.GetFiles (PlatformTest.ResultsDirectory)
+				.Where (p => {
+					var e = System.IO.Path.GetExtension (p);
+					return (e == ".svg" || e == ".png");
+				});
 			foreach (var f in pngs) {
 				client.UploadData ("http://192.168.1.201:1234/" + System.IO.Path.GetFileName (f), System.IO.File.ReadAllBytes (f));
 			}
