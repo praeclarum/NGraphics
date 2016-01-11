@@ -11,6 +11,7 @@ namespace NGraphics
 		IImage LoadImage (string path);
 		IImage LoadImage (Stream stream);
 		IImage CreateImage (Color[] colors, int pixelWidth, double scale = 1.0);
+		Size MeasureText (string text, Font font);
 		Task<Stream> OpenFileStreamForWritingAsync (string path);
 	}
 

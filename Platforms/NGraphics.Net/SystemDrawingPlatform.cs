@@ -51,6 +51,23 @@ namespace NGraphics
 			}
 			return new ImageImage (bitmap);
 		}
+
+		public static Size GlobalMeasureText (Graphics graphics, string text, Font font)
+		{
+			using (var netFont = new System.Drawing.Font(font.Name, (float)font.Size, FontStyle.Regular))
+			{
+				var result = graphics.MeasureString(text, netFont);
+				return new Size(result.Width, result.Height);
+			}
+		}
+
+		Graphics measureGraphics = Graphics.FromImage (new Bitmap (1, 1));
+
+		public Size MeasureText (string text, Font font)
+		{
+			return GlobalMeasureText (measureGraphics, text, font);
+		}
+
 	}
 
 	public class ImageImage : IImage
@@ -158,11 +175,7 @@ namespace NGraphics
 
 		public Size MeasureText(string text, Font font)
 		{
-			using (var netFont = new System.Drawing.Font(font.Name, (float)font.Size, FontStyle.Regular))
-			{
-				var result = graphics.MeasureString(text, netFont);
-				return new Size(result.Width, result.Height);
-			}
+			return SystemDrawingPlatform.GlobalMeasureText (graphics, text, font);
 		}
 
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)

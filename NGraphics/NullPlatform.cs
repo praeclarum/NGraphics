@@ -9,6 +9,11 @@ namespace NGraphics
 	{
 		public string Name { get { return "Null"; } }
 
+		public Size MeasureText (string text, Font font)
+		{
+			return Size.Zero;
+		}
+
 		public Task<Stream> OpenFileStreamForWritingAsync (string path)
 		{
 			return Task.FromResult ((Stream)new MemoryStream ());

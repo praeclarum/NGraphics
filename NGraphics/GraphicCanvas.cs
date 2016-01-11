@@ -10,9 +10,22 @@ namespace NGraphics
 
 		public Graphic Graphic { get; private set; }
 
+		/// <summary>
+		/// The text platform new graphic canvases will use.
+		/// </summary>
+		public static IPlatform DefaultTextPlatform { get; set; }
+
+		public IPlatform TextPlatform { get; set; }
+
+		static GraphicCanvas ()
+		{
+			DefaultTextPlatform = new NullPlatform ();
+		}
+
 		public GraphicCanvas (Size size)
 		{
 			states.Push (NGraphics.Transform.Identity);
+			TextPlatform = DefaultTextPlatform;
 			Graphic = new Graphic (size);
 		}
 
@@ -38,9 +51,9 @@ namespace NGraphics
 				states.Pop ();
 			}
 		}
-		public Size MeasureText(string text, Font font)
+		public Size MeasureText (string text, Font font)
 		{
-			throw new NotImplementedException();
+			return TextPlatform.MeasureText (text, font);
 		}
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
