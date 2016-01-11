@@ -50,6 +50,37 @@ namespace NGraphics
 			var bitmap = Bitmap.CreateBitmap (acolors, pixelWidth, pixelHeight, Bitmap.Config.Argb8888);
 			return new BitmapImage (bitmap, scale);
 		}
+
+		public static TextPaint GlobalGetFontPaint (Font font, TextAlignment alignment)
+		{
+			var paint = new TextPaint (PaintFlags.AntiAlias);
+			paint.TextAlign = Paint.Align.Left;
+			if (alignment == TextAlignment.Center)
+				paint.TextAlign = Paint.Align.Center;
+			else if (alignment == TextAlignment.Right)
+				paint.TextAlign = Paint.Align.Right;
+
+			paint.TextSize = (float)font.Size;
+			var typeface = Typeface.Create (font.Family, TypefaceStyle.Normal);
+			paint.SetTypeface (typeface);
+
+			return paint;
+		}
+
+		public static Size GlobalMeasureText (string text, Font font)
+		{
+			var paint = GlobalGetFontPaint(font, TextAlignment.Left);
+			var w = paint.MeasureText (text);
+			var fm = paint.GetFontMetrics ();
+			var h = fm.Ascent + fm.Descent;
+			return new Size(w, h);
+			return AndroidPlatform.GlobalMeasureText (text, font);
+		}
+
+		public Size MeasureText (string text, Font font)
+		{
+			return GlobalMeasureText (text, font);
+		}
 	}
 
 	public class BitmapImage : IImage
@@ -148,22 +179,7 @@ namespace NGraphics
 		{
 			graphics.Restore ();
 		}
-
-		TextPaint GetFontPaint (Font font, TextAlignment alignment)
-		{
-			var paint = new TextPaint (PaintFlags.AntiAlias);
-			paint.TextAlign = Paint.Align.Left;
-			if (alignment == TextAlignment.Center)
-				paint.TextAlign = Paint.Align.Center;
-			else if (alignment == TextAlignment.Right)
-				paint.TextAlign = Paint.Align.Right;
-
-			paint.TextSize = (float)font.Size;
-			var typeface = Typeface.Create (font.Family, TypefaceStyle.Normal);
-			paint.SetTypeface (typeface);
-
-			return paint;
-		}
+			
 		Paint GetImagePaint (double alpha)
 		{
 			var paint = new Paint (PaintFlags.AntiAlias);
@@ -247,13 +263,9 @@ namespace NGraphics
 			throw new NotSupportedException ("Brush " + brush);
 		}
 
-		public Size MeasureText(string text, Font font)
+		public Size MeasureText (string text, Font font)
 		{
-			var paint = GetFontPaint(font, TextAlignment.Left);
-			var w = paint.MeasureText (text);
-			var fm = paint.GetFontMetrics ();
-			var h = fm.Ascent + fm.Descent;
-			return new Size(w, h);
+			return AndroidPlatform.GlobalMeasureText (text, font);
 		}
 
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
@@ -261,7 +273,7 @@ namespace NGraphics
 			if (brush == null)
 				return;
 
-			var paint = GetFontPaint (font, alignment);
+			var paint = AndroidPlatform.GlobalGetFontPaint (font, alignment);
 			var w = paint.MeasureText (text);
 			var fm = paint.GetFontMetrics ();
 			var h = fm.Ascent + fm.Descent;
