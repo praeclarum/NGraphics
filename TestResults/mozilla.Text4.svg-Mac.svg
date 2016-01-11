@@ -4,5 +4,5 @@
     <description></description>
     <defs>
     </defs>
-    <text stroke-width="1" stroke="#00FF00" fill="#0000FF" x="10" y="20" font-family="Times New Roman" font-size="24">SVG text styling</text>
+    <text stroke-width="1" stroke="#00FF00" fill="#0000FF" x="10" y="20" font-family="Georgia" font-size="24">SVG text styling</text>
 </svg>

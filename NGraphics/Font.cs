@@ -33,6 +33,21 @@ namespace NGraphics
 
 		public double Size { get; set; }
 
+		public Font WithFamily (string family)
+		{
+			return new Font (family, Size);
+		}
+
+		public Font WithStyle (string style)
+		{
+			return this;
+		}
+
+		public Font WithWeight (string weight)
+		{
+			return this;
+		}
+
 		public Font WithSize (double newSize)
 		{
 			return new Font (Name, newSize);

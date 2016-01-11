@@ -37,7 +37,8 @@ namespace NGraphics.Mac.Test
 				sdir = System.IO.Path.GetDirectoryName (sdir);
 			PlatformTest.ResultsDirectory = System.IO.Path.Combine (sdir, "TestResults");
 			PlatformTest.Platform = Platforms.Current;
-			PlatformTest.OpenStream = File.OpenWrite;
+			PlatformTest.OpenStream = n =>
+				new System.IO.FileStream (n, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
 			Environment.CurrentDirectory = PlatformTest.ResultsDirectory;
 
 			var tat = typeof(NUnit.Framework.TestAttribute);
