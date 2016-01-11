@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="800px" height="334px" viewBox="0 0 800 334" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.4.4 (17249) - http://www.bohemiancoding.com/sketch -->
+    <title>TextVariations</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Rectangle-1-+-Left-Aligned" sketch:type="MSLayerGroup" transform="translate(1.000000, 1.000000)">
+            <rect id="Rectangle-1" stroke="#979797" fill="#D8D8D8" sketch:type="MSShapeGroup" x="0" y="0" width="388" height="96"></rect>
+            <text id="Left-Aligned" sketch:type="MSTextLayer" font-family="Helvetica" font-size="32" font-weight="normal" fill="#4FA5CD">
+                <tspan x="14" y="56">Left Aligned</tspan>
+            </text>
+        </g>
+        <g id="Rectangle-1-+-Left-Aligned-Copy-4" sketch:type="MSLayerGroup" transform="translate(411.000000, 119.000000)">
+            <rect id="Rectangle-1" stroke="#979797" fill="#D8D8D8" sketch:type="MSShapeGroup" x="0" y="0" width="388" height="96"></rect>
+            <text id="Multiple-Formats-and" sketch:type="MSTextLayer" font-family="Helvetica" font-size="32" font-weight="bold" fill="#4FA5CD">
+                <tspan x="15" y="42">Multiple</tspan>
+                <tspan x="135.875" y="42" font-weight="normal"> </tspan>
+                <tspan x="144.765625" y="42" font-style="italic" font-weight="normal">Formats</tspan>
+                <tspan x="262.109375" y="42" font-weight="normal"> and </tspan>
+                <tspan x="15" y="80" font-family="Courier" font-weight="normal">Fonts</tspan>
+                <tspan x="111.015625" y="80" font-weight="normal"> and </tspan>
+                <tspan x="182.1875" y="80" font-size="14" font-weight="normal">Wrapping</tspan>
+            </text>
+        </g>
+        <g id="Rectangle-1-+-Left-Aligned-Copy-3" sketch:type="MSLayerGroup" transform="translate(411.000000, 1.000000)">
+            <rect id="Rectangle-1" stroke="#979797" fill="#D8D8D8" sketch:type="MSShapeGroup" x="0" y="0" width="388" height="96"></rect>
+            <text id="Multiple" sketch:type="MSTextLayer" font-family="Helvetica" font-size="20" font-weight="normal" fill="#4FA5CD">
+                <tspan x="15" y="30">Multiple</tspan>
+                <tspan x="15" y="54">Forced</tspan>
+                <tspan x="15" y="78">Lines</tspan>
+            </text>
+        </g>
+        <g id="Rectangle-1-+-Left-Aligned-Copy-2" sketch:type="MSLayerGroup" transform="translate(1.000000, 237.000000)">
+            <rect id="Rectangle-1" stroke="#979797" fill="#D8D8D8" sketch:type="MSShapeGroup" x="0" y="0" width="388" height="96"></rect>
+            <text id="Center" sketch:type="MSTextLayer" font-family="Helvetica" font-size="32" font-weight="normal" sketch:alignment="middle" fill="#4FA5CD">
+                <tspan x="144.976562" y="56">Center</tspan>
+            </text>
+        </g>
+        <g id="Rectangle-1-+-Left-Aligned-Copy" sketch:type="MSLayerGroup" transform="translate(1.000000, 119.000000)">
+            <rect id="Rectangle-1" stroke="#979797" fill="#D8D8D8" sketch:type="MSShapeGroup" x="0" y="0" width="388" height="96"></rect>
+            <text id="Right-Aligned" sketch:type="MSTextLayer" font-family="Helvetica" font-size="32" font-weight="normal" sketch:alignment="right" fill="#4FA5CD">
+                <tspan x="183.40625" y="56">Right Aligned</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

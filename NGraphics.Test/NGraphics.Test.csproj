@@ -78,5 +78,6 @@
     <EmbeddedResource Include="Inputs\cat.png" />
     <EmbeddedResource Include="Inputs\repeat.svg" />
     <EmbeddedResource Include="Inputs\sliderThumb.svg" />
+    <EmbeddedResource Include="Inputs\TextVariations.svg" />
   </ItemGroup>
 </Project>
