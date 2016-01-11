@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using SharpDX;
+using SharpDX.Mathematics.Interop;
 using D3D = SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;
 using D2D1 = SharpDX.Direct2D1;
@@ -108,7 +109,7 @@ namespace NGraphics
 			: base (factories)
 		{
 			sisn = ComObject.As<DXGI.ISurfaceImageSourceNative> (surfaceImageSource);
-			SharpDX.Point offset;
+			RawPoint offset;
 			var surface = sisn.BeginDraw (updateRect.ToRectangle (), out offset);
 
 			var dpi = 96.0;
@@ -163,10 +164,13 @@ namespace NGraphics
 		public void Transform (Transform transform)
 		{
 			var currentTx = renderTarget.Transform;
-			var tx = new Matrix3x2 (
-				(float)transform.A, (float)transform.B,
-				(float)transform.C, (float)transform.D,
-				(float)transform.E, (float)transform.F);
+            var tx = new Matrix3x2 ();
+            tx.M11 = (float)transform.A;
+            tx.M12 = (float)transform.B;
+            tx.M21 = (float)transform.C;
+            tx.M22 = (float)transform.D;
+            tx.M31 = (float)transform.E;
+            tx.M32 = (float)transform.F;
 			renderTarget.Transform = tx * currentTx;
 		}
 
@@ -178,24 +182,16 @@ namespace NGraphics
 			}
 		}
 
-		public Size MeasureText (string text, Font font)
+		public TextMetrics MeasureText (string text, Font font)
 		{
-			float maxWidth = float.MaxValue;
-			float maxHeight = float.MaxValue;
-			var layout = new DW.TextLayout (factories.DWFactory, text, GetTextFormat (font), maxWidth, maxHeight);
-			return new Size (layout.Metrics.Width, layout.Metrics.Height);
+            return WinRTPlatform.GlobalMeasureText(factories, text, font);
 		}
 
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
-			var layout = new DW.TextLayout (factories.DWFactory, text, GetTextFormat (font), (float)frame.Width, (float)frame.Height);
-			var h = layout.Metrics.Height;
+			var layout = new DW.TextLayout (factories.DWFactory, text, WinRTPlatform.GetTextFormat (factories, font), (float)frame.Width, (float)frame.Height);
+			var h = layout.Metrics.Height + layout.OverhangMetrics.Top;
 			renderTarget.DrawTextLayout ((frame.TopLeft - h*Point.OneY).ToVector2 (), layout, GetBrush (frame, brush));
-		}
-
-		private DW.TextFormat GetTextFormat (Font font)
-		{
-			return new DW.TextFormat (factories.DWFactory, font.Family, (float)font.Size);
 		}
 
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
@@ -303,7 +299,7 @@ namespace NGraphics
 			var p = GetBrush (pen);
 			var b = GetBrush (frame, brush);
 			var c = frame.Center;
-			var s = new D2D1.Ellipse (new Vector2 ((float)c.X, (float)c.Y), (float)(frame.Width / 2.0), (float)(frame.Height / 2.0));
+			var s = new D2D1.Ellipse (new RawVector2 { X = (float)c.X, Y = (float)c.Y }, (float)(frame.Width / 2.0), (float)(frame.Height / 2.0));
 			if (b != null) {
 				renderTarget.FillEllipse (s, b);
 			}
@@ -418,11 +414,7 @@ namespace NGraphics
 
 			var d3DDevice = new D3D11.Device (
 				D3D.DriverType.Hardware,
-				D3D11.DeviceCreationFlags.BgraSupport
-#if DEBUG
- | D3D11.DeviceCreationFlags.Debug
-#endif
-,
+				D3D11.DeviceCreationFlags.BgraSupport,
 				D3D.FeatureLevel.Level_11_1,
 				D3D.FeatureLevel.Level_11_0,
 				D3D.FeatureLevel.Level_10_1,
@@ -451,14 +443,14 @@ namespace NGraphics
 
 	public static partial class Conversions
 	{
-		public static Color4 ToColor4 (this Color color)
+		public static RawColor4 ToColor4 (this Color color)
 		{
-			return new Color4 (color.Abgr);
+			return new RawColor4 ((float)color.Red, (float)color.Green, (float)color.Blue, (float)color.Alpha);
 		}
 
-		public static Vector2 ToVector2 (this Point point)
+		public static RawVector2 ToVector2 (this Point point)
 		{
-			return new Vector2 ((float)point.X, (float)point.Y);
+			return new RawVector2 { X = (float)point.X, Y = (float)point.Y };
 		}
 
 		public static Size2F ToSize2F (this Size size)
@@ -476,14 +468,14 @@ namespace NGraphics
 			return new Size (size.Width, size.Height);
 		}
 
-		public static RectangleF ToRectangleF (this Rect rect)
+		public static RawRectangleF ToRectangleF (this Rect rect)
 		{
-			return new RectangleF ((float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height);
+			return new RawRectangleF ((float)rect.X, (float)rect.Y, (float)rect.Right, (float)rect.Bottom);
 		}
 
-		public static SharpDX.Rectangle ToRectangle (this Rect rect)
+		public static RawRectangle ToRectangle (this Rect rect)
 		{
-			return new SharpDX.Rectangle ((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
+			return new RawRectangle ((int)rect.X, (int)rect.Y, (int)rect.Right, (int)rect.Bottom);
 		}
 	}
 }

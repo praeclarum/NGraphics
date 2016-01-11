@@ -60,11 +60,11 @@ namespace NGraphics.WindowsStore.Test
 			};
 			PlatformTest.CloseStream = async stream => {
 				var path = ((FileMemoryStream)stream).Path;
-				var url = "http://10.0.1.12:1234/" + System.IO.Path.GetFileName (path);
+				var url = "http://192.168.1.201:1234/" + System.IO.Path.GetFileName (path);
 				System.Diagnostics.Debug.WriteLine ("POSTING " + url);
 				stream.Position = 0;
 				var content = new StreamContent (stream);
-				await client.PostAsync (url, content);
+                await client.PostAsync (url, content);
 			};
 
 			foreach (var t in tfts) {

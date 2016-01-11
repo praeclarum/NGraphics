@@ -9,6 +9,7 @@ using D3D = SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;
 using D2D1 = SharpDX.Direct2D1;
 using DXGI = SharpDX.DXGI;
+using DW = SharpDX.DirectWrite;
 using WIC = SharpDX.WIC;
 
 namespace NGraphics
@@ -68,5 +69,28 @@ namespace NGraphics
 			var folder = await Windows.Storage.StorageFolder.GetFolderFromPathAsync (System.IO.Path.GetDirectoryName (path));
 			return await folder.OpenStreamForWriteAsync (System.IO.Path.GetFileName (path), Windows.Storage.CreationCollisionOption.ReplaceExisting);
 		}
-	}
+
+        public static DW.TextFormat GetTextFormat (Direct2DFactories factories, Font font)
+        {
+            return new DW.TextFormat (factories.DWFactory, font.Family, (float)font.Size);
+        }
+
+        public static TextMetrics GlobalMeasureText (Direct2DFactories factories, string text, Font font)
+        {
+            float maxWidth = float.MaxValue;
+            float maxHeight = float.MaxValue;
+            var layout = new DW.TextLayout(factories.DWFactory, text, GetTextFormat(factories, font), maxWidth, maxHeight);
+            return new TextMetrics
+            {
+                Width = layout.Metrics.Width,
+                Ascent = layout.Metrics.Height + layout.OverhangMetrics.Top,
+                Descent = -layout.OverhangMetrics.Top,
+            };
+        }
+
+        public TextMetrics MeasureText (string text, Font font)
+        {
+            return GlobalMeasureText (Direct2DFactories.Shared, text, font);
+        }
+    }
 }
