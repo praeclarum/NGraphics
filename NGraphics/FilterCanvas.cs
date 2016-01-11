@@ -40,7 +40,7 @@ namespace NGraphics
 			NextCanvas.RestoreState ();
 		}
 
-		public virtual Size MeasureText(string text, Font font)
+		public virtual TextMetrics MeasureText(string text, Font font)
 		{
 			return NextCanvas.MeasureText(text, font);
 		}

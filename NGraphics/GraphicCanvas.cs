@@ -51,7 +51,7 @@ namespace NGraphics
 				states.Pop ();
 			}
 		}
-		public Size MeasureText (string text, Font font)
+		public TextMetrics MeasureText (string text, Font font)
 		{
 			return TextPlatform.MeasureText (text, font);
 		}

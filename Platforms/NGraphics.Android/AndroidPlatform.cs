@@ -67,17 +67,19 @@ namespace NGraphics
 			return paint;
 		}
 
-		public static Size GlobalMeasureText (string text, Font font)
+		public static TextMetrics GlobalMeasureText (string text, Font font)
 		{
 			var paint = GlobalGetFontPaint(font, TextAlignment.Left);
 			var w = paint.MeasureText (text);
 			var fm = paint.GetFontMetrics ();
-			var h = fm.Ascent + fm.Descent;
-			return new Size(w, h);
-			return AndroidPlatform.GlobalMeasureText (text, font);
+			return new TextMetrics {
+				Width = w,
+				Ascent = -fm.Ascent,
+				Descent = fm.Descent
+			};
 		}
 
-		public Size MeasureText (string text, Font font)
+		public TextMetrics MeasureText (string text, Font font)
 		{
 			return GlobalMeasureText (text, font);
 		}
@@ -263,7 +265,7 @@ namespace NGraphics
 			throw new NotSupportedException ("Brush " + brush);
 		}
 
-		public Size MeasureText (string text, Font font)
+		public TextMetrics MeasureText (string text, Font font)
 		{
 			return AndroidPlatform.GlobalMeasureText (text, font);
 		}

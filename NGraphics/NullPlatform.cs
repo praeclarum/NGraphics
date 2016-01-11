@@ -9,9 +9,9 @@ namespace NGraphics
 	{
 		public string Name { get { return "Null"; } }
 
-		public Size MeasureText (string text, Font font)
+		public TextMetrics MeasureText (string text, Font font)
 		{
-			return Size.Zero;
+			return new TextMetrics ();
 		}
 
 		public Task<Stream> OpenFileStreamForWritingAsync (string path)
@@ -55,9 +55,9 @@ namespace NGraphics
 			public void RestoreState ()
 			{
 			}
-			public Size MeasureText(string text, Font font)
+			public TextMetrics MeasureText(string text, Font font)
 			{
-				return Size.Zero;
+				return new TextMetrics ();
 			}
 			public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 			{

@@ -21,7 +21,7 @@ while true do
         let path = Path.Combine (cwd, partialPath)
         match c.Request.HttpMethod with
         | "POST" ->
-            use f = File.OpenWrite path
+            use f = new FileStream (path, FileMode.Create, FileAccess.Write)
             c.Request.InputStream.CopyTo (f)
             f.Flush ()
             printfn "POSTED %s" path

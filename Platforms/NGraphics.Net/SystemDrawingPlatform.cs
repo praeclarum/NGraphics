@@ -52,18 +52,26 @@ namespace NGraphics
 			return new ImageImage (bitmap);
 		}
 
-		public static Size GlobalMeasureText (Graphics graphics, string text, Font font)
+		public static TextMetrics GlobalMeasureText (Graphics graphics, string text, Font font)
 		{
-			using (var netFont = new System.Drawing.Font(font.Name, (float)font.Size, FontStyle.Regular))
+			using (var netFont = new System.Drawing.Font(font.Name, (float)font.Size, FontStyle.Regular, GraphicsUnit.Pixel))
 			{
 				var result = graphics.MeasureString(text, netFont);
-				return new Size(result.Width, result.Height);
+                var resultUnit = graphics.PageUnit;
+                var asc = netFont.FontFamily.GetCellAscent(netFont.Style);
+                var desc = netFont.FontFamily.GetCellDescent(netFont.Style);
+                var ascale = result.Height / (asc + desc);
+                return new TextMetrics {
+					Width = result.Width,
+					Ascent = asc * ascale,
+					Descent = desc * ascale,
+                };
 			}
 		}
 
 		Graphics measureGraphics = Graphics.FromImage (new Bitmap (1, 1));
 
-		public Size MeasureText (string text, Font font)
+		public TextMetrics MeasureText (string text, Font font)
 		{
 			return GlobalMeasureText (measureGraphics, text, font);
 		}
@@ -173,7 +181,7 @@ namespace NGraphics
 			}
 		}
 
-		public Size MeasureText(string text, Font font)
+		public TextMetrics MeasureText(string text, Font font)
 		{
 			return SystemDrawingPlatform.GlobalMeasureText (graphics, text, font);
 		}
@@ -182,11 +190,14 @@ namespace NGraphics
 		{
 			if (brush == null)
 				return;
-			var sdfont = new System.Drawing.Font (font.Family, (float)font.Size, FontStyle.Regular, GraphicsUnit.Pixel);
-			var sz = graphics.MeasureString (text, sdfont);
-			var point = frame.Position;
+			var netFont = new System.Drawing.Font (font.Family, (float)font.Size, FontStyle.Regular, GraphicsUnit.Pixel);
+			var sz = graphics.MeasureString (text, netFont);
+            var asc = netFont.FontFamily.GetCellAscent(netFont.Style);
+            var desc = netFont.FontFamily.GetCellDescent(netFont.Style);
+            var ascale = sz.Height / (asc + desc);
+            var point = frame.Position;
             var fr = new Rect (point, new Size (sz.Width, sz.Height));
-            graphics.DrawString (text, sdfont, Conversions.GetBrush (brush, fr), Conversions.GetPointF (point - new Point (0, sdfont.Height)));
+            graphics.DrawString (text, netFont, Conversions.GetBrush (brush, fr), Conversions.GetPointF (point - new Point (0, sz.Height - desc * ascale)));
 		}
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 		{

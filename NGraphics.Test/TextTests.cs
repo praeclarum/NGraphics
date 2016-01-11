@@ -45,9 +45,11 @@ namespace NGraphics.Test
 		void DrawTextBox (ICanvas c, string text, Point point, Font f)
 		{
 			var b = new SolidBrush (Colors.Black);
-			var p = new Pen (Colors.Blue);
+			var bp = new Pen (Colors.Blue);
+			var rp = new Pen (Colors.Red);
 			var size = c.MeasureText (text, f);
-			c.DrawRectangle (new Rect (point, size) + new Size (0, -size.Height), p);
+			c.DrawRectangle (new Rect (point, size.Size) + new Size (0, -size.Ascent), bp);
+			c.DrawLine (point, point + new Size (size.Width, 0), rp);
 			c.DrawText (text, point, f, b);
 		}
 
@@ -75,6 +77,19 @@ namespace NGraphics.Test
 				DrawTextBox (c, "Hello\nWorld", new Point (0, 20), f);
 
 			}, new Size (256), "TextTests.HelloWorldLineBreak");
+		}
+
+		[Test]
+		public async Task DrawDescents ()
+		{
+			await Draw (c => {
+
+				var f = new Font {
+					Size = 20,
+				};
+				DrawTextBox (c, "qypfgj EM", new Point (0, 40), f);
+
+			}, new Size (256), "TextTests.Descents");
 		}
 	}
 }

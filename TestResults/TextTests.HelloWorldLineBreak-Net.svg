@@ -4,7 +4,8 @@
     <description></description>
     <defs>
     </defs>
-    <rect stroke-width="1" stroke="#0000FF" fill="none" x="0" y="-43.9322853088379" width="85.3645782470703" height="63.9322853088379" />
+    <rect stroke-width="1" stroke="#0000FF" fill="none" x="0" y="-18.6973053812981" width="64.0234375" height="47.9492170512676" />
+    <path stroke-width="1" stroke="#FF0000" fill="none" d="M0,20 L64.0234375,20 " />
     <text stroke="none" fill="#000000" x="0" y="20" font-family="Georgia" font-size="20">Hello
 World</text>
 </svg>

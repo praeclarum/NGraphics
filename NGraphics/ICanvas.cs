@@ -10,7 +10,7 @@ namespace NGraphics
 		void Transform (Transform transform);
 		void RestoreState ();
 
-		Size MeasureText (string text, Font font);
+		TextMetrics MeasureText (string text, Font font);
 		void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null);
 		void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null);
 		void DrawRectangle (Rect frame, Size corner, Pen pen = null, Brush brush = null);

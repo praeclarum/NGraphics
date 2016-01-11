@@ -95,48 +95,36 @@ namespace NGraphics
 			return new CGImageImage (image, 1);
 		}
 
-		public static Size GlobalMeasureText (string text, Font font)
+		public static TextMetrics GlobalMeasureText (string text, Font font)
 		{
 			if (string.IsNullOrEmpty(text))
-				return Size.Zero;
+				return new TextMetrics ();
 			if (font == null)
 				throw new ArgumentNullException("font");
 
-			string fontName = font.Name;
-			Array availableFonts =
-				#if __IOS__ || __TVOS__
-				UIKit.UIFont.FontNamesForFamilyName(fontName);
-				#else
-				AppKit.NSFontManager.SharedFontManager.AvailableMembersOfFontFamily (fontName).ToArray ();
-				#endif
+			using (var atext = new NSMutableAttributedString (text)) {
 
-			#if __IOS__ || __TVOS__
-			UIKit.UIFont nsFont;
-			if (availableFonts != null && availableFonts.Length > 0)
-				nsFont = UIKit.UIFont.FromName(font.Name, (nfloat)font.Size);
-			else
-				nsFont = UIKit.UIFont.FromName("Georgia", (nfloat)font.Size);
-			#else
-			AppKit.NSFont nsFont;
-			if (availableFonts != null && availableFonts.Length > 0)
-			nsFont = AppKit.NSFont.FromFontName(font.Name, (nfloat)font.Size);
-			else
-			nsFont = AppKit.NSFont.FromFontName("Georgia", (nfloat)font.Size);
-			#endif
+				atext.AddAttributes (new CTStringAttributes {
+					ForegroundColorFromContext = true,
+					Font = font.GetCTFont (),
+				}, new NSRange (0, text.Length));
 
-			using (var s = new NSAttributedString(text, font: nsFont))
-			using (nsFont)
-			{
-				#if __IOS__ || __TVOS__
-				var result = s.GetBoundingRect(new CGSize(float.MaxValue, float.MaxValue), NSStringDrawingOptions.UsesDeviceMetrics, null);
-				#else
-				var result = s.BoundingRectWithSize(new CGSize(float.MaxValue, float.MaxValue), NSStringDrawingOptions.UsesDeviceMetrics);
-				#endif
-				return new Size(result.Width, result.Height);
+				using (var l = new CTLine (atext)) {
+					nfloat asc, desc, lead;
+
+					var len = l.GetTypographicBounds (out asc, out desc, out lead);
+
+					return new TextMetrics {
+						Width = len,
+						Ascent = asc,
+						Descent = desc,
+					};
+				}
 			}
+
 		}
 
-		public Size MeasureText (string text, Font font)
+		public TextMetrics MeasureText (string text, Font font)
 		{
 			return GlobalMeasureText (text, font);
 		}
@@ -266,7 +254,7 @@ namespace NGraphics
 
 		private static NSString NSFontAttributeName = new NSString("NSFontAttributeName");
 
-		public Size MeasureText(string text, Font font)
+		public TextMetrics MeasureText(string text, Font font)
 		{
 			return ApplePlatform.GlobalMeasureText (text, font);
 		}

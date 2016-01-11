@@ -113,4 +113,16 @@ namespace NGraphics
 			Text = text;
 		}
 	}
+
+	public struct TextMetrics
+	{
+		public double Width;
+		public double Ascent;
+		public double Descent;
+		public Size Size {
+			get {
+				return new Size (Width, Ascent + Descent);
+			}
+		}
+	}
 }
