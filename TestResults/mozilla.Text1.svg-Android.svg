@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="100px" height="30px" viewBox="0 0 100 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title></title>
+    <description></description>
+    <defs>
+    </defs>
+    <text stroke="none" fill="#000000" transform="matrix(0.1, 0, 0, 0.1, 0, 0)" x="250" y="150" font-family="Verdana" font-size="55">Hello, out there</text>
+    <rect stroke="none" fill="none" transform="matrix(0.1, 0, 0, 0.1, 0, 0)" x="1" y="1" width="998" height="298" />
+</svg>
