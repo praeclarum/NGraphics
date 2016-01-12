@@ -10,6 +10,7 @@ namespace NGraphics
 	{
 		readonly Size size;
 		readonly DrawingFunc func;
+		readonly IPlatform textPlatform;
 
 		Graphic graphic = null;
 
@@ -27,13 +28,14 @@ namespace NGraphics
 			}
 		}
 
-		public Drawing (Size size, DrawingFunc func)
+		public Drawing (Size size, DrawingFunc func, IPlatform textPlatform)
 		{
 			if (func == null) {
 				throw new ArgumentNullException ("func");
 			}
 			this.size = size;
 			this.func = func;
+			this.textPlatform = textPlatform ?? new NullPlatform ();
 		}
 
 		public void Invalidate ()
@@ -43,7 +45,7 @@ namespace NGraphics
 
 		void DrawGraphic ()
 		{
-			var c = new GraphicCanvas (size);
+			var c = new GraphicCanvas (size, textPlatform);
 			if (func != null)
 				func (c);
 			graphic = c.Graphic;

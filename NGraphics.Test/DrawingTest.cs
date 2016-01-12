@@ -10,7 +10,7 @@ using System;
 namespace NGraphics.Test
 {
 	[TestFixture]
-	public class DrawingTest
+	public class DrawingTest : PlatformTest
 	{
 		[Test]
 		public void Ellipse ()
@@ -19,7 +19,7 @@ namespace NGraphics.Test
 
 				s.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Black);
 
-			});
+			}, Platform);
 			Assert.AreEqual (1, d.Graphic.Children.Count);
 		}
 
@@ -29,7 +29,7 @@ namespace NGraphics.Test
 			var d = new Drawing (new Size (50, 50), s => {
 				s.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Black);
 				s.DrawEllipse (new Point (20, 30), new Size (40, 30), Pens.Black);
-			});
+			}, Platform);
 			Assert.AreEqual (2, d.Graphic.Children.Count);
 		}
 
@@ -41,7 +41,7 @@ namespace NGraphics.Test
 				for (var i = 0; i < num; i++) {
 					s.DrawEllipse (new Point (10*i, 20), new Size (30, 40), Pens.Black);
 				}
-			});
+			}, Platform);
 			Assert.AreEqual (1, d.Graphic.Children.Count);
 
 			num = 2;
@@ -53,7 +53,7 @@ namespace NGraphics.Test
 		public void EmptyDrawing ()
 		{
 			var d = new Drawing (new Size (50, 50), s => {
-			});
+			}, Platform);
 			Assert.AreEqual (0, d.Graphic.Children.Count);
 		}
 	}

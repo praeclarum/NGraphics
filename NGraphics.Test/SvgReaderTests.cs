@@ -37,7 +37,7 @@ namespace NGraphics.Test
 			g.Draw (c);
 			await SaveImage (c, path);
 
-			var c2 = new GraphicCanvas (g.Size);
+			var c2 = new GraphicCanvas (g.Size, Platform);
 			g.Draw (c2);
 			await SaveSvg (c2, path);
 		}

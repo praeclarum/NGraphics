@@ -28,9 +28,6 @@ namespace NGraphics
 					#else
 					current = new SystemDrawingPlatform ();
 					#endif
-					if (GraphicCanvas.DefaultTextPlatform == null || GraphicCanvas.DefaultTextPlatform is NullPlatform) {
-						GraphicCanvas.DefaultTextPlatform = current;
-					}
 				}
 				return current;
 			}

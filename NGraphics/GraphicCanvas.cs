@@ -10,22 +10,12 @@ namespace NGraphics
 
 		public Graphic Graphic { get; private set; }
 
-		/// <summary>
-		/// The text platform new graphic canvases will use.
-		/// </summary>
-		public static IPlatform DefaultTextPlatform { get; set; }
-
 		public IPlatform TextPlatform { get; set; }
 
-		static GraphicCanvas ()
-		{
-			DefaultTextPlatform = new NullPlatform ();
-		}
-
-		public GraphicCanvas (Size size)
+		public GraphicCanvas (Size size, IPlatform textPlatform)
 		{
 			states.Push (NGraphics.Transform.Identity);
-			TextPlatform = DefaultTextPlatform;
+			TextPlatform = textPlatform;
 			Graphic = new Graphic (size);
 		}
 
