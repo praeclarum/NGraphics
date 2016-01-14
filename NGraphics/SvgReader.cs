@@ -62,6 +62,10 @@ namespace NGraphics
 				size.Height *= viewBox.Height;
 			}
 
+			if (heightA == null && widthA == null && viewBoxA != null) {
+				size = new Size(viewBox.Width, viewBox.Height);
+			}
+
 			//
 			// Add the elements
 			//
