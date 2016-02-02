@@ -103,12 +103,14 @@ namespace NGraphics
 			if (!string.IsNullOrWhiteSpace (style)) {
 				ApplyStyle (style, eStyle);
 			}
-			//var id = ReadString (e.Attribute ("id"));
+            if (!eStyle.hasPen) eStyle.pen = inheritPen;
+            if (!eStyle.hasBrush) eStyle.brush = inheritBrush;
+            //var id = ReadString (e.Attribute ("id"));
 
-			//
-			// Elements
-			//
-			switch (e.Name.LocalName) {
+            //
+            // Elements
+            //
+            switch (e.Name.LocalName) {
 			case "text":
 				{
 					var x = ReadNumber (e.Attribute ("x"));
