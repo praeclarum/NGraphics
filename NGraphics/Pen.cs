@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace NGraphics
 {
@@ -19,6 +20,7 @@ namespace NGraphics
 	{
 		public Color Color;
 		public double Width;
+        public IEnumerable<float> DashPattern; 
 
 		public Pen ()
 		{

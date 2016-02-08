@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Android.Graphics;
 using Android.Text;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NGraphics
@@ -195,6 +196,12 @@ namespace NGraphics
 			paint.SetStyle (Paint.Style.Stroke);
 			paint.SetARGB (pen.Color.A, pen.Color.R, pen.Color.G, pen.Color.B);
 			paint.StrokeWidth = (float)pen.Width;
+
+            if (pen.DashPattern != null && pen.DashPattern.Any ()) {
+                var dashPathEffect = new DashPathEffect(pen.DashPattern.ToArray(), 0);
+                paint.SetPathEffect(dashPathEffect);
+            }
+
 			return paint;
 		}
 		Paint GetBrushPaint (Brush brush, Rect frame)
