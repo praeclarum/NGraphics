@@ -504,9 +504,6 @@ namespace NGraphics
 				if (brush == null)
 					mode = CGPathDrawingMode.Stroke;
 			}
-			else {
-                context.SetLineDash(0, null, 0);
-            }
 			return mode;
 		}
 
@@ -522,6 +519,9 @@ namespace NGraphics
 
 		        context.SetLineDash (0, pattern, pattern.Length);
 		    }
+            else {
+                context.SetLineDash(0, null, 0);
+            }
         }
 
 		void SetBrush (Brush brush)
