@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NGraphics
@@ -351,8 +352,15 @@ namespace NGraphics
 
 		public static System.Drawing.Pen GetPen (this Pen pen)
 		{
-			return new System.Drawing.Pen (GetColor (pen.Color), (float)pen.Width);
-		}
+            var drawingPen = new System.Drawing.Pen(GetColor(pen.Color), (float)pen.Width);
+
+            if (pen.DashPattern != null && pen.DashPattern.Any())
+            {
+                drawingPen.DashPattern = pen.DashPattern.ToArray();
+            }
+
+            return drawingPen;
+        }
 
         static ColorBlend BuildBlend (List<GradientStop> stops, bool reverse = false)
         {

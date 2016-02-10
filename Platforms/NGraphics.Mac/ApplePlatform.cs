@@ -511,7 +511,18 @@ namespace NGraphics
 		{
 			context.SetStrokeColor ((nfloat)pen.Color.Red, (nfloat)pen.Color.Green, (nfloat)pen.Color.Blue, (nfloat)pen.Color.Alpha);
 			context.SetLineWidth ((nfloat)pen.Width);
-		}
+
+		    if (pen.DashPattern != null && pen.DashPattern.Any ()) {
+		        var pattern = pen.DashPattern
+                    .Select (dp => (nfloat)dp)
+                    .ToArray ();
+
+		        context.SetLineDash (0, pattern, pattern.Length);
+		    }
+            else {
+                context.SetLineDash(0, null, 0);
+            }
+        }
 
 		void SetBrush (Brush brush)
 		{
