@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -52,6 +53,35 @@ namespace NGraphics
       public IImage LoadImage(string path)
       {
          return LoadImage(File.Open(path, FileMode.Open));
+      }
+
+      public TextMetrics MeasureText(string text, Font font)
+      {
+         return TextUtil.MeasureText(text, font);
+      }
+
+      public Task<Stream> OpenFileStreamForWritingAsync(string path)
+      {
+         return Task.FromResult((Stream)new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read));
+      }
+   }
+
+   static class TextUtil
+   {
+      public static FormattedText GetFormattedText(string text, Font font)
+      {
+         var formattedText = new FormattedText(text, CultureInfo.InvariantCulture, System.Windows.FlowDirection.LeftToRight, font.GetTypeface(), font.Size, null);
+         return formattedText;
+      }
+
+      public static TextMetrics MeasureText(string text, Font font)
+      {
+         var formattedText = GetFormattedText(text, font);
+         return new TextMetrics {
+            Width = formattedText.Width,
+            Ascent = formattedText.Height,
+            Descent = formattedText.OverhangAfter
+         };
       }
    }
 
@@ -133,30 +163,68 @@ namespace NGraphics
          dc.DrawGeometry(brush?.GetBrush(), pen?.GetPen(), streamGeometry);
       }
 
-      public void DrawRectangle(Rect frame, Pen pen, Brush brush)
+      public void DrawRectangle(Rect frame, Size corner, Pen pen = null, Brush brush = null)
       {
-         dc.DrawRectangle(brush?.GetBrush(), pen?.GetPen(), frame.GetRect());
+         if (corner.Width > 0 || corner.Height > 0)
+         {
+            var geometry = new StreamGeometry();
+            using (var context = geometry.Open())
+            {
+               bool isStroked = pen != null;
+               const bool isSmoothJoin = true;
+
+               var diag = corner.Diagonal;
+               var cornerRadius = new {
+                  TopLeft = diag,
+                  TopRight = diag,
+                  BottomRight = diag,
+                  BottomLeft = diag
+               };
+
+               var rect = frame.GetRect();
+
+               context.BeginFigure(rect.TopLeft + new Vector(0, cornerRadius.TopLeft), brush != null, true);
+               context.ArcTo(new System.Windows.Point(rect.TopLeft.X + cornerRadius.TopLeft, rect.TopLeft.Y),
+                   new System.Windows.Size(cornerRadius.TopLeft, cornerRadius.TopLeft),
+                   90, false, SweepDirection.Clockwise, isStroked, isSmoothJoin);
+
+               context.LineTo(rect.TopRight - new Vector(cornerRadius.TopRight, 0), isStroked, isSmoothJoin);
+               context.ArcTo(new System.Windows.Point(rect.TopRight.X, rect.TopRight.Y + cornerRadius.TopRight),
+                   new System.Windows.Size(cornerRadius.TopRight, cornerRadius.TopRight),
+                   90, false, SweepDirection.Clockwise, isStroked, isSmoothJoin);
+
+               context.LineTo(rect.BottomRight - new Vector(0, cornerRadius.BottomRight), isStroked, isSmoothJoin);
+               context.ArcTo(new System.Windows.Point(rect.BottomRight.X - cornerRadius.BottomRight, rect.BottomRight.Y),
+                   new System.Windows.Size(cornerRadius.BottomRight, cornerRadius.BottomRight),
+                   90, false, SweepDirection.Clockwise, isStroked, isSmoothJoin);
+
+               context.LineTo(rect.BottomLeft + new Vector(cornerRadius.BottomLeft, 0), isStroked, isSmoothJoin);
+               context.ArcTo(new System.Windows.Point(rect.BottomLeft.X, rect.BottomLeft.Y - cornerRadius.BottomLeft),
+                   new System.Windows.Size(cornerRadius.BottomLeft, cornerRadius.BottomLeft),
+                   90, false, SweepDirection.Clockwise, isStroked, isSmoothJoin);
+
+               context.Close();
+            }
+            dc.DrawGeometry(brush?.GetBrush(), pen?.GetPen(), geometry);
+         }
+         else
+         {
+            dc.DrawRectangle(brush?.GetBrush(), pen?.GetPen(), frame.GetRect());
+         }
       }
 
       public void DrawText(string text, Rect frame, Font font, TextAlignment alignment, Pen pen, Brush brush)
       {
-         var formattedText = GetFormattedText(text, font);
+         var formattedText = TextUtil.GetFormattedText(text, font);
          formattedText.SetForegroundBrush((brush ?? Brushes.Black).GetBrush());
          var point = frame.TopLeft.GetPoint();
          point.Y -= formattedText.Baseline;
          dc.DrawText(formattedText, point);
       }
 
-      FormattedText GetFormattedText(string text, Font font)
+      public TextMetrics MeasureText(string text, Font font)
       {
-         var formattedText = new FormattedText(text, CultureInfo.InvariantCulture, System.Windows.FlowDirection.LeftToRight, font.GetTypeface(), font.Size, null);
-         return formattedText;
-      }
-
-      public Size MeasureText(string text, Font font)
-      {
-         var formattedText = GetFormattedText(text, font);
-         return new Size(formattedText.Width, formattedText.Baseline);
+         return TextUtil.MeasureText(text, font);
       }
 
       List<int> stackDepths = new List<int>();
@@ -187,6 +255,8 @@ namespace NGraphics
             stackDepths[stackDepths.Count - 1]++;
          }
       }
+
+
    }
 
    public class DrawingVisualImageCanvas : DrawingContextCanvas, IImageCanvas

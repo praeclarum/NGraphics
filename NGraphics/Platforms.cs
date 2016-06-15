@@ -25,6 +25,8 @@ namespace NGraphics
 					current = new AndroidPlatform ();
 					#elif NETFX_CORE
 					current = new WinRTPlatform ();
+					#elif WPF
+					current = new PresentationFoundationPlatform();
 					#else
 					current = new SystemDrawingPlatform ();
 					#endif
