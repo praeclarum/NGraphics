@@ -15,10 +15,10 @@ namespace NGraphics.Test
 	[TestFixture]
 	public class SvgReaderTests : PlatformTest
 	{
-		Graphic Read (string path)
+		Graphic Read (string path, Brush defaultBrush = null)
 		{
 			using (var s = OpenResource (path)) {
-				var r = new SvgReader (new StreamReader (s));
+				var r = new SvgReader (new StreamReader (s), defaultBrush: defaultBrush);
 				Assert.IsTrue (r.Graphic.Children.Count >= 0);
 				Assert.IsTrue (r.Graphic.Size.Width > 1);
 				Assert.IsTrue (r.Graphic.Size.Height > 1);
@@ -26,9 +26,11 @@ namespace NGraphics.Test
 			}
 		}
 
-		async Task ReadAndDraw (string path)
+		async Task ReadAndDraw (string path, Brush defaultBrush = null)
 		{
-			var g = Read (path);
+            // If no brush is provided in the SVG, use a pleasing shade of green.
+            defaultBrush = defaultBrush ?? Brushes.Green;
+			var g = Read (path, defaultBrush);
 
 			//
 			// Draw Image

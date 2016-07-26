@@ -74,9 +74,9 @@ namespace NGraphics
 			canvas.RestoreState ();
 		}
 
-		public static Graphic LoadSvg (System.IO.TextReader reader)
+		public static Graphic LoadSvg (System.IO.TextReader reader, Brush defaultBrush = null)
 		{
-			var svgr = new SvgReader (reader);
+            var svgr = new SvgReader (reader, defaultBrush: defaultBrush);
 			return svgr.Graphic;
 		}
 
