@@ -77,11 +77,12 @@ namespace NGraphics
       public static TextMetrics MeasureText(string text, Font font)
       {
          var formattedText = GetFormattedText(text, font);
-         return new TextMetrics {
-            Width = formattedText.Width,
-            Ascent = formattedText.Height,
-            Descent = formattedText.OverhangAfter
+         var metrics = new TextMetrics {
+            Width = formattedText.WidthIncludingTrailingWhitespace,
+            Ascent = formattedText.Baseline,
+            Descent = Math.Min(formattedText.Height, formattedText.Extent) - formattedText.Baseline
          };
+         return metrics;
       }
    }
 
@@ -125,7 +126,7 @@ namespace NGraphics
                var mt = op as MoveTo;
                if (mt != null)
                {
-                  geometryContext.BeginFigure(mt.Point.GetPoint(), false, false);
+                  geometryContext.BeginFigure(mt.Point.GetPoint(), true, false);
                   continue;
                }
 
@@ -160,6 +161,7 @@ namespace NGraphics
                throw new NotSupportedException();
             }
          }
+
          dc.DrawGeometry(brush?.GetBrush(), pen?.GetPen(), streamGeometry);
       }
 
