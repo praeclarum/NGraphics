@@ -62,9 +62,6 @@ namespace NGraphics
                 size.Height *= viewBox.Height;
             }
 
-            System.Diagnostics.Debug.WriteLine ("SVG viewbox: " + viewBox.ToString ());
-            System.Diagnostics.Debug.WriteLine ("SVG size: " + size.ToString ());
-
             //
             // Add the elements
             //
