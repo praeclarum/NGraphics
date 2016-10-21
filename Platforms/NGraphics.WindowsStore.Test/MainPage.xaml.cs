@@ -67,6 +67,17 @@ namespace NGraphics.WindowsStore.Test
                 await client.PostAsync (url, content);
 			};
 
+            // Save test results to LocalState folder
+            //PlatformTest.CloseStream = async stream => {
+            //    var path = ((FileMemoryStream)stream).Path;
+            //    System.Diagnostics.Debug.WriteLine ("SAVING " + path);
+            //    stream.Position = 0;
+            //    var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+            //    var file = await localFolder.CreateFileAsync (path, Windows.Storage.CreationCollisionOption.ReplaceExisting);
+            //    using (var fileStream = await file.OpenStreamForWriteAsync ())
+            //        await stream.CopyToAsync (fileStream);
+            //};
+
 			foreach (var t in tfts) {
 				var test = Activator.CreateInstance (t);
 				var ms = t.GetRuntimeMethods ().Where (m => m.GetCustomAttributes (tat, true).Any ());
