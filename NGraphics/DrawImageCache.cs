@@ -26,14 +26,14 @@ namespace NGraphics
 		readonly int maxNumEntries;
 		readonly Dictionary<Tuple<Size, double, TKey>, Entry> cache = new Dictionary<Tuple<Size, double, TKey>, Entry> ();
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DrawImageCache`1"/> class.
-		/// </summary>
-		/// <param name="maxNumEntries">Max number cache entries.</param>
-		/// <param name="platform">The graphics platform used to generate images.</param>
-		/// <param name="scale">The image scale.</param>
-		/// <param name="transparent">Whether the image should have a transparent background.</param>
-		public DrawImageCache (int maxNumEntries, IPlatform platform, double scale, bool transparency = true)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DrawImageCache(int, IPlatform, double, bool)"/> class.
+        /// </summary>
+        /// <param name="maxNumEntries">Max number cache entries.</param>
+        /// <param name="platform">The graphics platform used to generate images.</param>
+        /// <param name="scale">The image scale.</param>
+        /// <param name="transparency">Whether the image should have a transparent background.</param>
+        public DrawImageCache (int maxNumEntries, IPlatform platform, double scale, bool transparency = true)
 		{
 			this.platform = platform;
 			this.scale = scale;

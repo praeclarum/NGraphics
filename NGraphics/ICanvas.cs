@@ -32,17 +32,20 @@ namespace NGraphics
 		{
 			canvas.Transform (Transform.Translate (translation));
 		}
-		/// <summary>
-		/// Rotate the specified canvas by the given angle (in degrees).
-		/// </summary>
-		/// <param name="angle">Angle in degrees.</param>
-		public static void Rotate (this ICanvas canvas, double angle)
+        /// <summary>
+        /// Rotate the specified canvas by the given angle (in degrees).
+        /// </summary>
+        /// <param name="canvas">The canvas to rotate.</param>
+        /// <param name="angle">Angle in degrees.</param>
+        public static void Rotate (this ICanvas canvas, double angle)
 		{
 			if (angle != 0) {
 				canvas.Transform (Transform.Rotate (angle));
 			}
 		}
+        /// <param name="canvas">The canvas to rotate.</param>
 		/// <param name="angle">Angle in degrees.</param>
+        /// <param name="point">The translation point.</param>
 		public static void Rotate (this ICanvas canvas, double angle, Point point)
 		{
 			if (angle != 0) {
@@ -51,7 +54,10 @@ namespace NGraphics
 				canvas.Translate (-point);
 			}
 		}
+        /// <param name="canvas">The canvas to rotate.</param>
 		/// <param name="angle">Angle in degrees.</param>
+        /// <param name="x">The x coordinate of the translation point.</param>
+        /// <param name="y">The y coordinate of the translation point.</param>
 		public static void Rotate (this ICanvas canvas, double angle, double x, double y)
 		{
 			if (angle != 0) {
