@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGraphics.Test", "NGraphics.Test\NGraphics.Test.csproj", "{D8259A30-0714-4160-89AF-0C644551DF3B}"
 EndProject
@@ -16,6 +16,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGraphics.WindowsPhone", "Platforms\NGraphics.WindowsPhone\NGraphics.WindowsPhone.csproj", "{82348188-6DDB-4AB7-8DE5-E7D5A33975E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGraphics.WindowsStore.Test", "Platforms\NGraphics.WindowsStore.Test\NGraphics.WindowsStore.Test.csproj", "{060349AB-8F2C-4AB3-BA04-91BA5013B2A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGraphics.UWP", "Platforms\NGraphics.UWP\NGraphics.UWP.csproj", "{BD195F55-D9F8-4985-9089-5EEDE2B4A0A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGraphics.UWP.Test", "Platforms\NGraphics.UWP.Test\NGraphics.UWP.Test.csproj", "{E3E4B5F3-D347-4E3B-9A30-1343A018B2FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
