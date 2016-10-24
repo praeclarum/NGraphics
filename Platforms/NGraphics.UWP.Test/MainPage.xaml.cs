@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Net.Http;
+using System.Diagnostics;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -43,6 +44,10 @@ namespace NGraphics.UWP.Test
 
         async Task RunUnitTests ()
         {
+            statusText.Text = $"Running unit tests.";
+            var timer = new Stopwatch();
+            timer.Start();
+
             var tat = typeof (NUnit.Framework.TestAttribute);
             var tfat = typeof (NUnit.Framework.TestFixtureAttribute);
 
@@ -71,6 +76,7 @@ namespace NGraphics.UWP.Test
             PlatformTest.CloseStream = async stream => {
                 var path = ((FileMemoryStream)stream).Path;
                 System.Diagnostics.Debug.WriteLine ("SAVING " + path);
+                statusText.Text += $"{Environment.NewLine}Saving: {path}"; // show in UI also
                 stream.Position = 0;
                 var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
                 var file = await localFolder.CreateFileAsync (path, Windows.Storage.CreationCollisionOption.ReplaceExisting);
@@ -93,6 +99,11 @@ namespace NGraphics.UWP.Test
 					}
 				}
 			}
+
+            timer.Stop();
+            statusText.Text += $"{Environment.NewLine}";
+            statusText.Text += $"{Environment.NewLine}Done! Elapsed: {timer.ElapsedMilliseconds}ms";
+            statusText.Text += $"{Environment.NewLine}Images saved here: {System.IO.Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, PlatformTest.ResultsDirectory) .ToString ()}";
         }
     }
 }

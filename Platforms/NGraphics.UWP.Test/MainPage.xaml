@@ -8,6 +8,8 @@
     mc:Ignorable="d" Loaded="Page_Loaded">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <ScrollViewer>
+            <TextBlock Name="statusText" FontSize="12" Text="status text" />
+        </ScrollViewer>
     </Grid>
 </Page>
