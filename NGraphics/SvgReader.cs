@@ -736,7 +736,12 @@ namespace NGraphics
                 b.Absolute = gradientUnits.Value == "userSpaceOnUse";
             }
 
-            // TODO: check gradientTransform attribute
+            //Read transformation defined in the gradientTransform attribute if present
+            Transform gradientTransform = Transform.Identity;
+            if (e.Attribute("gradientTransform") != null) {
+                gradientTransform = ReadTransform(e.Attribute("gradientTransform").Value);
+                b.gradientTransform = gradientTransform;
+            }
 
             ReadStops (e, b.Stops);
 
@@ -758,7 +763,12 @@ namespace NGraphics
                 b.Absolute = gradientUnits.Value == "userSpaceOnUse";
             }
 
-            // TODO: check gradientTransform attribute
+            //Read transformation defined in the gradientTransform attribute if present
+            Transform gradientTransform = Transform.Identity;
+            if (e.Attribute("gradientTransform") != null) {
+                gradientTransform = ReadTransform(e.Attribute("gradientTransform").Value);
+                b.gradientTransform = gradientTransform;
+            }
 
             ReadStops (e, b.Stops);
 
