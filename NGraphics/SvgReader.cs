@@ -419,7 +419,7 @@ namespace NGraphics
                     throw new NotSupportedException ("Fill " + defE.Name);
                 }
                 if (child != null)
-                {    
+                {
                     if (child is RadialGradientBrush && brush is RadialGradientBrush)
                     {
                         ((RadialGradientBrush)brush).Center = ((RadialGradientBrush)child).Center;
@@ -464,7 +464,7 @@ namespace NGraphics
                 case "matrix":
                     if (args.Length == 7) {
                         nt = new Transform (
-                            ReadNumber(args[1]), 
+                            ReadNumber(args[1]),
                             ReadNumber(args[2]),
                             ReadNumber(args[3]),
                             ReadNumber(args[4]),
@@ -557,6 +557,7 @@ namespace NGraphics
         }
 
         static readonly char[] WSC = new char[] { ',', ' ', '\t', '\n', '\r' };
+        static readonly string matchPathNumbers = @"([-+]?((\d*\.\d+)|(\d+))([eE][-+]?\d+)?)";
 
         static Regex pathRegex = new Regex(@"[MLHVCSQTAZmlhvcsqtaz][^MLHVCSQTAZmlhvcsqtaz]*", RegexOptions.Singleline);
         static Regex negativeNumberRe = new Regex("(?<=[0-9])-");
@@ -566,15 +567,17 @@ namespace NGraphics
             Match m = pathRegex.Match(pathDescriptor);
             while(m.Success)
             {
-                
+
                 var match = m.Value.TrimStart ();
                 var op = match[0];
 
                 if (op != ' ')
                 {
-                    // make sure negative numbers are split properly
-                    match = negativeNumberRe.Replace(match.Substring(1), " -");
-                    var args = match.Split(WSC, StringSplitOptions.RemoveEmptyEntries);
+                    var args = Regex.Matches(match, matchPathNumbers)
+                                   .Cast<Match>()
+                                       .Select(ml => ml.Value)
+                                       .Where((string arg) => !String.IsNullOrWhiteSpace(arg))
+                                       .ToArray();
 
                     Point previousPoint = new Point ();
                     Point subPathStartPoint = new Point (); //NEEDED FOR SUBPATHS
@@ -591,7 +594,7 @@ namespace NGraphics
                             if (op == 'm'){
                                 subPathStartPoint += point; //NEEDED FOR SUBPATHS
                                 point += previousPoint;
-                            } 
+                            }
                             p.MoveTo (point);
                             index += 2;
                             op = (char)(((int)op) - 1); // Change op from M to L (and m to l). This is needed because in the SVG 1.1 syntax if you place multiple pairs of coordinates after a moveto, all the pairs after the first are presumed to be preceded by a lineto.
@@ -814,7 +817,7 @@ namespace NGraphics
 
             var s = raw.Trim ();
 
-            if (s.Length == 7 && s [0] == '#') 
+            if (s.Length == 7 && s [0] == '#')
             {
 
                 var r = int.Parse (s.Substring (1, 2), NumberStyles.HexNumber, icult);
