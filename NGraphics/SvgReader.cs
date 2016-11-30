@@ -425,10 +425,14 @@ namespace NGraphics
                         ((RadialGradientBrush)brush).Center = ((RadialGradientBrush)child).Center;
                         ((RadialGradientBrush)brush).Focus = ((RadialGradientBrush)child).Focus;
                         ((RadialGradientBrush)brush).Radius = ((RadialGradientBrush)child).Radius;
+                        ((RadialGradientBrush)brush).Absolute = ((RadialGradientBrush)child).Absolute;
+                        ((RadialGradientBrush)brush).gradientTransform = ((RadialGradientBrush)child).gradientTransform;
                     } else if (child is LinearGradientBrush && brush is LinearGradientBrush)
                     {
                         ((LinearGradientBrush)brush).Start = ((LinearGradientBrush)child).Start;
                         ((LinearGradientBrush)brush).End = ((LinearGradientBrush)child).End;
+                        ((LinearGradientBrush)brush).Absolute = ((LinearGradientBrush)child).Absolute;
+                        ((LinearGradientBrush)brush).gradientTransform = ((LinearGradientBrush)child).gradientTransform;
                     }
 
                     brush.AddStops(child.Stops);
