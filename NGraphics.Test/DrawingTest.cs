@@ -20,7 +20,7 @@ namespace NGraphics.Test
 				s.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Black);
 
 			}, Platform);
-			Assert.AreEqual (1, d.Graphic.Children.Count);
+			Assert.AreEqual (1f, d.Graphic.Children.Count);
 		}
 
 		[Test]
@@ -30,7 +30,7 @@ namespace NGraphics.Test
 				s.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Black);
 				s.DrawEllipse (new Point (20, 30), new Size (40, 30), Pens.Black);
 			}, Platform);
-			Assert.AreEqual (2, d.Graphic.Children.Count);
+			Assert.AreEqual (2f, d.Graphic.Children.Count);
 		}
 
 		[Test]
@@ -42,11 +42,11 @@ namespace NGraphics.Test
 					s.DrawEllipse (new Point (10*i, 20), new Size (30, 40), Pens.Black);
 				}
 			}, Platform);
-			Assert.AreEqual (1, d.Graphic.Children.Count);
+			Assert.AreEqual (1f, d.Graphic.Children.Count);
 
 			num = 2;
 			d.Invalidate ();
-			Assert.AreEqual (2, d.Graphic.Children.Count);
+			Assert.AreEqual (2f, d.Graphic.Children.Count);
 		}
 
 		[Test]
@@ -54,7 +54,7 @@ namespace NGraphics.Test
 		{
 			var d = new Drawing (new Size (50, 50), s => {
 			}, Platform);
-			Assert.AreEqual (0, d.Graphic.Children.Count);
+			Assert.AreEqual (0f, d.Graphic.Children.Count);
 		}
 	}
 }

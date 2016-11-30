@@ -117,7 +117,8 @@ circle.Draw (canvas);
 	- `RenderTargetCanvas` wraps a `SharpDX.Direct2D1.RenderTarget`
 * Windows Phone 8.1 using Direct2D
 	- `RenderTargetCanvas` wraps a `SharpDX.Direct2D1.RenderTarget`
-
+* Universal Windows Platform (UWP) using Direct2D
+	- `RenderTargetCanvas` wraps a `SharpDX.Direct2D1.RenderTarget`
 
 ## Editor
 
