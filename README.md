@@ -1,8 +1,8 @@
 # NGraphics
 
-<img src="TestResults/Icon-Mac.png" width="64" height="64" style="float:left;margin-right:1em" />
+[![Build Status](https://www.bitrise.io/app/6feb1573b3c3da12.svg?token=E-iECGz-F7ekrF6elL3Fhw)](https://www.bitrise.io/app/6feb1573b3c3da12)
 
-NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode graphics using high quality native renderers.
+<img src="TestResults/Icon-Mac.png" width="64" height="64" style="float:left;margin-right:1em" /> NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode graphics using high quality native renderers.
 
 You can use it for cross platform rendering of UI widgets. Or as the basis for graphically rich interactive views. Or maybe you just want an easy way to import and export SVG and PNG files. Either way, I'm sure you'll find something interesting here.
 
