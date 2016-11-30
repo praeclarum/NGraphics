@@ -4,9 +4,18 @@ using System.Collections.Generic;
 
 namespace NGraphics
 {
+    // https://www.w3.org/TR/SVG11/painting.html#DisplayProperty
+    public enum Display
+    {
+        Inline,
+        None,
+        // do any other matter?
+    }
+
 	public abstract class Element : IDrawable, IEdgeSampleable
 	{
-		public string Id { get; set; }
+        public Display Display { get; set; } = Display.Inline;
+        public string Id { get; set; }
 		public Transform Transform { get; set; }
 		public virtual Pen Pen { get; set; }
 		public virtual Brush Brush { get; set; }
@@ -27,6 +36,7 @@ namespace NGraphics
 			clone.Transform = Transform;
 			clone.Pen = Pen;
 			clone.Brush = Brush;
+            clone.Display = Display;
 		}
 		protected abstract Element CreateUninitializedClone ();
 		public Element Clone ()
@@ -44,6 +54,8 @@ namespace NGraphics
 
 		public void Draw (ICanvas canvas)
 		{
+            if (Display == Display.None)
+                return;
 			var t = Transform;
 			var pushedState = false;
 			try {
