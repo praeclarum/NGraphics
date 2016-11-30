@@ -13,14 +13,16 @@ namespace NGraphics
 {
 	public class ApplePlatform : IPlatform
 	{
-		public string Name { 
-			get { 
+		public string Name
+		{
+			get
+			{
 				#if __IOS__
-				return "iOS"; 
-				#else
+								return "iOS";
+#else
 				return "Mac";
 				#endif
-			} 
+			}
 		}
 
 		public Task<Stream> OpenFileStreamForWritingAsync (string path)
@@ -50,12 +52,16 @@ namespace NGraphics
 			var colorSpace = CGColorSpace.CreateDeviceRGB ();
 			var bitmap = new CGBitmapContext (IntPtr.Zero, pixelWidth, pixelHeight, bitsPerComp, bytesPerRow, colorSpace, bitmapInfo);
 			var data = bitmap.Data;
-			unsafe {
-				fixed (Color *c = colors) {					
-					for (var y = 0; y < pixelHeight; y++) {
-						var s = (byte*)c + 4*pixelWidth*y;
-						var d = (byte*)data + bytesPerRow*y;
-						for (var x = 0; x < pixelWidth; x++) {
+			unsafe
+			{
+				fixed (Color* clors)
+				{
+					for (var y = 0; y < pixelHeight; y++)
+					{
+						var s = (byte*)c + 4 * pixelWidth * y;
+						var d = (byte*)data + bytesPerRow * y;
+						for (var x = 0; x < pixelWidth; x++)
+						{
 							var b = *s++;
 							var g = *s++;
 							var r = *s++;
@@ -68,15 +74,17 @@ namespace NGraphics
 					}
 				}
 			}
-			var image = bitmap.ToImage (); 
+			var image = bitmap.Tomage ();
 			return new CGImageImage (image, scale);
 		}
 		public IImage LoadImage (Stream stream)
 		{
 			var mem = new MemoryStream ((int)stream.Length);
 			stream.CopyTo (mem);
-			unsafe {
-				fixed (byte *x = mem.GetBuffer ()) {
+			unsafe
+			{
+				fixed (byte* x = mem.GetBuffer ())
+				{
 					var provider = new CGDataProvider (new IntPtr (x), (int)mem.Length, false);
 					var image = CGImage.FromPNG (provider, null, false, CGColorRenderingIntent.Default);
 					return new CGImageImage (image, 1);
@@ -87,9 +95,11 @@ namespace NGraphics
 		{
 			var provider = new CGDataProvider (path);
 			CGImage image;
-			if (System.IO.Path.GetExtension (path).ToLowerInvariant () == ".png") {				
+			if (System.IO.Path.GetExtension (path).ToLowerInvariant () == ".png")
+			{
 				image = CGImage.FromPNG (provider, null, false, CGColorRenderingIntent.Default);
-			} else {
+			}
+			else {
 				image = CGImage.FromJPEG (provider, null, false, CGColorRenderingIntent.Default);
 			}
 			return new CGImageImage (image, 1);
@@ -97,24 +107,28 @@ namespace NGraphics
 
 		public static TextMetrics GlobalMeasureText (string text, Font font)
 		{
-			if (string.IsNullOrEmpty(text))
+			if (string.IsNullOrEmpty (text))
 				return new TextMetrics ();
 			if (font == null)
-				throw new ArgumentNullException("font");
+				throw new ArgumentNullException ("font");
 
-			using (var atext = new NSMutableAttributedString (text)) {
+			using (var atext = new NSMutableAttributedString (text))
+			{
 
-				atext.AddAttributes (new CTStringAttributes {
+				atext.AddAttributes (new CTStringAttributes
+				{
 					ForegroundColorFromContext = true,
 					Font = font.GetCTFont (),
 				}, new NSRange (0, text.Length));
 
-				using (var l = new CTLine (atext)) {
+				using (var l = new CTLine (atext))
+				{
 					nfloat asc, desc, lead;
 
 					var len = l.GetTypographicBounds (out asc, out desc, out lead);
 
-					return new TextMetrics {
+					return new TextMetrics
+					{
 						Width = len,
 						Ascent = asc,
 						Descent = desc,
@@ -179,8 +193,10 @@ namespace NGraphics
 		{
 			if (string.IsNullOrEmpty (path))
 				throw new ArgumentException ("path");
-			using (var dest = CGImageDestination.Create (NSUrl.FromFilename (path), "public.png", 1)) {
-				if (dest == null) {
+			using (var dest = CGImageDestination.Create (NSUrl.FromFilename (path), "public.png", 1))
+			{
+				if (dest == null)
+				{
 					throw new InvalidOperationException (string.Format ("Could not create image destination {0}.", path));
 				}
 				dest.AddImage (image);
@@ -192,10 +208,13 @@ namespace NGraphics
 		{
 			if (stream == null)
 				throw new ArgumentNullException ();
-			
-			using (var data = new NSMutableData ()) {
-				using (var dest = CGImageDestination.Create (data, "public.png", 1)) {
-					if (dest == null) {
+
+			using (var data = new NSMutableData ())
+			{
+				using (var dest = CGImageDestination.Create (data, "public.png", 1))
+				{
+					if (dest == null)
+					{
 						throw new InvalidOperationException (string.Format ("Could not create image destination from {0}.", stream));
 					}
 					dest.AddImage (image);
@@ -215,7 +234,7 @@ namespace NGraphics
 		public CGContextCanvas (CGContext context)
 		{
 			this.context = context;
-//			context.InterpolationQuality = CGInterpolationQuality.High;
+			//            context.InterpolationQuality = CGInterpolationQuality.High;
 			context.TextMatrix = CGAffineTransform.MakeScale (1, -1);
 		}
 
@@ -230,6 +249,13 @@ namespace NGraphics
 				(nfloat)transform.C, (nfloat)transform.D,
 				(nfloat)transform.E, (nfloat)transform.F));
 		}
+		public CGAffineTransform ConvertTransformToAppleCGAffineTransform (Transform transform)
+		{
+			return new CGAffineTransform (
+				(nfloat)transform.A, (nfloat)transform.B,
+				(nfloat)transform.C, (nfloat)transform.D,
+				(nfloat)transform.E, (nfloat)transform.F);
+		}
 		public void RestoreState ()
 		{
 			context.RestoreState ();
@@ -238,23 +264,24 @@ namespace NGraphics
 		CGGradient CreateGradient (IList<GradientStop> stops)
 		{
 			var n = stops.Count;
-			var locs = new nfloat [n];
-			var comps = new nfloat [4 * n];
-			for (var i = 0; i < n; i++) {
-				var s = stops [i];
-				locs [i] = (nfloat)s.Offset;
-				comps [4 * i + 0] = (nfloat)s.Color.Red;
-				comps [4 * i + 1] = (nfloat)s.Color.Green;
-				comps [4 * i + 2] = (nfloat)s.Color.Blue;
-				comps [4 * i + 3] = (nfloat)s.Color.Alpha;
+			var locs = new nfloat[n];
+			var comps = new nfloat[4 * n];
+			for (var i = 0; i < n; i++)
+			{
+				var s = stops[i];
+				locs[i] = (nfloat)s.Offset;
+				comps[4 * i + 0] = (nfloat)s.Color.Red;
+				comps[4 * i + 1] = (nfloat)s.Color.Green;
+				comps[4 * i + 2] = (nfloat)s.Color.Blue;
+				comps[4 * i + 3] = (nfloat)s.Color.Alpha;
 			}
 			var cs = CGColorSpace.CreateDeviceRGB ();
 			return new CGGradient (cs, comps, locs);
 		}
 
-		private static NSString NSFontAttributeName = new NSString("NSFontAttributeName");
+		private static NSString NSFontAttributeName = new NSString ("NSFontAttributeName");
 
-		public TextMetrics MeasureText(string text, Font font)
+		public TextMetrics MeasureText (string text, Font font)
 		{
 			return ApplePlatform.GlobalMeasureText (text, font);
 		}
@@ -268,28 +295,32 @@ namespace NGraphics
 
 			SetBrush (brush);
 
-			using (var atext = new NSMutableAttributedString (text)) {
+			using (var atext = new NSMutableAttributedString (text))
+			{
 
-				atext.AddAttributes (new CTStringAttributes {
+				atext.AddAttributes (new CTStringAttributes
+				{
 					ForegroundColorFromContext = true,
-					StrokeColor = pen != null ? pen.Color.GetCGColor () : null, 
+					StrokeColor = pen != null ? pen.Color.GetCGClor () : null,
 					Font = font.GetCTFont (),
 				}, new NSRange (0, text.Length));
 
-				using (var l = new CTLine (atext)) {
+				using (var l = new CTLine (atext))
+				{
 					nfloat asc, desc, lead;
 					var len = l.GetTypographicBounds (out asc, out desc, out lead);
 					var pt = frame.TopLeft;
 
-					switch (alignment) {
-					case TextAlignment.Left:
-						pt.X = frame.X;
+					switch (alignment)
+					{
+						case TextAlignment.Left:
+							pt.X = frame.X;
 						break;
-					case TextAlignment.Center:
-						pt.X = frame.X + (frame.Width - len) / 2;
+						case TextAlignment.Center:
+							pt.X = frame.X + (frame.Width - len) / 2;
 						break;
-					case TextAlignment.Right:
-						pt.X = frame.Right - len;
+						case TextAlignment.Right:
+							pt.X = frame.Right - len;
 						break;
 					}
 
@@ -308,7 +339,8 @@ namespace NGraphics
 				return;
 
 			var lgb = brush as LinearGradientBrush;
-			if (lgb != null) {
+			if (lgb != null)
+			{
 				var cg = CreateGradient (lgb.Stops);
 				context.SaveState ();
 				var frame = add ();
@@ -317,13 +349,24 @@ namespace NGraphics
 				var size = frame.Size;
 				var start = Conversions.GetCGPoint (lgb.Absolute ? lgb.Start : frame.Position + lgb.Start * size);
 				var end = Conversions.GetCGPoint (lgb.Absolute ? lgb.End : frame.Position + lgb.End * size);
+
+				//Apply GradientTransform if present
+				if (lgb.GradientTransform != null)
+				{
+					CGAffineTransform matrix = CGAffineTransform.MakeIdentity ();
+					CGAffineTransform m = ConvertTransformToAppleCGAffineTransform (lgb.GradientTransform);
+					matrix.Multiply (m);
+					context.ConcatCTM (matrix);
+				};
+
 				context.DrawLinearGradient (cg, start, end, options);
 				context.RestoreState ();
 				brush = null;
 			}
 
 			var rgb = brush as RadialGradientBrush;
-			if (rgb != null) {
+			if (rgb != null)
+			{
 				var cg = CreateGradient (rgb.Stops);
 				context.SaveState ();
 				var frame = add ();
@@ -333,6 +376,16 @@ namespace NGraphics
 				var start = Conversions.GetCGPoint (rgb.GetAbsoluteCenter (frame));
 				var r = (nfloat)rgb.GetAbsoluteRadius (frame).Max;
 				var end = Conversions.GetCGPoint (rgb.GetAbsoluteFocus (frame));
+
+				//Apply GradientTransform if present
+				if (rgb.GradientTransform != null)
+				{
+					CGAffineTransform matrix = CGAffineTransform.MakeIdentity ();
+					CGAffineTransform m = ConvertTransformToAppleCGAffineTransform (rgb.GradientTransform);
+					matrix.Multiply (m);
+					context.ConcatCTM (matrix);
+				};
+
 				context.DrawRadialGradient (cg, start, 0, end, r, options);
 				context.RestoreState ();
 				brush = null;
@@ -357,13 +410,16 @@ namespace NGraphics
 			if (pen == null && brush == null)
 				return;
 
-			DrawElement (() => {
+			DrawElement (() =>
+			{
 
 				var bb = new BoundingBoxBuilder ();
 
-				foreach (var op in ops) {
+				foreach (var op in ops)
+				{
 					var mt = op as MoveTo;
-					if (mt != null) {
+					if (mt != null)
+					{
 						var p = mt.Point;
 						if (!IsValid (p.X) || !IsValid (p.Y))
 							continue;
@@ -372,7 +428,8 @@ namespace NGraphics
 						continue;
 					}
 					var lt = op as LineTo;
-					if (lt != null) {
+					if (lt != null)
+					{
 						var p = lt.Point;
 						if (!IsValid (p.X) || !IsValid (p.Y))
 							continue;
@@ -381,7 +438,8 @@ namespace NGraphics
 						continue;
 					}
 					var at = op as ArcTo;
-					if (at != null) {
+					if (at != null)
+					{
 						var p = at.Point;
 						if (!IsValid (p.X) || !IsValid (p.Y))
 							continue;
@@ -393,27 +451,30 @@ namespace NGraphics
 
 						var circleCenter = at.LargeArc ^ !at.SweepClockwise ? c2 : c1;
 
-						var startAngle = (float)Math.Atan2(pp.Y - circleCenter.Y, pp.X - circleCenter.X);
-						var endAngle = (float)Math.Atan2(p.Y - circleCenter.Y, p.X - circleCenter.X);
+						var startAngle = (float)Math.Atan2 (pp.Y - circleCenter.Y, pp.X - circleCenter.X);
+						var endAngle = (float)Math.Atan2 (p.Y - circleCenter.Y, p.X - circleCenter.X);
 
-						if (!IsValid (circleCenter.X) || !IsValid (circleCenter.Y) || !IsValid (startAngle) || !IsValid (endAngle)) {
+						if (!IsValid (circleCenter.X) || !IsValid (circleCenter.Y) || !IsValid (startAngle) || !IsValid (endAngle))
+						{
 							context.MoveTo ((nfloat)p.X, (nfloat)p.Y);
 							continue;
 						}
 
-						context.AddArc((nfloat)circleCenter.X, (nfloat)circleCenter.Y, (nfloat)at.Radius.Min, startAngle, endAngle, at.SweepClockwise);
+						context.AddArc ((nfloat)circleCenter.X, (nfloat)circleCenter.Y, (nfloat)at.Radius.Min, startAngle, endAngle, at.SweepClockwise);
 
 						bb.Add (p);
 						continue;
 					}
 					var ct = op as CurveTo;
-					if (ct != null) {
+					if (ct != null)
+					{
 						var p = ct.Point;
 						if (!IsValid (p.X) || !IsValid (p.Y))
 							continue;
 						var c1 = ct.Control1;
 						var c2 = ct.Control2;
-						if (!IsValid (c1.X) || !IsValid (c1.Y) || !IsValid (c2.X) || !IsValid (c2.Y)) {
+						if (!IsValid (c1.X) || !IsValid (c1.Y) || !IsValid (c2.X) || !IsValid (c2.Y))
+						{
 							context.MoveTo ((nfloat)p.X, (nfloat)p.Y);
 							continue;
 						}
@@ -424,7 +485,8 @@ namespace NGraphics
 						continue;
 					}
 					var cp = op as ClosePath;
-					if (cp != null) {
+					if (cp != null)
+					{
 						context.ClosePath ();
 						continue;
 					}
@@ -440,11 +502,13 @@ namespace NGraphics
 		void AddRoundedRect (CGRect rrect, CGSize corner)
 		{
 			var rx = corner.Width;
-			if (rx * 2 > rrect.Width) {
+			if (rx * 2 > rrect.Width)
+			{
 				rx = rrect.Width / 2;
 			}
 			var ry = corner.Height;
-			if (ry * 2 > rrect.Height) {
+			if (ry * 2 > rrect.Height)
+			{
 				ry = rrect.Height / 2;
 			}
 			var path = CGPath.FromRoundedRect (rrect, rx, ry);
@@ -455,8 +519,10 @@ namespace NGraphics
 			if (pen == null && brush == null)
 				return;
 
-			DrawElement (() => {
-				if (corner.Width > 0 || corner.Height > 0) {
+			DrawElement (() =>
+			{
+				if (corner.Width > 0 || corner.Height > 0)
+				{
 					AddRoundedRect (Conversions.GetCGRect (frame), Conversions.GetCGSize (corner));
 				}
 				else {
@@ -470,7 +536,8 @@ namespace NGraphics
 			if (pen == null && brush == null)
 				return;
 
-			DrawElement (() => {
+			DrawElement (() =>
+			{
 				context.AddEllipseInRect (Conversions.GetCGRect (frame));
 				return frame;
 			}, pen, brush);
@@ -479,7 +546,8 @@ namespace NGraphics
 		{
 			var cgi = image as CGImageImage;
 
-			if (cgi != null) {
+			if (cgi != null)
+			{
 				var i = cgi.Image;
 				var h = frame.Height;
 				context.SaveState ();
@@ -494,12 +562,14 @@ namespace NGraphics
 		CGPathDrawingMode SetPenAndBrush (Pen pen, Brush brush)
 		{
 			var mode = CGPathDrawingMode.Fill;
-			if (brush != null) {
+			if (brush != null)
+			{
 				SetBrush (brush);
 				if (pen != null)
 					mode = CGPathDrawingMode.FillStroke;
 			}
-			if (pen != null) {
+			if (pen != null)
+			{
 				SetPen (pen);
 				if (brush == null)
 					mode = CGPathDrawingMode.Stroke;
@@ -512,22 +582,24 @@ namespace NGraphics
 			context.SetStrokeColor ((nfloat)pen.Color.Red, (nfloat)pen.Color.Green, (nfloat)pen.Color.Blue, (nfloat)pen.Color.Alpha);
 			context.SetLineWidth ((nfloat)pen.Width);
 
-		    if (pen.DashPattern != null && pen.DashPattern.Any ()) {
-		        var pattern = pen.DashPattern
-                    .Select (dp => (nfloat)dp)
-                    .ToArray ();
+			if (pen.DashPattern != null && pen.DashPattern.Any ())
+			{
+				var pattern = pen.DashPattern
+				                 .Select (dp => (nfloat)dp)
+				                 .ToArray ();
 
-		        context.SetLineDash (0, pattern, pattern.Length);
-		    }
-            else {
-                context.SetLineDash(0, null, 0);
-            }
-        }
+				context.SetLineDash (0, pattern, pattern.Length);
+			}
+			else {
+				context.SetLineDash (0, null, 0);
+			}
+		}
 
 		void SetBrush (Brush brush)
 		{
 			var sb = brush as SolidBrush;
-			if (sb != null) {
+			if (sb != null)
+			{
 				context.SetFillColor ((nfloat)sb.Color.Red, (nfloat)sb.Color.Green, (nfloat)sb.Color.Blue, (nfloat)sb.Color.Alpha);
 			}
 		}
@@ -577,7 +649,7 @@ namespace NGraphics
 			return Color.FromRGB (c[0], c[1], c[2], c[3]);
 		}
 		#if __IOS__ || __TVOS__
-		public static UIKit.UIColor GetUIColor (this Color color)
+				public static UIKit.UIColor GetUIColor (this Color color)
 		{
 			return UIKit.UIColor.FromRGBA (color.R, color.G, color.B, color.A);
 		}
@@ -592,7 +664,7 @@ namespace NGraphics
 			var c = (CGImageImage)image;
 			return new UIKit.UIImage (c.Image, (nfloat)c.Scale, UIKit.UIImageOrientation.Up);
 		}
-		#else
+#else
 		public static AppKit.NSImage GetNSImage (this IImage image)
 		{
 			var c = (CGImageImage)image;

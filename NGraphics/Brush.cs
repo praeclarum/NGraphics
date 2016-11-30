@@ -40,7 +40,7 @@ namespace NGraphics
 		public double Offset;
 		public Color Color;
 		public GradientStop ()
-		{			
+		{
 		}
 		public GradientStop (double offset, Color color)
 		{
@@ -58,7 +58,7 @@ namespace NGraphics
 		}
 		public void AddStops (IEnumerable<GradientStop> stops)
 		{
-			Stops.AddRange(stops);
+			Stops.AddRange (stops);
 		}
 	}
 
@@ -68,6 +68,8 @@ namespace NGraphics
 		public Point Focus;
 		public Size Radius;
 		public bool Absolute = false;
+
+		public Transform GradientTransform { get; set; }
 
 		public RadialGradientBrush ()
 		{
@@ -126,6 +128,8 @@ namespace NGraphics
 		public Point Start;
 		public Point End;
 		public bool Absolute = false;
+
+		public Transform GradientTransform { get; set; }
 
 		public LinearGradientBrush ()
 		{
