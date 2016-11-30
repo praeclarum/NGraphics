@@ -80,5 +80,6 @@
     <EmbeddedResource Include="Inputs\repeat.svg" />
     <EmbeddedResource Include="Inputs\sliderThumb.svg" />
     <EmbeddedResource Include="Inputs\TextVariations.svg" />
+    <EmbeddedResource Include="Inputs\GroupOpacity.svg" />
   </ItemGroup>
 </Project>

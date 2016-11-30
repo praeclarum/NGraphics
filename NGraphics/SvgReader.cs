@@ -183,7 +183,13 @@ namespace NGraphics
 					var groupId = e.Attribute("id");
 					if (groupId != null && !string.IsNullOrEmpty(groupId.Value))
 						g.Id = groupId.Value;
+
+					var groupOpacity = e.Attribute ("opacity");
+					if (groupOpacity != null && !string.IsNullOrEmpty (groupOpacity.Value)) 
+						g.Opacity = ReadNumber (groupOpacity);
+
 					AddElements (g.Children, e.Elements (), pen, brush);
+
 					r = g;
 				}
 				break;
@@ -327,6 +333,9 @@ namespace NGraphics
 			}
 
 			var strokeOpacity = GetString (style, "stroke-opacity");
+			if (string.IsNullOrWhiteSpace (strokeOpacity))
+				strokeOpacity = GetString (style, "opacity");
+			
 			if (!string.IsNullOrWhiteSpace (strokeOpacity)) {
 				if (pen == null)
 					pen = new Pen ();
@@ -360,6 +369,9 @@ namespace NGraphics
 			// Brush attributes
 			//
 			var fillOpacity = GetString (style, "fill-opacity");
+			if (string.IsNullOrWhiteSpace (fillOpacity))
+				fillOpacity = GetString (style, "opacity");
+			
 			if (!string.IsNullOrWhiteSpace (fillOpacity)) {
 				if (brush == null)
 					brush = new SolidBrush ();

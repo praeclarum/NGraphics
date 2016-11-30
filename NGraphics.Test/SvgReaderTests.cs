@@ -137,6 +137,12 @@ namespace NGraphics.Test
 		{
 			await ReadAndDraw ("TextVariations.svg");
 		}
+
+		[Test]
+		public async Task GroupOpacity ()
+		{
+			await ReadAndDraw ("GroupOpacity.svg");
+		}
 	}
 }
 

@@ -8,6 +8,8 @@ namespace NGraphics
 	public class Group : Element
 	{
 		public readonly List<Element> Children = new List<Element> ();
+		private double _opacity = 1.0;
+		private double _resetOpacityMultiplier = 1.0;
 
 		public Group ()
 			: base (null, null)
@@ -21,6 +23,18 @@ namespace NGraphics
 				c.Accept (visitor);
 			}
 			visitor.EndVisit (this);
+		}
+
+		public double Opacity {
+			get { return _opacity; }
+			set {
+
+				if (value == _opacity)
+					return;
+
+				_resetOpacityMultiplier = _opacity/value;
+				_opacity = value;
+			}
 		}
 
 		public override Pen Pen {
@@ -49,8 +63,19 @@ namespace NGraphics
 
 		protected override void DrawElement (ICanvas canvas)
 		{
+			bool setOpacity = Opacity != 1.0 && _resetOpacityMultiplier != 1.0;
+			var setOpacityVisitor = setOpacity ? new OpacityVisitor{ Opacity = Opacity } : null;
+			var resetOpacityVisitor = setOpacity ? new OpacityVisitor{ Opacity = _resetOpacityMultiplier } : null;
+
 			foreach (var c in Children) {
+
+				if (setOpacityVisitor != null)
+					setOpacityVisitor.VisitElement (c);
+				
 				c.Draw (canvas);
+
+				if (resetOpacityVisitor != null)
+					resetOpacityVisitor.VisitElement (c);
 			}
 		}
 
@@ -116,5 +141,27 @@ namespace NGraphics
 
 		#endregion
 	}
-	
+
+	class OpacityVisitor : BaseElementVisitor
+	{
+		public double Opacity;
+
+		public override void VisitElement (Element element)
+		{
+			if (element.Brush != null) {				
+				// Modify alpha
+				if (element.Brush is SolidBrush) 
+					(element.Brush as SolidBrush).Color = (element.Brush as SolidBrush).Color.WithAlpha(
+						(element.Brush as SolidBrush).Color.Alpha * Opacity);
+					
+				else if (element.Brush is GradientBrush) 
+					foreach (var stop in (element.Brush as GradientBrush).Stops)
+						stop.Color = stop.Color.WithAlpha(stop.Color.Alpha * Opacity);				
+			}
+
+			if (element.Pen != null)				
+				// Modify alpha
+				element.Pen.Color = element.Pen.Color.WithAlpha(element.Pen.Color.Alpha * Opacity);
+		}
+	}
 }
