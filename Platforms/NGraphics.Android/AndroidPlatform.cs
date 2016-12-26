@@ -61,7 +61,8 @@ namespace NGraphics
 			else if (alignment == TextAlignment.Right)
 				paint.TextAlign = Paint.Align.Right;
 
-			paint.TextSize = (float)font.Size;
+			var density = global::Android.App.Application.Context.Resources.DisplayMetrics.Density;
+			paint.TextSize = (float)font.Size * density;
 			var typeface = Typeface.Create (font.Family, TypefaceStyle.Normal);
 			paint.SetTypeface (typeface);
 
