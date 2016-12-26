@@ -336,7 +336,7 @@ namespace NGraphics
 						Point c1, c2;
 						at.GetCircles(pp, out c1, out c2);
 
-						var circleCenter = at.LargeArc ^ !at.SweepClockwise ? c2 : c1;
+						var circleCenter = (at.LargeArc ^ at.SweepClockwise) ? c1 : c2;
 						var rect = new Rect(circleCenter - at.Radius, at.Radius * 2);
 
 						var startAngle = Conversions.RadToDeg((float)Math.Atan2(pp.Y - circleCenter.Y, pp.X - circleCenter.X));
