@@ -15,6 +15,7 @@ using DW = SharpDX.DirectWrite;
 
 using Windows.UI.Xaml.Media.Imaging;
 using NGraphics.UWP;
+using System.Runtime.InteropServices;
 
 namespace NGraphics
 {
@@ -57,8 +58,24 @@ namespace NGraphics
 			get { return scale; }
 		}
 	}
-
-	public class WICBitmapSourceImage : IImage
+    /// <summary>
+    /// Provides access to an IMemoryBuffer as an array of bytes.
+    /// </summary>
+    [ComImport]
+    [Guid("5B0D3235-4DBA-4D44-865E-8F1D0E4FD04D")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    public unsafe interface IMemoryBufferByteAccess
+    {
+        //If this method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.
+        //When MemoryBuffer::Close is called, the code using this buffer should set the value pointer to null.
+        /// <summary>
+        /// Gets an IMemoryBuffer as an array of bytes. 
+        /// </summary>
+        /// <param name="buffer">A pointer to a byte array containing the buffer data.</param>
+        /// <param name="capacity">The number of bytes in the returned array</param>
+        void GetBuffer(out byte* buffer, out uint capacity);
+    }
+    public class WICBitmapSourceImage : IImage
 	{
 		readonly WIC.BitmapSource bmp;
 		readonly Direct2DFactories factories;
@@ -100,7 +117,48 @@ namespace NGraphics
 				}
 			}
 		}
-	}
+        /// <summary>
+        /// Save As <see cref="Windows.Graphics.Imaging.SoftwareBitmap"/> 
+        /// </summary>
+        public unsafe Windows.Graphics.Imaging.SoftwareBitmap SaveAsSoftwareBitmap()
+        {
+            var size = bmp.Size;
+            var sbitmap = new Windows.Graphics.Imaging.SoftwareBitmap(Windows.Graphics.Imaging.BitmapPixelFormat.Bgra8, size.Width, size.Height);
+            using (var sbitbuffer = sbitmap.LockBuffer(Windows.Graphics.Imaging.BitmapBufferAccessMode.Write))
+            {
+                using (var reference = sbitbuffer.CreateReference())
+                {
+                    byte* dataInBytes;
+                    uint capacity;
+                    ((IMemoryBufferByteAccess)reference).GetBuffer(out dataInBytes, out capacity);
+
+                    // Fill-in the BGRA plane
+                    var bufferLayout = sbitbuffer.GetPlaneDescription(0);
+                    var intptr = new IntPtr(dataInBytes);
+                    Bitmap.CopyPixels(bufferLayout.Stride, intptr, (int)capacity);
+                }
+            }
+            return sbitmap;
+        }
+        /// <summary>
+        /// Save As <see cref="SoftwareBitmapSource"/> 
+        /// </summary>
+        public SoftwareBitmapSource SaveAsSoftwareBitmapSource()
+        {
+            var source = new SoftwareBitmapSource();
+            var task =source.SetBitmapAsync(SaveAsSoftwareBitmap());
+            return source;
+        }
+        /// <summary>
+        /// Save As <see cref="SoftwareBitmapSource"/> 
+        /// </summary>
+        public async Task<SoftwareBitmapSource> SaveAsSoftwareBitmapSourceAsync()
+        {
+            var source = new SoftwareBitmapSource();
+            await source.SetBitmapAsync(SaveAsSoftwareBitmap());
+            return source;
+        }
+    }
 
 	public class SurfaceImageSourceCanvas : RenderTargetCanvas
 	{
