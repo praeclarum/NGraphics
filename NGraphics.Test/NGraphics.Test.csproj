@@ -48,13 +48,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
     <None Include="fserve.fsx" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NGraphics\NGraphics.csproj">
@@ -62,7 +57,6 @@
       <Name>NGraphics</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Inputs\mozilla\ellipse.svg" />
     <EmbeddedResource Include="Inputs\SunAtNight.svg" />
@@ -82,5 +76,11 @@
     <EmbeddedResource Include="Inputs\sliderThumb.svg" />
     <EmbeddedResource Include="Inputs\TextVariations.svg" />
     <EmbeddedResource Include="Inputs\GroupOpacity.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=3.5.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.5.0\lib\portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
 </Project>
