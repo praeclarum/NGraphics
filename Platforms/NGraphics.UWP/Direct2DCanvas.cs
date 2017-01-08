@@ -123,7 +123,7 @@ namespace NGraphics
         public unsafe Windows.Graphics.Imaging.SoftwareBitmap SaveAsSoftwareBitmap()
         {
             var size = bmp.Size;
-            var sbitmap = new Windows.Graphics.Imaging.SoftwareBitmap(Windows.Graphics.Imaging.BitmapPixelFormat.Bgra8, size.Width, size.Height);
+            var sbitmap = new Windows.Graphics.Imaging.SoftwareBitmap(Windows.Graphics.Imaging.BitmapPixelFormat.Bgra8, size.Width, size.Height,Windows.Graphics.Imaging.BitmapAlphaMode.Premultiplied);
             using (var sbitbuffer = sbitmap.LockBuffer(Windows.Graphics.Imaging.BitmapBufferAccessMode.Write))
             {
                 using (var reference = sbitbuffer.CreateReference())
