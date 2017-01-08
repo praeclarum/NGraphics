@@ -191,7 +191,7 @@ canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.Cats"));
 
 ### Load SVG on UWP
 
-```
+```csharp
 var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(
 new Uri( "ms-appx:///Assets/ErulisseuiinSpaceshipPack.svg",UriKind.Absolute));
 using (var stream = new System.IO.StreamReader(await file.OpenStreamForReadAsync()))
