@@ -192,15 +192,15 @@ canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.Cats"));
 ### Load SVG on UWP
 
 ```
-            var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri( "ms-appx:///Assets/ErulisseuiinSpaceshipPack.svg",UriKind.Absolute));
-            using (var stream = new System.IO.StreamReader(await file.OpenStreamForReadAsync()))
-            {
-                var canvas = Platforms.Current.CreateImageCanvas(new Size(120 * 5, 120), scale: 2);
-                var svg = NGraphics.Graphic.LoadSvg(stream);
-                svg.Draw(canvas);
-                img.Source = (canvas.GetImage() as WICBitmapSourceImage).SaveAsSoftwareBitmapSource();
-            }
-
+var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(
+new Uri( "ms-appx:///Assets/ErulisseuiinSpaceshipPack.svg",UriKind.Absolute));
+using (var stream = new System.IO.StreamReader(await file.OpenStreamForReadAsync()))
+ {
+	var canvas = Platforms.Current.CreateImageCanvas(new Size(120 * 5, 120), scale: 2);
+	var svg = NGraphics.Graphic.LoadSvg(stream);
+	svg.Draw(canvas);
+	img.Source = (canvas.GetImage() as WICBitmapSourceImage).SaveAsSoftwareBitmapSource();
+}
 ```
 
 
