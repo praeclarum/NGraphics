@@ -136,6 +136,10 @@ namespace Yinyue200.SvgView
 
         private void redraw()
         {
+            if(svg==null)
+            {
+                return;
+            }
             using (var sr = new StringReader(svg))
             {
                 setsource(sr);

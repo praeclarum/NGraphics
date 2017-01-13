@@ -81,217 +81,232 @@ namespace NGraphics
 		}
 
 		void AddElement (IList<Element> list, XElement e, Pen inheritPen, Brush inheritBrush)
-		{
-			//
-			// Style
-			//
-			Element r = null;
-			Pen pen = null;
-			Brush brush = null;
-			bool hasPen, hasBrush;
-			ApplyStyle (e.Attributes ().ToDictionary (k => k.Name.LocalName, v => v.Value), ref pen, out hasPen, ref brush, out hasBrush);
-			var style = ReadString (e.Attribute ("style"));
-			if (!string.IsNullOrWhiteSpace (style)) {
-				ApplyStyle (style, ref pen, out hasPen, ref brush, out hasBrush);
-			}
-			pen = hasPen ? pen : inheritPen;
-			brush = hasBrush ? brush : inheritBrush;
-			//var id = ReadString (e.Attribute ("id"));
+        {
+            //
+            // Style
+            //
+            Element r = null;
+            Pen pen = null;
+            Brush brush = null;
+            GetPenAndBrush(e, inheritPen, inheritBrush, ref pen, ref brush);
+            //var id = ReadString (e.Attribute ("id"));
 
-			//
-			// Elements
-			//
-			switch (e.Name.LocalName) {
-			case "text":
-				{
-					var x = ReadNumber (e.Attribute ("x"));
-					var y = ReadNumber (e.Attribute ("y"));
-					var font = new Font ();
-					var fontFamily = ReadTextFontFamily(e);
-					if (!string.IsNullOrEmpty(fontFamily))
-						font.Family = fontFamily;
-					var fontSize = ReadTextFontSize(e);
-					if (fontSize >= 0)
-						font.Size = fontSize;
-					TextAlignment textAlignment = ReadTextAlignment(e);
-					var txt = new Text (new Rect (new Point (x, y), new Size (double.MaxValue, double.MaxValue)), font, textAlignment, pen, brush);
-					ReadTextSpans (txt, e);
-					r = txt;
-				}
-				break;
-			case "rect":
-				{
-					var x = ReadNumber (e.Attribute ("x"));
-					var y = ReadNumber (e.Attribute ("y"));
-					var width = ReadNumber (e.Attribute ("width"));
-					var height = ReadNumber (e.Attribute ("height"));
-					var rx = ReadNumber (e.Attribute ("rx"));
-					var ry = ReadNumber (e.Attribute ("ry"));
-					if (ry == 0) {
-						ry = rx;
-					}
-					r = new Rectangle (new Rect (new Point (x, y), new Size (width, height)), new Size (rx, ry), pen, brush);
-				}
-				break;
-			case "ellipse":
-				{
-					var cx = ReadNumber (e.Attribute ("cx"));
-					var cy = ReadNumber (e.Attribute ("cy"));
-					var rx = ReadNumber (e.Attribute ("rx"));
-					var ry = ReadNumber (e.Attribute ("ry"));
-					r = new Ellipse (new Point (cx - rx, cy - ry), new Size (2 * rx, 2 * ry), pen, brush);
-				}
-				break;
-			case "circle":
-				{
-					var cx = ReadNumber (e.Attribute ("cx"));
-					var cy = ReadNumber (e.Attribute ("cy"));
-					var rr = ReadNumber (e.Attribute ("r"));
-					r = new Ellipse (new Point (cx - rr, cy - rr), new Size (2 * rr, 2 * rr), pen, brush);
-				}
-				break;
+            //
+            // Elements
+            //
+            switch (e.Name.LocalName)
+            {
+                case "text":
+                    {
+                        var x = ReadNumber(e.Attribute("x"));
+                        var y = ReadNumber(e.Attribute("y"));
+                        var font = new Font();
+                        var fontFamily = ReadTextFontFamily(e);
+                        if (!string.IsNullOrEmpty(fontFamily))
+                            font.Family = fontFamily;
+                        var fontSize = ReadTextFontSize(e);
+                        if (fontSize >= 0)
+                            font.Size = fontSize;
+                        TextAlignment textAlignment = ReadTextAlignment(e);
+                        var txt = new Text(new Rect(new Point(x, y), new Size(double.MaxValue, double.MaxValue)), font, textAlignment, pen, brush);
+                        ReadTextSpans(txt, e, pen, brush);
+                        r = txt;
+                    }
+                    break;
+                case "rect":
+                    {
+                        var x = ReadNumber(e.Attribute("x"));
+                        var y = ReadNumber(e.Attribute("y"));
+                        var width = ReadNumber(e.Attribute("width"));
+                        var height = ReadNumber(e.Attribute("height"));
+                        var rx = ReadNumber(e.Attribute("rx"));
+                        var ry = ReadNumber(e.Attribute("ry"));
+                        if (ry == 0)
+                        {
+                            ry = rx;
+                        }
+                        r = new Rectangle(new Rect(new Point(x, y), new Size(width, height)), new Size(rx, ry), pen, brush);
+                    }
+                    break;
+                case "ellipse":
+                    {
+                        var cx = ReadNumber(e.Attribute("cx"));
+                        var cy = ReadNumber(e.Attribute("cy"));
+                        var rx = ReadNumber(e.Attribute("rx"));
+                        var ry = ReadNumber(e.Attribute("ry"));
+                        r = new Ellipse(new Point(cx - rx, cy - ry), new Size(2 * rx, 2 * ry), pen, brush);
+                    }
+                    break;
+                case "circle":
+                    {
+                        var cx = ReadNumber(e.Attribute("cx"));
+                        var cy = ReadNumber(e.Attribute("cy"));
+                        var rr = ReadNumber(e.Attribute("r"));
+                        r = new Ellipse(new Point(cx - rr, cy - rr), new Size(2 * rr, 2 * rr), pen, brush);
+                    }
+                    break;
 
-			case "path":
-				{
-					var dA = e.Attribute ("d");
-					if (dA != null && !string.IsNullOrWhiteSpace (dA.Value)) {
-						var p = new Path (pen, brush);
-						ReadPath (p, dA.Value);
-						r = p;
-					}
-				}
-				break;
-			case "polygon":
-				{
-					var pA = e.Attribute ("points");
-					if (pA != null && !string.IsNullOrWhiteSpace (pA.Value)) {
-						var path = new Path (pen, brush);
-						ReadPoints (path, pA.Value, true);
-						r = path;
-					}
-				}
-				break;
-			case "polyline":
-				{
-					var pA = e.Attribute ("points");
-					if (pA != null && !string.IsNullOrWhiteSpace (pA.Value)) {
-						var path = new Path (pen, brush);
-						ReadPoints (path, pA.Value, false);
-						r = path;
-					}
-				}
-			break;
-			case "g":
-				{
-					var g = new Group ();
-					var groupId = e.Attribute("id");
-					if (groupId != null && !string.IsNullOrEmpty(groupId.Value))
-						g.Id = groupId.Value;
+                case "path":
+                    {
+                        var dA = e.Attribute("d");
+                        if (dA != null && !string.IsNullOrWhiteSpace(dA.Value))
+                        {
+                            var p = new Path(pen, brush);
+                            ReadPath(p, dA.Value);
+                            r = p;
+                        }
+                    }
+                    break;
+                case "polygon":
+                    {
+                        var pA = e.Attribute("points");
+                        if (pA != null && !string.IsNullOrWhiteSpace(pA.Value))
+                        {
+                            var path = new Path(pen, brush);
+                            ReadPoints(path, pA.Value, true);
+                            r = path;
+                        }
+                    }
+                    break;
+                case "polyline":
+                    {
+                        var pA = e.Attribute("points");
+                        if (pA != null && !string.IsNullOrWhiteSpace(pA.Value))
+                        {
+                            var path = new Path(pen, brush);
+                            ReadPoints(path, pA.Value, false);
+                            r = path;
+                        }
+                    }
+                    break;
+                case "g":
+                    {
+                        var g = new Group();
+                        var groupId = e.Attribute("id");
+                        if (groupId != null && !string.IsNullOrEmpty(groupId.Value))
+                            g.Id = groupId.Value;
 
-					var groupOpacity = e.Attribute ("opacity");
-					if (groupOpacity != null && !string.IsNullOrEmpty (groupOpacity.Value)) 
-						g.Opacity = ReadNumber (groupOpacity);
+                        var groupOpacity = e.Attribute("opacity");
+                        if (groupOpacity != null && !string.IsNullOrEmpty(groupOpacity.Value))
+                            g.Opacity = ReadNumber(groupOpacity);
 
-					AddElements (g.Children, e.Elements (), pen, brush);
+                        AddElements(g.Children, e.Elements(), pen, brush);
 
-					r = g;
-				}
-				break;
-			case "use":
-				{
-					var href = ReadString (e.Attributes ().FirstOrDefault (x => x.Name.LocalName == "href"));
-					if (!string.IsNullOrWhiteSpace (href)) {
-						XElement useE;
-						if (defs.TryGetValue (href.Trim ().Replace ("#", ""), out useE)) {
-							var useList = new List<Element> ();
-							AddElement (useList, useE, pen, brush);
-							r = useList.FirstOrDefault ();
-						}
-					}
-				}
-				break;
-			case "title":
-				Graphic.Title = ReadString (e);
-				break;
-			case "desc":
-			case "description":
-				Graphic.Description = ReadString (e);
-				break;
-			case "defs":
-				// Already read in earlier pass
-				break;
-			case "namedview":
-			case "metadata":
-			case "image":
-				// Ignore
-				break;
+                        r = g;
+                    }
+                    break;
+                case "use":
+                    {
+                        var href = ReadString(e.Attributes().FirstOrDefault(x => x.Name.LocalName == "href"));
+                        if (!string.IsNullOrWhiteSpace(href))
+                        {
+                            XElement useE;
+                            if (defs.TryGetValue(href.Trim().Replace("#", ""), out useE))
+                            {
+                                var useList = new List<Element>();
+                                AddElement(useList, useE, pen, brush);
+                                r = useList.FirstOrDefault();
+                            }
+                        }
+                    }
+                    break;
+                case "title":
+                    Graphic.Title = ReadString(e);
+                    break;
+                case "desc":
+                case "description":
+                    Graphic.Description = ReadString(e);
+                    break;
+                case "defs":
+                    // Already read in earlier pass
+                    break;
+                case "namedview":
+                case "metadata":
+                case "image":
+                    // Ignore
+                    break;
 
-				case "line":
-				{
-					var x1 = ReadNumber ( e.Attribute("x1") );
-					var x2 = ReadNumber ( e.Attribute("x2") );
-					var y1 = ReadNumber ( e.Attribute("y1") );
-					var y2 = ReadNumber ( e.Attribute("y2") );
-					var p = new Path (pen, null);
-					p.MoveTo (x1, y1);
-					p.LineTo (x2, y2);
-					r = p;
-				}
-				break;
+                case "line":
+                    {
+                        var x1 = ReadNumber(e.Attribute("x1"));
+                        var x2 = ReadNumber(e.Attribute("x2"));
+                        var y1 = ReadNumber(e.Attribute("y1"));
+                        var y2 = ReadNumber(e.Attribute("y2"));
+                        var p = new Path(pen, null);
+                        p.MoveTo(x1, y1);
+                        p.LineTo(x2, y2);
+                        r = p;
+                    }
+                    break;
 
-				case "foreignObject":
-				{
-					var x = ReadNumber ( e.Attribute("x") );
-					var y = ReadNumber ( e.Attribute("y") );
-					var width = ReadNumber ( e.Attribute("width") );
-					var height = ReadNumber ( e.Attribute("height") );
-					r = new ForeignObject(new Point(x, y), new Size(width, height));
-				}
-				break;
+                case "foreignObject":
+                    {
+                        var x = ReadNumber(e.Attribute("x"));
+                        var y = ReadNumber(e.Attribute("y"));
+                        var width = ReadNumber(e.Attribute("width"));
+                        var height = ReadNumber(e.Attribute("height"));
+                        r = new ForeignObject(new Point(x, y), new Size(width, height));
+                    }
+                    break;
 
-				case "pgf":
-				{
-					var id = e.Attribute("id");
-					System.Diagnostics.Debug.WriteLine("Ignoring pgf element" + (id != null ? ": '" + id.Value + "'" : ""));
-				}
-				break;
+                case "pgf":
+                    {
+                        var id = e.Attribute("id");
+                        System.Diagnostics.Debug.WriteLine("Ignoring pgf element" + (id != null ? ": '" + id.Value + "'" : ""));
+                    }
+                    break;
 
-				case "switch":
-				{
-					// Evaluate requiredFeatures, requiredExtensions and systemLanguage
-					foreach (var ee in e.Elements())
-					{
-						var requiredFeatures = ee.Attribute("requiredFeatures");
-						var requiredExtensions = ee.Attribute("requiredExtensions");
-						var systemLanguage = ee.Attribute("systemLanguage");
-						// currently no support for any of these restrictions
-						if (requiredFeatures == null && requiredExtensions == null && systemLanguage == null)
-							AddElement (list, ee, pen, brush);
-					}
-				}
-				break;
-
-
-				// color definition that can be referred to by other elements
-				case "linearGradient":
-				break;
+                case "switch":
+                    {
+                        // Evaluate requiredFeatures, requiredExtensions and systemLanguage
+                        foreach (var ee in e.Elements())
+                        {
+                            var requiredFeatures = ee.Attribute("requiredFeatures");
+                            var requiredExtensions = ee.Attribute("requiredExtensions");
+                            var systemLanguage = ee.Attribute("systemLanguage");
+                            // currently no support for any of these restrictions
+                            if (requiredFeatures == null && requiredExtensions == null && systemLanguage == null)
+                                AddElement(list, ee, pen, brush);
+                        }
+                    }
+                    break;
 
 
-			default:
-				throw new NotSupportedException ("SVG element \"" + e.Name.LocalName + "\" is not supported");
-			}
+                // color definition that can be referred to by other elements
+                case "linearGradient":
+                    break;
 
-			if (r != null) {
-				r.Transform = ReadTransform (ReadString (e.Attribute ("transform")));
-				var ida = e.Attribute("id");
-				if (ida != null && !string.IsNullOrEmpty (ida.Value)) {
-					r.Id = ida.Value.Trim ();
-				}
-				list.Add (r);
-			}
-		}
 
-		Regex keyValueRe = new Regex (@"\s*([\w-]+)\s*:\s*(.*)");
+                default:
+                    throw new NotSupportedException("SVG element \"" + e.Name.LocalName + "\" is not supported");
+            }
+
+            if (r != null)
+            {
+                r.Transform = ReadTransform(ReadString(e.Attribute("transform")));
+                var ida = e.Attribute("id");
+                if (ida != null && !string.IsNullOrEmpty(ida.Value))
+                {
+                    r.Id = ida.Value.Trim();
+                }
+                list.Add(r);
+            }
+        }
+
+        private void GetPenAndBrush(XElement e, Pen inheritPen, Brush inheritBrush, ref Pen pen, ref Brush brush)
+        {
+            bool hasPen, hasBrush;
+            ApplyStyle(e.Attributes().ToDictionary(k => k.Name.LocalName, v => v.Value), ref pen, out hasPen, ref brush, out hasBrush);
+            var style = ReadString(e.Attribute("style"));
+            if (!string.IsNullOrWhiteSpace(style))
+            {
+                ApplyStyle(style, ref pen, out hasPen, ref brush, out hasBrush);
+            }
+            pen = hasPen ? pen : inheritPen;
+            brush = hasBrush ? brush : inheritBrush;
+        }
+
+        Regex keyValueRe = new Regex (@"\s*([\w-]+)\s*:\s*(.*)");
 
 		void ApplyStyle (string style, ref Pen pen, out bool hasPen, ref Brush brush, out bool hasBrush)
 		{
@@ -527,15 +542,20 @@ namespace NGraphics
 			return t;
 		}
 
-		void ReadTextSpans (Text txt, XElement e)
+		void ReadTextSpans (Text txt, XElement e, Pen inheritPen, Brush inheritBrush)
 		{
 			foreach (XNode c in e.Nodes ()) {
 				if (c.NodeType == XmlNodeType.Text) {
-					txt.Spans.Add (new TextSpan (((XText)c).Value));
+                    txt.Spans.Add(new TextSpan(((XText)c).Value) { Pen = inheritPen, Brush = inheritBrush });
 				} else if (c.NodeType == XmlNodeType.Element) {
 					var ce = (XElement)c;
 					if (ce.Name.LocalName == "tspan") {
 						var tspan = new TextSpan (ce.Value);
+                        Pen newpen = null;
+                        Brush newbrush = null;
+                        GetPenAndBrush(ce, inheritPen, inheritBrush, ref newpen, ref newbrush);
+                        tspan.Pen = newpen;
+                        tspan.Brush = newbrush;
 						var x = ReadOptionalNumber (ce.Attribute ("x"));
 						var y = ReadOptionalNumber (ce.Attribute ("y"));
 						if (x.HasValue && y.HasValue) {

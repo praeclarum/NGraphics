@@ -26,7 +26,7 @@ namespace NGraphics
 			Frame = frame;
 			Font = font;
 			Alignment = alignment;
-			Spans = new List<TextSpan> { new TextSpan (text) };
+            Spans = new List<TextSpan> { new TextSpan(text) { Brush = brush, Pen = pen } };
 		}
 
 		public Text (Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
@@ -63,9 +63,9 @@ namespace NGraphics
 		{
 			foreach (var s in Spans) {
 				if (s.Position != null) {
-					canvas.DrawText (s.Text, new Rect (s.Position.Value, Size.MaxValue), s.Font ?? Font, TextAlignment.Left, Pen, Brush);
+					canvas.DrawText (s.Text, new Rect (s.Position.Value, Size.MaxValue), s.Font ?? Font, TextAlignment.Left, s.Pen, s.Brush);
 				} else {
-					canvas.DrawText (s.Text, Frame, s.Font ?? Font, Alignment, Pen, Brush);
+					canvas.DrawText (s.Text, Frame, s.Font ?? Font, Alignment, s.Pen, s.Brush);
 				}
 			}
 		}
@@ -104,6 +104,8 @@ namespace NGraphics
 
 	public class TextSpan
 	{
+        public Pen Pen;
+        public Brush Brush;
 		public Point? Position;
 		public Font Font;
 		public string Text;
