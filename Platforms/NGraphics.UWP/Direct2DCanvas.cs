@@ -248,9 +248,35 @@ namespace NGraphics
 
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
-			var layout = new DW.TextLayout (factories.DWFactory, text, WinUniversalPlatform.GetTextFormat (factories, font), (float)frame.Width, (float)frame.Height);
-			var h = layout.Metrics.Height + layout.OverhangMetrics.Top;
-			renderTarget.DrawTextLayout ((frame.TopLeft - h*Point.OneY).ToVector2 (), layout, GetBrush (frame, brush));
+            try
+            {
+                if(brush==null)
+                {
+                    brush = new SolidBrush(Color.FromRGB(0, 0, 0, 0));
+                }
+                var layout = new DW.TextLayout(factories.DWFactory, text, WinUniversalPlatform.GetTextFormat(factories, font), (float)frame.Width, (float)frame.Height);
+                var h = layout.Metrics.Height + layout.OverhangMetrics.Top;
+                var point = (frame.TopLeft - h * Point.OneY).ToVector2();
+                if (pen==null)
+                {
+                    renderTarget.DrawTextLayout(point, layout, GetBrush(frame, brush));
+                }
+                else
+                {
+                    using (var pentr = new TextRendererWithPen(factories.D2DFactory, renderTarget))
+                    {
+                        pentr.PenBrush = GetBrush(pen);
+                        pentr.PenWidth = (float)pen.Width;
+                        pentr.PenStyle = GetStrokeStyle(pen);
+                        pentr.FontBrush = GetBrush(frame,brush);
+                        layout.Draw(pentr, point.X, point.Y);
+                    }
+                }
+            }
+            catch
+            {
+                System.Diagnostics.Debug.WriteLine("drawtexterror");
+            }
 		}
 
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
