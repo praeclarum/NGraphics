@@ -26,5 +26,13 @@ namespace SvgViewer
         {
             this.InitializeComponent();
         }
+
+        private async void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            Windows.Storage.Pickers.FileOpenPicker fop = new Windows.Storage.Pickers.FileOpenPicker();
+            fop.FileTypeFilter.Add(".svg");
+            var file=await fop.PickSingleFileAsync();
+            img.SetSource(await file.OpenStreamForReadAsync());
+        }
     }
 }

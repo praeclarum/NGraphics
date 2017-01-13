@@ -104,6 +104,23 @@ namespace Yinyue200.SvgView
                     }
             }
         }
+
+
+
+        public bool UseRecommendedSize
+        {
+            get { return (bool)GetValue(UseRecommendedSizeProperty); }
+            set { SetValue(UseRecommendedSizeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for UseRecommendedSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty UseRecommendedSizeProperty =
+            DependencyProperty.Register("UseRecommendedSize", typeof(bool), typeof(SvgView), new PropertyMetadata(true));
+
+
+
+
+
         // Using a DependencyProperty as the backing store for UriSource.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty UriSourceProperty =
             DependencyProperty.Register(nameof(UriSource), typeof(Uri), typeof(SvgView), new PropertyMetadata(null, UriSourceChangedCallback));
@@ -189,8 +206,17 @@ namespace Yinyue200.SvgView
         {
             if(canuse(this.ActualHeight)&&canuse(this.ActualWidth))
             {
-                var canvas = Platforms.Current.CreateImageCanvas(new Size(ActualWidth, ActualHeight), scale: disinfo / 96);
                 var svg = NGraphics.Graphic.LoadSvg(tr);
+                Size size;
+                if (UseRecommendedSize)
+                {
+                    size = svg.Size;
+                }
+                else
+                {
+                    size = new Size(ActualWidth, ActualHeight);
+                }
+                var canvas = Platforms.Current.CreateImageCanvas(size, scale: disinfo / 96f);
                 svg.Draw(canvas);
                 images = (canvas.GetImage() as WICBitmapSourceImage).SaveAsSoftwareBitmapSource();
             }

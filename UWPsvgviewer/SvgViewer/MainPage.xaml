@@ -9,8 +9,13 @@
     mc:Ignorable="d">
 
     <Grid >
-        <svgview:SvgView UriSource="Assets/text2.svg" />
-        <!--<svgview:SvgView UriSource="Assets/index.svg" Width="10000" Height="10000" />-->
+        <!--<svgview:SvgView UriSource="Assets/text2.svg" />-->
+        <svgview:SvgView x:Name="img"   />
 
     </Grid>
+    <Page.TopAppBar>
+        <CommandBar DefaultLabelPosition="Right">
+            <AppBarButton Label="打开" Icon="OpenFile" Click="AppBarButton_Click"/>
+        </CommandBar>
+    </Page.TopAppBar>
 </Page>
