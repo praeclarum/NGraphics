@@ -14,22 +14,6 @@
     <description>NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode graphics using high quality native renderers.</description>    
     <copyright>Copyright 2015 Frank A. Krueger</copyright>
     <tags>graphics pcl vector drawing ios mac android xamarin imaging draw image svg png render</tags>
-    <dependencies>
-      <group targetFramework="win81">
-        <dependency id="SharpDX" version="3.0.0" />
-        <dependency id="SharpDX.Direct2D1" version="3.0.0" />
-        <dependency id="SharpDX.Direct3D11" version="3.0.0" />
-        <dependency id="SharpDX.DXGI" version="3.0.0" />
-        <dependency id="SharpDX.Mathematics" version="3.0.0" />
-      </group>
-      <group targetFramework="wpa81">
-        <dependency id="SharpDX" version="3.0.0" />
-        <dependency id="SharpDX.Direct2D1" version="3.0.0" />
-        <dependency id="SharpDX.Direct3D11" version="3.0.0" />
-        <dependency id="SharpDX.DXGI" version="3.0.0" />
-        <dependency id="SharpDX.Mathematics" version="3.0.0" />
-      </group>
-    </dependencies>
   </metadata>
   <files>
     <!-- .NET -->
