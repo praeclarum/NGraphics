@@ -72,7 +72,7 @@ namespace NGraphics
 
 		public static bool operator != (Rect a, Rect b)
 		{
-			return a.X != b.X || a.Y != b.Y || a.Width != b.Width || a.Height == b.Height;
+			return a.X != b.X || a.Y != b.Y || a.Width != b.Width || a.Height != b.Height;
 		}
 
 		public static Rect operator + (Rect a, Point offset)
