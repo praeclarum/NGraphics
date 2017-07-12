@@ -580,6 +580,7 @@ namespace NGraphics
 		void ReadPath (Path p, string pathDescriptor)
 		{
 			Match m = pathRegex.Match(pathDescriptor);
+            Point previousPoint = new Point();
 			while(m.Success)
 			{
 				var match = m.Value.TrimStart ();
@@ -592,13 +593,9 @@ namespace NGraphics
 					match = negativeNumberRe.Replace(match.Substring(1), " -");
 					var args = match.Split(WSC, StringSplitOptions.RemoveEmptyEntries);
 
-					Point previousPoint = new Point ();
 					int index = 0;
 					while(index < args.Length)
 					{
-						if (p.Operations.Count > 0 && !(p.Operations.Last() is ClosePath))
-							previousPoint = p.Operations.Last().EndPoint;
-
 						if ((op == 'M' || op == 'm') && args.Length >= index+2) {
 							var point = new Point (ReadNumber (args [index]), ReadNumber (args [index+1]));
 							if (op == 'm')
@@ -662,6 +659,8 @@ namespace NGraphics
 						} else {
 							throw new NotSupportedException ("Path Operation " + op);
 						}
+
+                        previousPoint = p.Operations.Last().EndPoint;
 					}
 				}
 				m = m.NextMatch();

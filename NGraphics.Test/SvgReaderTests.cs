@@ -26,6 +26,13 @@ namespace NGraphics.Test
 			}
 		}
 
+		Graphic ReadString(string svg)
+		{
+			var r = new SvgReader(new StringReader(svg));
+			Assert.IsTrue(r.Graphic.Children.Count >= 0);
+			return r.Graphic;
+		}
+
 		async Task ReadAndDraw (string path)
 		{
 			var g = Read (path);
@@ -40,6 +47,16 @@ namespace NGraphics.Test
 			var c2 = new GraphicCanvas (g.Size, Platform);
 			g.Draw (c2);
 			await SaveSvg (c2, path);
+		}
+
+		[Test]
+		public void RelativeMoveAfterClose()
+		{
+			var g = ReadString("<svg><path d=\"M1,2L3,4zm100,100\"/></svg>");
+            var p = (Path)g.Children[0];
+            Assert.AreEqual(4, p.Operations.Count);
+            var m = p.Operations[3];
+            Assert.AreEqual(new Point (103, 104), m.EndPoint);
 		}
 
 		[Test]
