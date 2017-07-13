@@ -4,5 +4,5 @@
     <description></description>
     <defs>
     </defs>
-    <path stroke-width="3" stroke="#000000" fill="#FFA500" d="M100,100 L300,100 L200,300 Z " />
+    <path stroke-width="3" stroke="#000000" fill="#FFFF00" d="M100,100 L300,100 L200,300 Z " />
 </svg>
