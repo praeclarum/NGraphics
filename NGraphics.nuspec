@@ -34,6 +34,7 @@
         <dependency id="System.Runtime.Serialization.Primitives" version="4.3.0" />
       </group>
       <group targetFramework="uap10.0">
+        <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="5.2.2" />
         <dependency id="SharpDX" version="3.1.0" />
         <dependency id="SharpDX.Direct2D1" version="3.1.0" />
         <dependency id="SharpDX.Direct3D11" version="3.1.0" />
