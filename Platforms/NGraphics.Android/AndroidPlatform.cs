@@ -384,6 +384,7 @@ namespace NGraphics
 
 				if (brush != null) {
 					var paint = GetBrushPaint (brush, frame);
+					path.SetFillType (global::Android.Graphics.Path.FillType.EvenOdd);
 					graphics.DrawPath (path, paint);
 				}
 				if (pen != null) {

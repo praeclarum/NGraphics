@@ -8,6 +8,8 @@ packages
 *.suo
 *.nupkg
 
+project.lock.json
+
 build.sh
 runfserve.sh
 NGraphics.Test/Inputs/Smile.sketch

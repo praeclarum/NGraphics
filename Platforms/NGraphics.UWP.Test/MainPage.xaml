@@ -9,7 +9,7 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ScrollViewer>
-            <TextBlock Name="statusText" FontSize="12" Text="status text" />
+            <TextBlock Name="statusText" FontSize="12" Text="Status" />
         </ScrollViewer>
     </Grid>
 </Page>

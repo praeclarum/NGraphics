@@ -26,10 +26,10 @@ namespace NGraphics.Test
 			}
 		}
 
-		Graphic ReadString(string svg)
+		Graphic ReadString (string svg)
 		{
-			var r = new SvgReader(new StringReader(svg));
-			Assert.IsTrue(r.Graphic.Children.Count >= 0);
+			var r = new SvgReader (new StringReader (svg));
+			Assert.IsTrue (r.Graphic.Children.Count >= 0);
 			return r.Graphic;
 		}
 
@@ -50,13 +50,19 @@ namespace NGraphics.Test
 		}
 
 		[Test]
-		public void RelativeMoveAfterClose()
+		public void RelativeMoveAfterClose ()
 		{
-			var g = ReadString("<svg><path d=\"M1,2L3,4zm100,100\"/></svg>");
-            var p = (Path)g.Children[0];
-            Assert.AreEqual(4, p.Operations.Count);
-            var m = p.Operations[3];
-            Assert.AreEqual(new Point (103, 104), m.EndPoint);
+			var g = ReadString ("<svg><path d=\"M1,2L3,4zm100,100\"/></svg>");
+			var p = (Path)g.Children[0];
+			Assert.AreEqual (4, p.Operations.Count);
+			var m = p.Operations[3];
+			Assert.AreEqual (new Point (103, 104), m.EndPoint);
+		}
+
+		[Test]
+		public async Task EvenOdd ()
+		{
+			await ReadAndDraw ("EvenOdd.svg");
 		}
 
 		[Test]

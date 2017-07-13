@@ -82,5 +82,6 @@
     <EmbeddedResource Include="Inputs\sliderThumb.svg" />
     <EmbeddedResource Include="Inputs\TextVariations.svg" />
     <EmbeddedResource Include="Inputs\GroupOpacity.svg" />
+    <EmbeddedResource Include="Inputs\EvenOdd.svg" />
   </ItemGroup>
 </Project>

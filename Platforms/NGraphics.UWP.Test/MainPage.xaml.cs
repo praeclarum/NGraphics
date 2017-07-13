@@ -63,26 +63,34 @@ namespace NGraphics.UWP.Test
             PlatformTest.OpenStream = path => {
                 return new FileMemoryStream { Path = path, };
             };
-            //PlatformTest.CloseStream = async stream => {
-            //	var path = ((FileMemoryStream)stream).Path;
-            //	var url = "http://192.168.1.100:1234/" + System.IO.Path.GetFileName (path);
-            //	System.Diagnostics.Debug.WriteLine ("POSTING " + url);
-            //	stream.Position = 0;
-            //	var content = new StreamContent (stream);
-            //             await client.PostAsync (url, content);
-            //};
 
-            // Save test results to LocalState folder
-            PlatformTest.CloseStream = async stream => {
-                var path = ((FileMemoryStream)stream).Path;
-                System.Diagnostics.Debug.WriteLine ("SAVING " + path);
-                statusText.Text += $"{Environment.NewLine}Saving: {path}"; // show in UI also
-                stream.Position = 0;
-                var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                var file = await localFolder.CreateFileAsync (path, Windows.Storage.CreationCollisionOption.ReplaceExisting);
-                using (var fileStream = await file.OpenStreamForWriteAsync ())
-                    await stream.CopyToAsync (fileStream);
-            };
+			if (false)
+			{
+				PlatformTest.CloseStream = async stream => {
+					var path = ((FileMemoryStream)stream).Path;
+					var url = "http://192.168.1.142:1234/" + System.IO.Path.GetFileName (path);
+					System.Diagnostics.Debug.WriteLine ("POSTING " + url);
+					statusText.Text += $"{Environment.NewLine}Posting: {url}"; // show in UI also
+					stream.Position = 0;
+					var content = new StreamContent (stream);
+				    await client.PostAsync (url, content);
+				};
+			}
+			else
+			{
+				// Save test results to LocalState folder
+				PlatformTest.CloseStream = async stream =>
+				{
+					var path = ((FileMemoryStream)stream).Path;
+					System.Diagnostics.Debug.WriteLine("SAVING " + path);
+					statusText.Text += $"{Environment.NewLine}Saving: {path}"; // show in UI also
+					stream.Position = 0;
+					var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+					var file = await localFolder.CreateFileAsync(path, Windows.Storage.CreationCollisionOption.ReplaceExisting);
+					using (var fileStream = await file.OpenStreamForWriteAsync())
+						await stream.CopyToAsync(fileStream);
+				};
+			}
 
             foreach (var t in tfts) {
 				var test = Activator.CreateInstance (t);

@@ -71,7 +71,7 @@ namespace NGraphics.Android.Test
 					return (e == ".svg" || e == ".png");
 				});
 			foreach (var f in pngs) {
-				client.UploadData ("http://192.168.1.201:1234/" + System.IO.Path.GetFileName (f), System.IO.File.ReadAllBytes (f));
+				client.UploadData ("http://192.168.1.142:1234/" + System.IO.Path.GetFileName (f), System.IO.File.ReadAllBytes (f));
 			}
 		}
 	}
