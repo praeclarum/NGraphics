@@ -140,10 +140,6 @@
       <Project>{bd195f55-d9f8-4985-9089-5eede2b4a0a0}</Project>
       <Name>NGraphics.UWP</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NGraphics.WindowsStore\NGraphics.WindowsStore.csproj">
-      <Project>{35F0412D-049B-4660-8CFF-798833084D68}</Project>
-      <Name>NGraphics.WindowsStore</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

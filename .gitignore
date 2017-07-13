@@ -1,5 +1,7 @@
 .DS_Store
 .com.apple.timemachine.supported
+/.vs
+/Releases
 
 bin
 obj

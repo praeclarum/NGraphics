@@ -2,32 +2,25 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>NGraphics</id>
-    <version>0.4.1</version>
-    <releaseNotes>SVG writing added</releaseNotes>
+    <version>0.5.0-beta1</version>
+    <releaseNotes>Bug fixes and improvements</releaseNotes>
     <title>NGraphics</title>
-    <authors>Frank A. Krueger, et al</authors>
+    <authors>Frank A. Krueger</authors>
     <owners>Frank A. Krueger</owners>
     <licenseUrl>https://github.com/praeclarum/NGraphics/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/praeclarum/NGraphics</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/praeclarum/NGraphics/master/TestResults/Icon-Mac.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode graphics using high quality native renderers.</description>    
-    <copyright>Copyright 2015 Frank A. Krueger</copyright>
+    <copyright>Copyright 2015-2017 Frank A. Krueger</copyright>
     <tags>graphics pcl vector drawing ios mac android xamarin imaging draw image svg png render</tags>
     <dependencies>
-      <group targetFramework="win81">
-        <dependency id="SharpDX" version="3.0.0" />
-        <dependency id="SharpDX.Direct2D1" version="3.0.0" />
-        <dependency id="SharpDX.Direct3D11" version="3.0.0" />
-        <dependency id="SharpDX.DXGI" version="3.0.0" />
-        <dependency id="SharpDX.Mathematics" version="3.0.0" />
-      </group>
-      <group targetFramework="wpa81">
-        <dependency id="SharpDX" version="3.0.0" />
-        <dependency id="SharpDX.Direct2D1" version="3.0.0" />
-        <dependency id="SharpDX.Direct3D11" version="3.0.0" />
-        <dependency id="SharpDX.DXGI" version="3.0.0" />
-        <dependency id="SharpDX.Mathematics" version="3.0.0" />
+      <group targetFramework="uap10.0">
+        <dependency id="SharpDX" version="3.1.0" />
+        <dependency id="SharpDX.Direct2D1" version="3.1.0" />
+        <dependency id="SharpDX.Direct3D11" version="3.1.0" />
+        <dependency id="SharpDX.DXGI" version="3.1.0" />
+        <dependency id="SharpDX.Mathematics" version="3.1.0" />
       </group>
     </dependencies>
   </metadata>
@@ -35,54 +28,40 @@
     <!-- PCL -->
     <file src="NGraphics/bin/Release/NGraphics.dll"     target="lib\portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10\NGraphics.dll" />
     <file src="NGraphics/bin/Release/NGraphics.xml"     target="lib\portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10\NGraphics.xml" />
-    <file src="NGraphics/bin/Release/NGraphics.dll.mdb" target="lib\portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10\NGraphics.dll.mdb" />
+    <file src="NGraphics/bin/Release/NGraphics.pdb"     target="lib\portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10\NGraphics.pdb" />
     <!-- .NET -->
     <file src="NGraphics/bin/Release/NGraphics.dll"                       target="lib\net45\NGraphics.dll" />
     <file src="NGraphics/bin/Release/NGraphics.xml"                       target="lib\net45\NGraphics.xml" />
-    <file src="NGraphics/bin/Release/NGraphics.dll.mdb"                   target="lib\net45\NGraphics.dll.mdb" />   
+    <file src="NGraphics/bin/Release/NGraphics.pdb"                       target="lib\net45\NGraphics.pdb" />   
     <file src="Platforms/NGraphics.Net/bin/Release/NGraphics.Net.dll"     target="lib\net45\NGraphics.Net.dll" />
     <file src="Platforms/NGraphics.Net/bin/Release/NGraphics.Net.xml"     target="lib\net45\NGraphics.Net.xml" />
-    <file src="Platforms/NGraphics.Net/bin/Release/NGraphics.Net.dll.mdb" target="lib\net45\NGraphics.Net.dll.mdb" />   
-    <!-- Windows Store -->
-    <file src="NGraphics/bin/Release/NGraphics.dll"                                     target="lib\win81\NGraphics.dll" />
-    <file src="NGraphics/bin/Release/NGraphics.xml"                                     target="lib\win81\NGraphics.xml" />
-    <file src="NGraphics/bin/Release/NGraphics.dll.mdb"                                 target="lib\win81\NGraphics.dll.mdb" />   
-    <file src="Platforms/NGraphics.WindowsStore/bin/Release/NGraphics.WindowsStore.dll" target="lib\win81\NGraphics.WindowsStore.dll" />
-    <file src="Platforms/NGraphics.WindowsStore/bin/Release/NGraphics.WindowsStore.xml" target="lib\win81\NGraphics.WindowsStore.xml" />
-    <file src="Platforms/NGraphics.WindowsStore/bin/Release/NGraphics.WindowsStore.pdb" target="lib\win81\NGraphics.WindowsStore.dll.mdb" />   
-    <!-- Windows Phone -->
-    <file src="NGraphics/bin/Release/NGraphics.dll"                                     target="lib\wpa81\NGraphics.dll" />
-    <file src="NGraphics/bin/Release/NGraphics.xml"                                     target="lib\wpa81\NGraphics.xml" />
-    <file src="NGraphics/bin/Release/NGraphics.dll.mdb"                                 target="lib\wpa81\NGraphics.dll.mdb" />   
-    <file src="Platforms/NGraphics.WindowsPhone/bin/Release/NGraphics.WindowsPhone.dll" target="lib\wpa81\NGraphics.WindowsPhone.dll" />
-    <file src="Platforms/NGraphics.WindowsPhone/bin/Release/NGraphics.WindowsPhone.xml" target="lib\wpa81\NGraphics.WindowsPhone.xml" />
-    <file src="Platforms/NGraphics.WindowsPhone/bin/Release/NGraphics.WindowsPhone.pdb" target="lib\wpa81\NGraphics.WindowsPhone.dll.mdb" />
+    <file src="Platforms/NGraphics.Net/bin/Release/NGraphics.Net.pdb"     target="lib\net45\NGraphics.Net.pdb" />   
     <!-- UWP -->
     <file src="NGraphics/bin/Release/NGraphics.dll"                       target="lib\uap10.0\NGraphics.dll" />
     <file src="NGraphics/bin/Release/NGraphics.xml"                       target="lib\uap10.0\NGraphics.xml" />
-    <file src="NGraphics/bin/Release/NGraphics.dll.mdb"                   target="lib\uap10.0\NGraphics.dll.mdb" />
+    <file src="NGraphics/bin/Release/NGraphics.pdb"                       target="lib\uap10.0\NGraphics.pdb" />
     <file src="Platforms/NGraphics.UWP/bin/x86/Release/NGraphics.UWP.dll" target="lib\uap10.0\NGraphics.UWP.dll" />
     <file src="Platforms/NGraphics.UWP/bin/x86/Release/NGraphics.UWP.pdb" target="lib\uap10.0\NGraphics.UWP.pdb" />
     <!-- Xamarin.Mac -->
     <file src="NGraphics/bin/Release/NGraphics.dll"                       target="lib\Xamarin.Mac20\NGraphics.dll" />
     <file src="NGraphics/bin/Release/NGraphics.xml"                       target="lib\Xamarin.Mac20\NGraphics.xml" />
-    <file src="NGraphics/bin/Release/NGraphics.dll.mdb"                   target="lib\Xamarin.Mac20\NGraphics.dll.mdb" />   
+    <file src="NGraphics/bin/Release/NGraphics.pdb"                       target="lib\Xamarin.Mac20\NGraphics.pdb" />   
     <file src="Platforms/NGraphics.Mac/bin/Release/NGraphics.Mac.dll"     target="lib\Xamarin.Mac20\NGraphics.Mac.dll" />
     <file src="Platforms/NGraphics.Mac/bin/Release/NGraphics.Mac.xml"     target="lib\Xamarin.Mac20\NGraphics.Mac.xml" />
-    <file src="Platforms/NGraphics.Mac/bin/Release/NGraphics.Mac.dll.mdb" target="lib\Xamarin.Mac20\NGraphics.Mac.dll.mdb" />   
+    <file src="Platforms/NGraphics.Mac/bin/Release/NGraphics.Mac.pdb"     target="lib\Xamarin.Mac20\NGraphics.Mac.pdb" />   
     <!-- Xamarin.iOS -->
     <file src="NGraphics/bin/Release/NGraphics.dll"                       target="lib\Xamarin.iOS10\NGraphics.dll" />
     <file src="NGraphics/bin/Release/NGraphics.xml"                       target="lib\Xamarin.iOS10\NGraphics.xml" />
-    <file src="NGraphics/bin/Release/NGraphics.dll.mdb"                   target="lib\Xamarin.iOS10\NGraphics.dll.mdb" />   
+    <file src="NGraphics/bin/Release/NGraphics.pdb"                       target="lib\Xamarin.iOS10\NGraphics.pdb" />   
     <file src="Platforms/NGraphics.iOS/bin/Release/NGraphics.iOS.dll"     target="lib\Xamarin.iOS10\NGraphics.iOS.dll" />
     <file src="Platforms/NGraphics.iOS/bin/Release/NGraphics.iOS.xml"     target="lib\Xamarin.iOS10\NGraphics.iOS.xml" />
-    <file src="Platforms/NGraphics.iOS/bin/Release/NGraphics.iOS.dll.mdb" target="lib\Xamarin.iOS10\NGraphics.iOS.dll.mdb" />   
+    <file src="Platforms/NGraphics.iOS/bin/Release/NGraphics.iOS.pdb"     target="lib\Xamarin.iOS10\NGraphics.iOS.pdb" />   
     <!-- Xamarin.Android -->
     <file src="NGraphics/bin/Release/NGraphics.dll"                               target="lib\MonoAndroid10\NGraphics.dll" />
     <file src="NGraphics/bin/Release/NGraphics.xml"                               target="lib\MonoAndroid10\NGraphics.xml" />
-    <file src="NGraphics/bin/Release/NGraphics.dll.mdb"                           target="lib\MonoAndroid10\NGraphics.dll.mdb" />   
+    <file src="NGraphics/bin/Release/NGraphics.pdb"                               target="lib\MonoAndroid10\NGraphics.pdb" />   
     <file src="Platforms/NGraphics.Android/bin/Release/NGraphics.Android.dll"     target="lib\MonoAndroid10\NGraphics.Android.dll" />
     <file src="Platforms/NGraphics.Android/bin/Release/NGraphics.Android.xml"     target="lib\MonoAndroid10\NGraphics.Android.xml" />
-    <file src="Platforms/NGraphics.Android/bin/Release/NGraphics.Android.dll.mdb" target="lib\MonoAndroid10\NGraphics.Android.dll.mdb" />   
+    <file src="Platforms/NGraphics.Android/bin/Release/NGraphics.Android.pdb"     target="lib\MonoAndroid10\NGraphics.Android.pdb" />   
   </files>
 </package>
