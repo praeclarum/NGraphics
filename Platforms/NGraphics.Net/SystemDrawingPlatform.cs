@@ -189,8 +189,7 @@ namespace NGraphics
 
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
-			if (brush == null)
-				return;
+            var brushToUse = brush ?? Brushes.Black;
 			var netFont = new System.Drawing.Font (font.Family, (float)font.Size, FontStyle.Regular, GraphicsUnit.Pixel);
 			var sz = graphics.MeasureString (text, netFont);
             var asc = netFont.FontFamily.GetCellAscent(netFont.Style);
@@ -198,7 +197,7 @@ namespace NGraphics
             var ascale = sz.Height / (asc + desc);
             var point = frame.Position;
             var fr = new Rect (point, new Size (sz.Width, sz.Height));
-            graphics.DrawString (text, netFont, Conversions.GetBrush (brush, fr), Conversions.GetPointF (point - new Point (0, sz.Height - desc * ascale)));
+            graphics.DrawString (text, netFont, Conversions.GetBrush (brushToUse, fr), Conversions.GetPointF (point - new Point (0, sz.Height - desc * ascale)));
 		}
 		public void DrawPath (IEnumerable<PathOp> ops, Pen pen = null, Brush brush = null)
 		{
