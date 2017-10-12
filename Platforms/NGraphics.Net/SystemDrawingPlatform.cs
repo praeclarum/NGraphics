@@ -211,6 +211,7 @@ namespace NGraphics
 				foreach (var op in ops) {
 					var mt = op as MoveTo;
 					if (mt != null) {
+                        path.StartFigure();
 						var p = mt.Point;
 						position = p;
                         bb.Add (p);
