@@ -61,7 +61,7 @@ namespace NGraphics
                 var resultUnit = graphics.PageUnit;
                 var asc = netFont.FontFamily.GetCellAscent(netFont.Style);
                 var desc = netFont.FontFamily.GetCellDescent(netFont.Style);
-                var ascale = result.Height / (asc + desc);
+                var ascale = result.Height / (asc + desc) * 0.850;
                 return new TextMetrics {
 					Width = result.Width,
 					Ascent = asc * ascale,
