@@ -1,11 +1,77 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.4</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;VSTEST</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;VSTEST</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NUnit" Version="3.8.1" />
+    <None Remove="Inputs\cat.png" />
+    <None Remove="Inputs\ErulisseuiinSpaceshipPack.svg" />
+    <None Remove="Inputs\GroupOpacity.svg" />
+    <None Remove="Inputs\MocastIcon.svg" />
+    <None Remove="Inputs\mozilla\BezierCurves1.svg" />
+    <None Remove="Inputs\mozilla\BezierCurves2.svg" />
+    <None Remove="Inputs\mozilla\ellipse.svg" />
+    <None Remove="Inputs\mozilla\path.svg" />
+    <None Remove="Inputs\mozilla\Text1.svg" />
+    <None Remove="Inputs\mozilla\Text2.svg" />
+    <None Remove="Inputs\mozilla\Text3.svg" />
+    <None Remove="Inputs\mozilla\Text4.svg" />
+    <None Remove="Inputs\mozilla\transform.svg" />
+    <None Remove="Inputs\repeat.svg" />
+    <None Remove="Inputs\sliderThumb.svg" />
+    <None Remove="Inputs\Smile.svg" />
+    <None Remove="Inputs\SunAtNight.sketch\Data" />
+    <None Remove="Inputs\SunAtNight.sketch\metadata" />
+    <None Remove="Inputs\SunAtNight.sketch\QuickLook\Preview.png" />
+    <None Remove="Inputs\SunAtNight.sketch\QuickLook\Thumbnail.png" />
+    <None Remove="Inputs\SunAtNight.sketch\version" />
+    <None Remove="Inputs\SunAtNight.svg" />
+    <None Remove="Inputs\TextVariations.sketch" />
+    <None Remove="Inputs\TextVariations.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Inputs\cat.png" />
+    <EmbeddedResource Include="Inputs\ErulisseuiinSpaceshipPack.svg" />
+    <EmbeddedResource Include="Inputs\GroupOpacity.svg" />
+    <EmbeddedResource Include="Inputs\MocastIcon.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\BezierCurves1.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\BezierCurves2.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\ellipse.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\path.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\Text1.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\Text2.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\Text3.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\Text4.svg" />
+    <EmbeddedResource Include="Inputs\mozilla\transform.svg" />
+    <EmbeddedResource Include="Inputs\repeat.svg" />
+    <EmbeddedResource Include="Inputs\sliderThumb.svg" />
+    <EmbeddedResource Include="Inputs\Smile.svg" />
+    <EmbeddedResource Include="Inputs\SunAtNight.sketch\Data" />
+    <EmbeddedResource Include="Inputs\SunAtNight.sketch\metadata" />
+    <EmbeddedResource Include="Inputs\SunAtNight.sketch\QuickLook\Preview.png" />
+    <EmbeddedResource Include="Inputs\SunAtNight.sketch\QuickLook\Thumbnail.png" />
+    <EmbeddedResource Include="Inputs\SunAtNight.sketch\version" />
+    <EmbeddedResource Include="Inputs\SunAtNight.svg" />
+    <EmbeddedResource Include="Inputs\TextVariations.sketch" />
+    <EmbeddedResource Include="Inputs\TextVariations.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>
