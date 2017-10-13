@@ -1,56 +1,36 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8E435CF3-C669-41BF-9768-7A40EBD21CC5}</ProjectGuid>
+    <TargetFrameworks>net462</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <RootNamespace>NGraphics.Net.Test</RootNamespace>
-    <AssemblyName>NGraphics.Net.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
+    <IsPackable>false</IsPackable>
+    <RuntimeIdentifiers>win7-x86</RuntimeIdentifiers>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;VSTEST</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;VSTEST</DefineConstants>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=3.8.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.3.8.1\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
+    <Compile Remove="Inputs\**" />
+    <EmbeddedResource Remove="Inputs\**" />
+    <None Remove="Inputs\**" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+
   <ItemGroup>
-    <ProjectReference Include="..\..\NGraphics.Test\NGraphics.Test.csproj">
-      <Project>{264301b1-db94-4873-ba38-fe575d2b53d4}</Project>
-      <Name>NGraphics.Test</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NGraphics.Net\NGraphics.Net.csproj">
-      <Project>{D59E8B57-9EC9-46FC-9E74-02FD6F2AA6FD}</Project>
-      <Name>NGraphics.Net</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\..\NGraphics.Test\NGraphics.Test.csproj" />
+    <ProjectReference Include="..\NGraphics.Net\NGraphics.Net.csproj" />
+    <ProjectReference Include="..\NGraphics.WPF\NGraphics.WPF.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
+
 </Project>
