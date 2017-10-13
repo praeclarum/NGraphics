@@ -76,8 +76,19 @@ namespace NGraphics
 			var mem = new MemoryStream ((int)stream.Length);
 			stream.CopyTo (mem);
 			unsafe {
-				fixed (byte *x = mem.GetBuffer ()) {
-					var provider = new CGDataProvider (new IntPtr (x), (int)mem.Length, false);
+
+#if NET45
+                fixed (byte* x = mem.GetBuffer())
+#else
+                ArraySegment<byte> segment;
+                if (!mem.TryGetBuffer(out segment))
+                {
+                    throw new Exception("Could not get buffer from stream.");
+                }
+                fixed (byte* x = segment.Array)
+#endif
+                { 
+                    var provider = new CGDataProvider (new IntPtr (x), (int)mem.Length, false);
 					var image = CGImage.FromPNG (provider, null, false, CGColorRenderingIntent.Default)
                         ?? CGImage.FromJPEG (provider, null, false, CGColorRenderingIntent.Default);
 					return new CGImageImage (image, 1);
@@ -579,7 +590,7 @@ namespace NGraphics
 			var c = color.Components;
 			return Color.FromRGB (c[0], c[1], c[2], c[3]);
 		}
-		#if __IOS__ || __TVOS__
+#if __IOS__ || __TVOS__
 		public static UIKit.UIColor GetUIColor (this Color color)
 		{
 			return UIKit.UIColor.FromRGBA (color.R, color.G, color.B, color.A);
@@ -595,13 +606,13 @@ namespace NGraphics
 			var c = (CGImageImage)image;
 			return new UIKit.UIImage (c.Image, (nfloat)c.Scale, UIKit.UIImageOrientation.Up);
 		}
-		#else
+#else
 		public static AppKit.NSImage GetNSImage (this IImage image)
 		{
 			var c = (CGImageImage)image;
 			return new AppKit.NSImage (c.Image, Conversions.GetCGSize (c.Size));
 		}
-		#endif
+#endif
 	}
 }
 

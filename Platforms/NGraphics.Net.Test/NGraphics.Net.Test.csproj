@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -7,7 +7,8 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>NGraphics.Net.Test</RootNamespace>
     <AssemblyName>NGraphics.Net.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,10 +29,10 @@
     <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.8.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NUnit.3.8.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -39,20 +40,17 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\..\NGraphics\NGraphics.csproj">
-      <Project>{4EA643B9-84F6-4AD4-B89E-AE230A7461B8}</Project>
-      <Name>NGraphics</Name>
+    <ProjectReference Include="..\..\NGraphics.Test\NGraphics.Test.csproj">
+      <Project>{264301b1-db94-4873-ba38-fe575d2b53d4}</Project>
+      <Name>NGraphics.Test</Name>
     </ProjectReference>
     <ProjectReference Include="..\NGraphics.Net\NGraphics.Net.csproj">
       <Project>{D59E8B57-9EC9-46FC-9E74-02FD6F2AA6FD}</Project>
       <Name>NGraphics.Net</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\NGraphics.Test\NGraphics.Test.csproj">
-      <Project>{D8259A30-0714-4160-89AF-0C644551DF3B}</Project>
-      <Name>NGraphics.Test</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
 </Project>

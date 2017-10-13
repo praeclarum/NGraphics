@@ -1,74 +1,53 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{AB9C83C0-6DC1-4C04-A40A-677897CA22C8}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>NGraphics.Mac</RootNamespace>
-    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
     <AssemblyName>NGraphics.Mac</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <UseXamMacFullFramework>true</UseXamMacFullFramework>
+    <RootNamespace>NGraphics</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>NGraphics.Mac</PackageId>
+    <Authors>Frank A. Krueger, Pingman Tools</Authors>
+    <Company />
+    <Product />
+    <Description>MacOS backend for NGraphics</Description>
+    <Copyright>Frank A. Krueger</Copyright>
+    <PackageLicenseUrl>https://github.com/PingmanTools/NGraphics/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/PingmanTools/NGraphics</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/PingmanTools/NGraphics</RepositoryUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/PingmanTools/NGraphics/master/TestResults/Icon-Net.png</PackageIconUrl>
+    <PackageTags>graphics pcl vector drawing ios mac android xamarin imaging draw image svg png render</PackageTags>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;MAC</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <UseRefCounting>false</UseRefCounting>
-    <UseSGen>false</UseSGen>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <CreatePackage>false</CreatePackage>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <EnablePackageSigning>false</EnablePackageSigning>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Debug\NGraphics.Mac.xml</DocumentationFile>
-    <Profiling>false</Profiling>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <UseRefCounting>false</UseRefCounting>
-    <UseSGen>false</UseSGen>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <CreatePackage>false</CreatePackage>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <DefineConstants>MAC</DefineConstants>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Release\NGraphics.Mac.xml</DocumentationFile>
-    <DebugSymbols>true</DebugSymbols>
-    <Profiling>false</Profiling>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.3|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard1.3\NGraphics.Mac.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard1.3|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.3\NGraphics.Mac.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Xamarin.Mac" />
+    <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" Condition="'$(TargetFramework)' == 'netstandard1.3'" />
   </ItemGroup>
+
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <ProjectReference Include="..\..\NGraphics.Core\NGraphics.Core.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\..\NGraphics\Platforms.cs">
-      <Link>Platforms.cs</Link>
-    </Compile>
-    <Compile Include="ApplePlatform.cs" />
+    <Reference Include="Xamarin.Mac">
+      <HintPath>..\..\Xamarin.Mac.dll</HintPath>
+      <Private>false</Private>
+      <SpecificVersion>false</SpecificVersion>
+    </Reference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\..\NGraphics\NGraphics.csproj">
-      <Project>{4EA643B9-84F6-4AD4-B89E-AE230A7461B8}</Project>
-      <Name>NGraphics</Name>
-    </ProjectReference>
-  </ItemGroup>
+
 </Project>

@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.1</TargetFramework>
+    <RootNamespace>NGraphics</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode graphics using high quality native renderers.</Description>
+    <Copyright>Frank A. Krueger</Copyright>
+    <PackageTags>graphics pcl vector drawing ios mac android xamarin imaging draw image svg png render</PackageTags>
+    <PackageLicenseUrl>https://github.com/PingmanTools/NGraphics/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/PingmanTools/NGraphics</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/PingmanTools/NGraphics/master/TestResults/Icon-Net.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/PingmanTools/NGraphics</RepositoryUrl>
+    <Authors>Frank A. Krueger, Pingman Tools</Authors>
+    <Company />
+    <Product />
+    <PackageId>NGraphics.Core</PackageId>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.1\NGraphics.Core.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard1.1\NGraphics.Core.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>

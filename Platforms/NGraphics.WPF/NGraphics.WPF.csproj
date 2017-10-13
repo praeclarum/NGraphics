@@ -1,76 +1,38 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CC3D6157-D058-4D77-983F-93F6380C9BA7}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NGraphics.WPF</RootNamespace>
+    <TargetFramework>net45</TargetFramework>
     <AssemblyName>NGraphics.WPF</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
+    <RootNamespace>NGraphics</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>NGraphics.WPF</PackageId>
+    <Authors>Frank A. Krueger, Pingman Tools</Authors>
+    <Company />
+    <Product />
+    <Description>MacOS backend for NGraphics</Description>
+    <Copyright>Frank A. Krueger</Copyright>
+    <PackageLicenseUrl>https://github.com/PingmanTools/NGraphics/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/PingmanTools/NGraphics</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/PingmanTools/NGraphics</RepositoryUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/PingmanTools/NGraphics/master/TestResults/Icon-Net.png</PackageIconUrl>
+    <PackageTags>graphics pcl vector drawing ios mac android xamarin imaging draw image svg png render</PackageTags>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WPF</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Debug\NGraphics.WPF.XML</DocumentationFile>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\net45\NGraphics.WPF.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;WPF</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Release\NGraphics.WPF.XML</DocumentationFile>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\net45\NGraphics.WPF.xml</DocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\NGraphics.Core\NGraphics.Core.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="PresentationCore" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\..\NGraphics\Platforms.cs">
-      <Link>Platforms.cs</Link>
-    </Compile>
-    <Compile Include="PresentationFoundationPlatform.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\NGraphics\NGraphics.csproj">
-      <Project>{4ea643b9-84f6-4ad4-b89e-ae230a7461b8}</Project>
-      <Name>NGraphics</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
