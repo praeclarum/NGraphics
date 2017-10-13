@@ -9,7 +9,7 @@
     <Authors>Frank A. Krueger, Pingman Tools</Authors>
     <Company />
     <Product />
-    <Description>MacOS backend for NGraphics</Description>
+    <Description>WPF (System.Windows.Media) backend for NGraphics</Description>
     <Copyright>Frank A. Krueger</Copyright>
     <PackageLicenseUrl>https://github.com/PingmanTools/NGraphics/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/PingmanTools/NGraphics</PackageProjectUrl>
