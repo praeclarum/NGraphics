@@ -15,6 +15,7 @@
     <Company />
     <Product />
     <PackageId>NGraphics.Core</PackageId>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
