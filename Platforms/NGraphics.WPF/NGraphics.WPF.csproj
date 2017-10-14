@@ -28,7 +28,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\NGraphics.Core\NGraphics.Core.csproj" />
+    <ProjectReference Include="..\..\NGraphics\NGraphics.csproj" />
   </ItemGroup>
 
   <ItemGroup>
