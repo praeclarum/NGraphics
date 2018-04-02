@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2015
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGraphics.Test", "NGraphics.Test\NGraphics.Test.csproj", "{D8259A30-0714-4160-89AF-0C644551DF3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NGraphics.Test", "NGraphics.Test\NGraphics.Test.csproj", "{D8259A30-0714-4160-89AF-0C644551DF3B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGraphics.Net", "Platforms\NGraphics.Net\NGraphics.Net.csproj", "{D59E8B57-9EC9-46FC-9E74-02FD6F2AA6FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGraphics", "NGraphics\NGraphics.csproj", "{4EA643B9-84F6-4AD4-B89E-AE230A7461B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NGraphics", "NGraphics\NGraphics.csproj", "{4EA643B9-84F6-4AD4-B89E-AE230A7461B8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGraphics.Net.Test", "Platforms\NGraphics.Net.Test\NGraphics.Net.Test.csproj", "{8E435CF3-C669-41BF-9768-7A40EBD21CC5}"
 EndProject
@@ -346,5 +346,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {656C7945-D247-4DB4-AEB6-2274CD1E9EF5}
 	EndGlobalSection
 EndGlobal
