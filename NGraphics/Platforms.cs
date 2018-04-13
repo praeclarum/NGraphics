@@ -10,24 +10,16 @@ namespace NGraphics
 		static readonly IPlatform nulll = new NullPlatform ();
 		static IPlatform current = null;
 
-		public static IPlatform Null { get { return nulll; } }
+		public static IPlatform Null => nulll;
 
-		public static IPlatform Current {
+        public static void SetPlatform(IPlatform platform) => current = platform;
+
+        public static void SetPlatform<TPlatform>() where TPlatform : IPlatform, new()  => current = new TPlatform();
+
+        public static IPlatform Current { 
 			get {
 				if (current == null) {
-					#if MAC
-					current = new ApplePlatform ();
-					#elif __IOS__
-					current = new ApplePlatform ();
-					#elif __TVOS__
-					current = new ApplePlatform ();
-					#elif __ANDROID__
-					current = new AndroidPlatform ();
-					#elif NETFX_CORE
-					current = new WinRTPlatform ();
-					#else
-					current = new SystemDrawingPlatform ();
-					#endif
+					throw new Exception("Platform must be first set using " + nameof(SetPlatform));
 				}
 				return current;
 			}

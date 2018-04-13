@@ -1,66 +1,55 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{FE4491D7-0609-4D6F-957B-9DDA3FA03D9F}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>NGraphics.Android</RootNamespace>
-    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
-    <AndroidResgenClass>Resource</AndroidResgenClass>
-    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
-    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
+    <TargetFrameworks>netstandard1.3</TargetFrameworks>
     <AssemblyName>NGraphics.Android</AssemblyName>
-    <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
+    <RootNamespace>NGraphics</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>NGraphics.Android</PackageId>
+    <Authors>Frank A. Krueger, Pingman Tools</Authors>
+    <Company />
+    <Product />
+    <Description>Android backend for NGraphics</Description>
+    <Copyright>Frank A. Krueger</Copyright>
+    <PackageLicenseUrl>https://github.com/PingmanTools/NGraphics/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/PingmanTools/NGraphics</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/PingmanTools/NGraphics</RepositoryUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/PingmanTools/NGraphics/master/TestResults/Icon-Net.png</PackageIconUrl>
+    <PackageTags>graphics pcl vector drawing ios mac android xamarin imaging draw image svg png render</PackageTags>
+    <Version>1.1.0</Version>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AndroidLinkMode>None</AndroidLinkMode>
-    <ConsolePause>false</ConsolePause>
-    <DocumentationFile>bin\Debug\NGraphics.Android.xml</DocumentationFile>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
-    <ConsolePause>false</ConsolePause>
-    <DocumentationFile>bin\Release\NGraphics.Android.xml</DocumentationFile>
-    <DebugSymbols>true</DebugSymbols>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.3|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard1.3\NGraphics.Android.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard1.3|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.3\NGraphics.Android.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="Mono.Android" />
+    <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" Condition="'$(TargetFramework)' == 'netstandard1.3'" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Resources\Resource.designer.cs" />
-    <Compile Include="..\..\NGraphics\Platforms.cs">
-      <Link>Platforms.cs</Link>
-    </Compile>
-    <Compile Include="AndroidPlatform.cs" />
+    <ProjectReference Include="..\..\NGraphics\NGraphics.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <None Include="Resources\AboutResources.txt" />
+    <Reference Include="Java.Interop">
+      <HintPath>..\..\Java.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Android">
+      <HintPath>..\..\Mono.Android.dll</HintPath>
+    </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\values\Strings.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\NGraphics\NGraphics.csproj">
-      <Project>{4EA643B9-84F6-4AD4-B89E-AE230A7461B8}</Project>
-      <Name>NGraphics</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+
 </Project>

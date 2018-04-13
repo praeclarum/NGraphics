@@ -1,7 +1,7 @@
 ﻿#if VSTEST
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestClassAttribute;
-using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.AppContainer.UITestMethodAttribute;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TestFixtureAttribute = Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute;
+using TestAttribute = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
 #else
 using NUnit.Framework;
 #endif

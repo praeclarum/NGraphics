@@ -3,6 +3,9 @@ using System.IO;
 using NGraphics.Test;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TestFixtureAttribute = Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute;
+using TestAttribute = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
 
 namespace NGraphics.Net.Test
 {
@@ -10,8 +13,12 @@ namespace NGraphics.Net.Test
 	{
 		public static void Main (string[] args)
 		{
+            Platforms.SetPlatform<SystemDrawingPlatform>();
 			RunTests ().Wait ();
-		}
+
+            //Platforms.SetPlatform<PresentationFoundationPlatform>();
+            //RunTests().Wait();
+        }
 
 		static async Task RunTests ()
 		{
@@ -22,13 +29,21 @@ namespace NGraphics.Net.Test
 			PlatformTest.Platform = Platforms.Current;
 			Environment.CurrentDirectory = PlatformTest.ResultsDirectory;
 
-			var tat = typeof(NUnit.Framework.TestAttribute);
-			var tfat = typeof(NUnit.Framework.TestFixtureAttribute);
+			var tat = typeof(TestAttribute);
+			var tfat = typeof(TestFixtureAttribute);
 
 			var types = typeof (DrawingTest).Assembly.GetTypes ();
-			var tfts = types.Where (t => t.GetCustomAttributes (tfat, false).Length > 0);
+            var tfts = types.Where(t => t.GetCustomAttributes(tfat, false).Length > 0).ToArray();
 
-			foreach (var t in tfts) {
+            if (tfts.Length == 0)
+            {
+                throw new Exception("No tests found");
+            }
+
+            int passed = 0;
+            int failed = 0;
+
+            foreach (var t in tfts) {
 				var test = Activator.CreateInstance (t);
 				var ms = t.GetMethods ().Where (m => m.GetCustomAttributes (tat, true).Length > 0);
 				foreach (var m in ms) {
@@ -37,17 +52,20 @@ namespace NGraphics.Net.Test
 					try {
 						var r = m.Invoke (test, null);
 						var ta = r as Task;
-						if (ta != null)
-							await ta;
+                        if (ta != null)
+                            await ta;
+                        Console.WriteLine("Succeeded");
+                        passed++;
 					}
 					catch (Exception ex) {
+                        failed++;
 						Console.WriteLine (ex);
 						Console.ReadLine ();
 					}
 				}
 			}
 
-			Console.WriteLine ("Done");
+			Console.WriteLine ($"Done: {passed} passed, {failed} failed");
 		}
 	}
 }

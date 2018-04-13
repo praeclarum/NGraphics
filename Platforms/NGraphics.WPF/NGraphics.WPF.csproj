@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net45</TargetFramework>
+    <AssemblyName>NGraphics.WPF</AssemblyName>
+    <RootNamespace>NGraphics</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>NGraphics.WPF</PackageId>
+    <Authors>Frank A. Krueger, Pingman Tools</Authors>
+    <Company />
+    <Product />
+    <Description>WPF (System.Windows.Media) backend for NGraphics</Description>
+    <Copyright>Frank A. Krueger</Copyright>
+    <PackageLicenseUrl>https://github.com/PingmanTools/NGraphics/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/PingmanTools/NGraphics</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/PingmanTools/NGraphics</RepositoryUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/PingmanTools/NGraphics/master/TestResults/Icon-Net.png</PackageIconUrl>
+    <PackageTags>graphics pcl vector drawing ios mac android xamarin imaging draw image svg png render</PackageTags>
+    <Version>1.1.0</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\net45\NGraphics.WPF.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\net45\NGraphics.WPF.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\NGraphics\NGraphics.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+</Project>
