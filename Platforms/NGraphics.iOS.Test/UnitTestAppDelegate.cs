@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Foundation;
 using UIKit;
 using NGraphics.Test;
+using System.Threading.Tasks;
 
 namespace NGraphics.iOS.Test
 {
@@ -15,7 +16,10 @@ namespace NGraphics.iOS.Test
 
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
-			System.Threading.ThreadPool.QueueUserWorkItem (_ => {
+			Window = new UIWindow (UIScreen.MainScreen.Bounds);
+			Window.RootViewController = new UIViewController ();
+
+			System.Threading.ThreadPool.QueueUserWorkItem (async _ => {
 				var tat = typeof (NUnit.Framework.TestAttribute);
 				var tfat = typeof (NUnit.Framework.TestFixtureAttribute);
 
@@ -26,20 +30,38 @@ namespace NGraphics.iOS.Test
 				PlatformTest.Platform = Platforms.Current;
 				Environment.CurrentDirectory = PlatformTest.ResultsDirectory;
 
+				List<Exception> errors = new List<Exception> ();
+
+				SetColor (UIColor.Yellow);
+
 				foreach (var t in tfts) {
 					var test = Activator.CreateInstance (t);
 					var ms = t.GetMethods ().Where (m => m.GetCustomAttributes (tat, true).Length > 0);
 					foreach (var m in ms) {
-						m.Invoke (test, null);
+						Console.WriteLine ($"Running {m}");
+						try {
+							if (m.Invoke (test, null) is Task ttask) {
+								await ttask;
+							}
+						}
+						catch (Exception ex) {
+							Console.WriteLine (ex);
+							errors.Add (ex);
+						}
 					}
 				}
+				SetColor (errors.Count > 0 ? UIColor.Red : UIColor.Green);
 			});
 
-			Window = new UIWindow (UIScreen.MainScreen.Bounds);
-			Window.RootViewController = new UIViewController ();
 			Window.MakeKeyAndVisible ();
 
 			return true;
+		}
+
+		void SetColor (UIColor color) {
+			BeginInvokeOnMainThread (() => {
+				Window.RootViewController.View.BackgroundColor = color;
+			});
 		}
 	}
 }

@@ -46,7 +46,11 @@ namespace NGraphics.Test
 			var ti = ty.GetTypeInfo ();
 			var assembly = ti.Assembly;
 			var resources = assembly.GetManifestResourceNames ();
-			return assembly.GetManifestResourceStream ("NGraphics.Test.Inputs." + path);
+			var s = assembly.GetManifestResourceStream ("NGraphics.Test.Inputs." + path);
+			if (s == null) {
+				throw new Exception ("Could not find resource: " + path);
+			}
+			return s;
 		}
 		public IImage GetResourceImage (string name)
 		{

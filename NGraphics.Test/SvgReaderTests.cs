@@ -60,6 +60,13 @@ namespace NGraphics.Test
 		}
 
 		[Test]
+		public async Task Find ()
+		{
+			// Issue #91
+			await ReadAndDraw ("find.svg");
+		}
+
+		[Test]
 		public async Task EvenOdd ()
 		{
 			await ReadAndDraw ("EvenOdd.svg");
