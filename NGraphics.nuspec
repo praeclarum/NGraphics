@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>NGraphics</id>
-    <version>0.5.0-beta1</version>
+    <version>0.5.0</version>
     <releaseNotes>Bug fixes and improvements</releaseNotes>
     <title>NGraphics</title>
     <authors>Frank A. Krueger</authors>
@@ -12,25 +12,10 @@
     <iconUrl>https://raw.githubusercontent.com/praeclarum/NGraphics/master/TestResults/Icon-Mac.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode graphics using high quality native renderers.</description>    
-    <copyright>Copyright 2015-2017 Frank A. Krueger</copyright>
+    <copyright>Copyright 2015-2018 Frank A. Krueger</copyright>
     <tags>graphics pcl vector drawing ios mac android xamarin imaging draw image svg png render</tags>
     <dependencies>
-      <group targetFramework="netstandard1.2">
-        <dependency id="System.Runtime.Serialization.Primitives" version="4.3.0" />
-      </group>
       <group targetFramework="netstandard1.3">
-        <dependency id="System.Runtime.Serialization.Primitives" version="4.3.0" />
-      </group>
-      <group targetFramework="netstandard1.4">
-        <dependency id="System.Runtime.Serialization.Primitives" version="4.3.0" />
-      </group>
-      <group targetFramework="netstandard1.5">
-        <dependency id="System.Runtime.Serialization.Primitives" version="4.3.0" />
-      </group>
-      <group targetFramework="netstandard1.6">
-        <dependency id="System.Runtime.Serialization.Primitives" version="4.3.0" />
-      </group>
-      <group targetFramework="netstandard2.0">
         <dependency id="System.Runtime.Serialization.Primitives" version="4.3.0" />
       </group>
       <group targetFramework="uap10.0">
@@ -45,9 +30,9 @@
   </metadata>
   <files>
     <!-- NetStandard -->
-    <file src="NGraphics/bin/Release/NGraphics.dll"     target="lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/NGraphics.dll" />
-    <file src="NGraphics/bin/Release/NGraphics.xml"     target="lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/NGraphics.xml" />
-    <file src="NGraphics/bin/Release/NGraphics.pdb"     target="lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10/NGraphics.pdb" />
+    <file src="NGraphics/bin/Release/netstandard1.3/NGraphics.dll"        target="lib/netstandard1.3/NGraphics.dll" />
+    <file src="NGraphics/bin/Release/netstandard1.3/NGraphics.xml"        target="lib/netstandard1.3/NGraphics.xml" />
+    <file src="NGraphics/bin/Release/netstandard1.3/NGraphics.pdb"        target="lib/netstandard1.3/NGraphics.pdb" />
     <!-- .NET -->
     <file src="NGraphics/bin/Release/NGraphics.dll"                       target="lib/net45/NGraphics.dll" />
     <file src="NGraphics/bin/Release/NGraphics.xml"                       target="lib/net45/NGraphics.xml" />
