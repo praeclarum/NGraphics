@@ -12,7 +12,7 @@ namespace NGraphics
 
 		public IPlatform TextPlatform { get; set; }
 
-		public GraphicCanvas (Size size, IPlatform textPlatform)
+		public GraphicCanvas (Size size, IPlatform textPlatform = null)
 		{
 			states.Push (NGraphics.Transform.Identity);
 			TextPlatform = textPlatform;
@@ -43,7 +43,10 @@ namespace NGraphics
 		}
 		public TextMetrics MeasureText (string text, Font font)
 		{
-			return TextPlatform.MeasureText (text, font);
+			if (TextPlatform != null) {
+				return TextPlatform.MeasureText (text, font);
+			}
+			return new TextMetrics ();
 		}
 		public void DrawText (string text, Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
 		{
