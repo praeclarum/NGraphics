@@ -1,79 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{4EA643B9-84F6-4AD4-B89E-AE230A7461B8}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>NGraphics</RootNamespace>
-    <AssemblyName>NGraphics</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>portable</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <DocumentationFile>bin\Debug\NGraphics.xml</DocumentationFile>
-    <NoWarn>1591</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>portable</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <DebugSymbols>true</DebugSymbols>
-    <DocumentationFile>bin\Release\NGraphics.xml</DocumentationFile>
+    <TargetFramework>netstandard1.2</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Brush.cs" />
-    <Compile Include="Color.cs" />
-    <Compile Include="IDrawable.cs" />
-    <Compile Include="IImage.cs" />
-    <Compile Include="IPlatform.cs" />
-    <Compile Include="Log.cs" />
-    <Compile Include="NullPlatform.cs" />
-    <Compile Include="Pen.cs" />
-    <Compile Include="Point.cs" />
-    <Compile Include="Size.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ICanvas.cs" />
-    <Compile Include="Graphic.cs" />
-    <Compile Include="Ellipse.cs" />
-    <Compile Include="GraphicCanvas.cs" />
-    <Compile Include="Drawing.cs" />
-    <Compile Include="SvgReader.cs" />
-    <Compile Include="Group.cs" />
-    <Compile Include="Rect.cs" />
-    <Compile Include="Rectangle.cs" />
-    <Compile Include="Path.cs" />
-    <Compile Include="Transform.cs" />
-    <Compile Include="Text.cs" />
-    <Compile Include="Element.cs" />
-    <Compile Include="Font.cs" />
-    <Compile Include="FilterCanvas.cs" />
-    <Compile Include="DrawImageCache.cs" />
-    <Compile Include="ForeignObject.cs" />
-    <Compile Include="EdgeSampling.cs" />
-    <Compile Include="SvgWriter.cs" />
-    <Compile Include="CodeWriter.cs" />
+    <Compile Remove="Platforms.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <ItemGroup />
   <ItemGroup>
-    <None Include="..\NGraphics.nuspec">
-      <Link>NGraphics.nuspec</Link>
-    </None>
-    <None Include="..\README.md">
-      <Link>README.md</Link>
-    </None>
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
   </ItemGroup>
 </Project>

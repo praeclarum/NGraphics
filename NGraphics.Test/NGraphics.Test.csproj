@@ -1,87 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{D8259A30-0714-4160-89AF-0C644551DF3B}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>NGraphics.Test</RootNamespace>
-    <AssemblyName>NGraphics.Test</AssemblyName>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AssemblyMarker.cs" />
-    <Compile Include="ImageSurfaceTest.cs" />
-    <Compile Include="DrawingTest.cs" />
-    <Compile Include="PrimitivesTest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GraphicCanvasTests.cs" />
-    <Compile Include="SvgReaderTests.cs" />
-    <Compile Include="PathTests.cs" />
-    <Compile Include="ReadmeTests.cs" />
-    <Compile Include="TransformTests.cs" />
-    <Compile Include="ColorsToImageTests.cs" />
-    <Compile Include="BrushTests.cs" />
-    <Compile Include="ColorTests.cs" />
-    <Compile Include="TextTests.cs" />
-    <Compile Include="ArcTests.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
+    <PackageReference Include="NUnit" Version="3.10.1" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="fserve.fsx" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NGraphics\NGraphics.csproj">
-      <Project>{4EA643B9-84F6-4AD4-B89E-AE230A7461B8}</Project>
-      <Name>NGraphics</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <EmbeddedResource Include="Inputs\mozilla\ellipse.svg" />
-    <EmbeddedResource Include="Inputs\SunAtNight.svg" />
-    <EmbeddedResource Include="Inputs\MocastIcon.svg" />
-    <EmbeddedResource Include="Inputs\mozilla\path.svg" />
-    <EmbeddedResource Include="Inputs\mozilla\transform.svg" />
-    <EmbeddedResource Include="Inputs\mozilla\BezierCurves1.svg" />
-    <EmbeddedResource Include="Inputs\mozilla\BezierCurves2.svg" />
-    <EmbeddedResource Include="Inputs\mozilla\Text1.svg" />
-    <EmbeddedResource Include="Inputs\mozilla\Text2.svg" />
-    <EmbeddedResource Include="Inputs\mozilla\Text3.svg" />
-    <EmbeddedResource Include="Inputs\mozilla\Text4.svg" />
-    <EmbeddedResource Include="Inputs\Smile.svg" />
-    <EmbeddedResource Include="Inputs\ErulisseuiinSpaceshipPack.svg" />
-    <EmbeddedResource Include="Inputs\cat.png" />
-    <EmbeddedResource Include="Inputs\repeat.svg" />
-    <EmbeddedResource Include="Inputs\sliderThumb.svg" />
-    <EmbeddedResource Include="Inputs\TextVariations.svg" />
-    <EmbeddedResource Include="Inputs\GroupOpacity.svg" />
-    <EmbeddedResource Include="Inputs\EvenOdd.svg" />
+    <ProjectReference Include="..\NGraphics\NGraphics.csproj" />
   </ItemGroup>
 </Project>
