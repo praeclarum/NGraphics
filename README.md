@@ -1,6 +1,8 @@
 # NGraphics
 
-[![Build Status](https://www.bitrise.io/app/6feb1573b3c3da12.svg?token=E-iECGz-F7ekrF6elL3Fhw)](https://www.bitrise.io/app/6feb1573b3c3da12)
+[![NuGet Package](https://img.shields.io/nuget/v/Ooui.svg)](https://www.nuget.org/packages/Ooui)
+
+[![Build Status](https://app.bitrise.io/app/6feb1573b3c3da12/status.svg?token=E-iECGz-F7ekrF6elL3Fhw&branch=master)](https://app.bitrise.io/app/6feb1573b3c3da12)
 
 <img src="TestResults/Icon-Mac.png" width="64" height="64" style="float:left;margin-right:1em" /> NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode graphics using high quality native renderers.
 

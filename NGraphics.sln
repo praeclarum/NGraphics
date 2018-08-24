@@ -28,6 +28,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B724C98A-C1C9-4C1F-AC39-5C2D7E552228}"
 	ProjectSection(SolutionItems) = preProject
 		NGraphics.nuspec = NGraphics.nuspec
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGraphics.Watch", "Platforms\NGraphics.Watch\NGraphics.Watch.csproj", "{6B5AA1E6-BBAE-4BE8-AE7F-39EC0F6D5E08}"
