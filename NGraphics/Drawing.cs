@@ -28,10 +28,10 @@ namespace NGraphics
 			}
 		}
 
-		public Drawing (Size size, DrawingFunc func, IPlatform textPlatform)
+		public Drawing (Size size, DrawingFunc func, IPlatform textPlatform = null)
 		{
 			if (func == null) {
-				throw new ArgumentNullException ("func");
+				throw new ArgumentNullException (nameof (func));
 			}
 			this.size = size;
 			this.func = func;

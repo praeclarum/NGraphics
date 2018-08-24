@@ -15,7 +15,9 @@ namespace NGraphics
 	{
 		public string Name {
 			get {
-#if __IOS__
+#if __WATCHOS__
+				return "Watch";
+#elif __IOS__
 				return "iOS";
 #else
 				return "Mac";
@@ -571,10 +573,11 @@ namespace NGraphics
 			return new CTFont (font.Name, (nfloat)font.Size);
 		}
 #if __WATCHOS__
-		public static CGColor GetCGColor (this Color color) {
+		public static CGColor GetCGColor (this Color color)
+		{
 			using (var cs = CGColorSpace.CreateDeviceRGB()) {
 				return new CGColor (cs, new[] {
-					(nfloat)color.Red, (nfloat)color.Green, (nfloat)color.Blue, (nfloat)color.Alpha});
+					(nfloat)color.Red, (nfloat)color.Green, (nfloat)color.Blue, (nfloat)color.Alpha });
 			}
 		}
 #else
@@ -588,7 +591,7 @@ namespace NGraphics
 			var c = color.Components;
 			return Color.FromRGB (c[0], c[1], c[2], c[3]);
 		}
-#if __IOS__ || __TVOS__
+#if __IOS__ || __TVOS__ || __WATCHOS__
 		public static UIKit.UIColor GetUIColor (this Color color)
 		{
 			return UIKit.UIColor.FromRGBA (color.R, color.G, color.B, color.A);
@@ -604,7 +607,6 @@ namespace NGraphics
 			var c = (CGImageImage)image;
 			return new UIKit.UIImage (c.Image, (nfloat)c.Scale, UIKit.UIImageOrientation.Up);
 		}
-#elif __WATCHOS__
 #else
 		public static AppKit.NSImage GetNSImage (this IImage image)
 		{
