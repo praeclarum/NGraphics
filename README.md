@@ -1,6 +1,6 @@
 # NGraphics
 
-[![NuGet Package](https://img.shields.io/nuget/v/Ooui.svg)](https://www.nuget.org/packages/Ooui)
+[![NuGet Package](https://img.shields.io/nuget/v/NGraphics.svg)](https://www.nuget.org/packages/NGraphics)
 
 [![Build Status](https://app.bitrise.io/app/6feb1573b3c3da12/status.svg?token=E-iECGz-F7ekrF6elL3Fhw&branch=master)](https://app.bitrise.io/app/6feb1573b3c3da12)
 
