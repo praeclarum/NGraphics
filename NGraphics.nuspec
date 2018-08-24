@@ -56,6 +56,11 @@
     <file src="NGraphics/bin/Release/netstandard1.0/NGraphics.xml"               target="lib/Xamarin.watchOS10/NGraphics.xml" />
     <file src="Platforms/NGraphics.Watch/bin/Release/NGraphics.Watch.dll"        target="lib/Xamarin.watchOS10/NGraphics.Watch.dll" />
     <file src="Platforms/NGraphics.Watch/bin/Release/NGraphics.Watch.xml"        target="lib/Xamarin.watchOS10/NGraphics.Watch.xml" />
+    <!-- Xamarin.tvOS -->
+    <file src="NGraphics/bin/Release/netstandard1.0/NGraphics.dll"               target="lib/Xamarin.tvOS10/NGraphics.dll" />
+    <file src="NGraphics/bin/Release/netstandard1.0/NGraphics.xml"               target="lib/Xamarin.tvOS10/NGraphics.xml" />
+    <file src="Platforms/NGraphics.TV/bin/Release/NGraphics.TV.dll"              target="lib/Xamarin.tvOS10/NGraphics.TV.dll" />
+    <file src="Platforms/NGraphics.TV/bin/Release/NGraphics.TV.xml"              target="lib/Xamarin.tvOS10/NGraphics.TV.xml" />
     <!-- Xamarin.Android -->
     <file src="NGraphics/bin/Release/netstandard1.0/NGraphics.dll"               target="lib/MonoAndroid10/NGraphics.dll" />
     <file src="NGraphics/bin/Release/netstandard1.0/NGraphics.xml"               target="lib/MonoAndroid10/NGraphics.xml" />

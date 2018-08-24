@@ -572,7 +572,7 @@ namespace NGraphics
 		{
 			return new CTFont (font.Name, (nfloat)font.Size);
 		}
-#if __WATCHOS__
+#if __WATCHOS__ || __TVOS__
 		public static CGColor GetCGColor (this Color color)
 		{
 			using (var cs = CGColorSpace.CreateDeviceRGB()) {
