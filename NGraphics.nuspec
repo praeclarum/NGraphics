@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>NGraphics</id>
-    <version>0.5.0-beta2</version>
+    <version>0.5.0-beta3</version>
     <releaseNotes>Bug fixes and improvements</releaseNotes>
     <title>NGraphics</title>
     <authors>Frank A. Krueger</authors>
@@ -51,10 +51,15 @@
     <file src="NGraphics/bin/Release/netstandard1.0/NGraphics.xml"        target="lib/Xamarin.iOS10/NGraphics.xml" />
     <file src="Platforms/NGraphics.iOS/bin/Release/NGraphics.iOS.dll"     target="lib/Xamarin.iOS10/NGraphics.iOS.dll" />
     <file src="Platforms/NGraphics.iOS/bin/Release/NGraphics.iOS.xml"     target="lib/Xamarin.iOS10/NGraphics.iOS.xml" />
+    <!-- Xamarin.watchOS -->
+    <file src="NGraphics/bin/Release/netstandard1.0/NGraphics.dll"               target="lib/Xamarin.watchOS10/NGraphics.dll" />
+    <file src="NGraphics/bin/Release/netstandard1.0/NGraphics.xml"               target="lib/Xamarin.watchOS10/NGraphics.xml" />
+    <file src="Platforms/NGraphics.Watch/bin/Release/NGraphics.Watch.dll"        target="lib/Xamarin.watchOS10/NGraphics.Watch.dll" />
+    <file src="Platforms/NGraphics.Watch/bin/Release/NGraphics.Watch.xml"        target="lib/Xamarin.watchOS10/NGraphics.Watch.xml" />
     <!-- Xamarin.Android -->
-    <file src="NGraphics/bin/Release/netstandard1.0/NGraphics.dll"        target="lib/MonoAndroid10/NGraphics.dll" />
-    <file src="NGraphics/bin/Release/netstandard1.0/NGraphics.xml"        target="lib/MonoAndroid10/NGraphics.xml" />
-    <file src="Platforms/NGraphics.Android/bin/Release/NGraphics.Android.dll"     target="lib/MonoAndroid10/NGraphics.Android.dll" />
-    <file src="Platforms/NGraphics.Android/bin/Release/NGraphics.Android.xml"     target="lib/MonoAndroid10/NGraphics.Android.xml" />
+    <file src="NGraphics/bin/Release/netstandard1.0/NGraphics.dll"               target="lib/MonoAndroid10/NGraphics.dll" />
+    <file src="NGraphics/bin/Release/netstandard1.0/NGraphics.xml"               target="lib/MonoAndroid10/NGraphics.xml" />
+    <file src="Platforms/NGraphics.Android/bin/Release/NGraphics.Android.dll"    target="lib/MonoAndroid10/NGraphics.Android.dll" />
+    <file src="Platforms/NGraphics.Android/bin/Release/NGraphics.Android.xml"    target="lib/MonoAndroid10/NGraphics.Android.xml" />
   </files>
 </package>

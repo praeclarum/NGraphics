@@ -15,19 +15,21 @@ namespace NGraphics
 		public static IPlatform Current {
 			get {
 				if (current == null) {
-					#if MAC
+#if MAC
 					current = new ApplePlatform ();
-					#elif __IOS__
+#elif __IOS__
 					current = new ApplePlatform ();
-					#elif __TVOS__
+#elif __TVOS__
 					current = new ApplePlatform ();
-					#elif __ANDROID__
+#elif __ANDROID__
 					current = new AndroidPlatform ();
-					#elif NETFX_CORE
+#elif NETFX_CORE
 					current = new WinRTPlatform ();
-					#else
+#elif __WATCHOS__
+					current = new ApplePlatform ();
+#else
 					current = new SystemDrawingPlatform ();
-					#endif
+#endif
 				}
 				return current;
 			}
