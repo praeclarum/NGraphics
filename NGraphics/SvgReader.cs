@@ -19,19 +19,20 @@ namespace NGraphics
 		readonly Dictionary<string, XElement> defs = new Dictionary<string, XElement> ();
 //		readonly XNamespace ns;
 
-		public SvgReader (System.IO.TextReader reader, double pixelsPerInch = 160.0)
+		public SvgReader (System.IO.TextReader reader, double pixelsPerInch = 160.0, Brush defaultBrush = null)
 		{
-			PixelsPerInch = pixelsPerInch;
-			Read (XDocument.Load (reader));
+            defaultBrush = defaultBrush ?? Brushes.Black;
+            PixelsPerInch = pixelsPerInch;
+			Read (XDocument.Load (reader), defaultBrush);
 		}
 
-		public SvgReader (string svgString, double pixelsPerInch = 160.0)
+		public SvgReader (string svgString, double pixelsPerInch = 160.0, Brush defaultBrush = null)
 		{
 			PixelsPerInch = pixelsPerInch;
-			Read (XDocument.Parse(svgString));
+			Read (XDocument.Parse(svgString), defaultBrush);
 		}
 
-		void Read (XDocument doc)
+		void Read (XDocument doc, Brush defaultBrush)
 		{
 			var svg = doc.Root;
 			var ns = svg.Name.Namespace;
@@ -77,7 +78,7 @@ namespace NGraphics
 			//
 			Graphic = new Graphic (size, viewBox);
 
-			AddElements (Graphic.Children, svg.Elements (), null, Brushes.Black);
+			AddElements (Graphic.Children, svg.Elements (), null, defaultBrush);
 		}
 
 		void AddElements (IList<Element> list, IEnumerable<XElement> es, Pen inheritPen, Brush inheritBrush)
