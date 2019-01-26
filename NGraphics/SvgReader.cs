@@ -25,6 +25,12 @@ namespace NGraphics
 			Read (XDocument.Load (reader));
 		}
 
+		public SvgReader (string svgString, double pixelsPerInch = 160.0)
+		{
+			PixelsPerInch = pixelsPerInch;
+			Read (XDocument.Parse(svgString));
+		}
+
 		void Read (XDocument doc)
 		{
 			var svg = doc.Root;
