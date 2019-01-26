@@ -102,6 +102,46 @@ namespace NGraphics.Test
 
 			await SaveImage (canvas, "Color.HSB.png");
 		}
+
+		[Test]
+		public void Parse000 ()
+		{
+			Assert.IsTrue (Colors.TryParse ("#000", out var c));
+			Assert.AreEqual (0, c.R);
+			Assert.AreEqual (0, c.G);
+			Assert.AreEqual (0, c.B);
+			Assert.AreEqual (255, c.A);
+		}
+
+		[Test]
+		public void Parse345 ()
+		{
+			Assert.IsTrue (Colors.TryParse ("#345", out var c));
+			Assert.AreEqual (0x33, c.R);
+			Assert.AreEqual (0x44, c.G);
+			Assert.AreEqual (0x55, c.B);
+			Assert.AreEqual (255, c.A);
+		}
+
+		[Test]
+		public void ParseF1a ()
+		{
+			Assert.IsTrue (Colors.TryParse ("#F1a", out var c));
+			Assert.AreEqual (0xFF, c.R);
+			Assert.AreEqual (0x11, c.G);
+			Assert.AreEqual (0xAA, c.B);
+			Assert.AreEqual (255, c.A);
+		}
+
+		[Test]
+		public void ImplicitCtor ()
+		{
+			var pen = new Pen ("red");
+			Assert.AreEqual (0xFF, pen.Color.R);
+			Assert.AreEqual (0x00, pen.Color.G);
+			Assert.AreEqual (0x00, pen.Color.B);
+			Assert.AreEqual (0xFF, pen.Color.A);
+		}
 	}
 }
 

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace NGraphics
 {
+	/// <summary>
+	/// A color encoded in sRGB.
+	/// </summary>
 	[System.Runtime.InteropServices.StructLayout (System.Runtime.InteropServices.LayoutKind.Sequential)]
 	public struct Color
 	{
@@ -120,6 +123,7 @@ namespace NGraphics
 				throw new ArgumentException ("Bad color string: " + colorString);
 			}
 		}
+		public static implicit operator Color (string colorString) => new Color (colorString);
 
 		public override bool Equals (object obj)
 		{
@@ -538,7 +542,7 @@ namespace NGraphics
 
 			var s = colorString.Trim ();
 
-			if (s.Length == 7 && s [0] == '#') {
+			if (s.Length == 7 && s[0] == '#') {
 
 				var icult = CultureInfo.InvariantCulture;
 
@@ -546,9 +550,29 @@ namespace NGraphics
 				var g = int.Parse (s.Substring (3, 2), NumberStyles.HexNumber, icult);
 				var b = int.Parse (s.Substring (5, 2), NumberStyles.HexNumber, icult);
 
-				color = new Color (r / 255.0, g / 255.0, b / 255.0, 1);
+				color = new Color {
+					R = (byte)r,
+					G = (byte)g,
+					B = (byte)b,
+					A = 255
+				};
 				return true;
+			}
+			else if (s.Length == 4 && s[0] == '#') {
 
+				var icult = CultureInfo.InvariantCulture;
+
+				var r = int.Parse (s.Substring (1, 1), NumberStyles.HexNumber, icult);
+				var g = int.Parse (s.Substring (2, 1), NumberStyles.HexNumber, icult);
+				var b = int.Parse (s.Substring (3, 1), NumberStyles.HexNumber, icult);
+
+				color = new Color {
+					R = (byte)((r << 4) | r),
+					G = (byte)((g << 4) | g),
+					B = (byte)((b << 4) | b),
+					A = 255
+				};
+				return true;
 			}
 
 			Color nc;
