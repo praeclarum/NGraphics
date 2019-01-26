@@ -26,7 +26,7 @@ namespace NGraphics
 			Frame = frame;
 			Font = font;
 			Alignment = alignment;
-			Spans = new List<TextSpan> { new TextSpan (text) };
+			Spans = new List<TextSpan> { new TextSpan (text) { Pen = pen, Brush = brush } };
 		}
 
 		public Text (Rect frame, Font font, TextAlignment alignment = TextAlignment.Left, Pen pen = null, Brush brush = null)
@@ -54,7 +54,7 @@ namespace NGraphics
 			throw new NotImplementedException ();
 		}
 
-		public override bool Contains (Point point)
+		public override bool Contains (Point localPoint)
 		{
 			throw new NotImplementedException ();
 		}
@@ -63,9 +63,9 @@ namespace NGraphics
 		{
 			foreach (var s in Spans) {
 				if (s.Position != null) {
-					canvas.DrawText (s.Text, new Rect (s.Position.Value, Size.MaxValue), s.Font ?? Font, TextAlignment.Left, Pen, Brush);
+					canvas.DrawText (s.Text, new Rect (s.Position.Value, Size.MaxValue), s.Font ?? Font, TextAlignment.Left, s.Pen ?? Pen, s.Brush ?? Brush);
 				} else {
-					canvas.DrawText (s.Text, Frame, s.Font ?? Font, Alignment, Pen, Brush);
+					canvas.DrawText (s.Text, Frame, s.Font ?? Font, Alignment, s.Pen ?? Pen, s.Brush ?? Brush);
 				}
 			}
 		}
@@ -107,6 +107,13 @@ namespace NGraphics
 		public Point? Position;
 		public Font Font;
 		public string Text;
+		public Pen Pen;
+		public Brush Brush;
+
+		public TextSpan ()
+		{
+			Text = String.Empty;
+		}
 
 		public TextSpan (string text)
 		{

@@ -86,22 +86,27 @@ namespace NGraphics
 				AddElement (list, e, inheritPen, inheritBrush);
 		}
 
+		void GetPenAndBrush (XElement e, Pen inheritPen, Brush inheritBrush, out Pen pen, out Brush brush)
+		{
+			bool hasPen, hasBrush;
+			pen = null;
+			brush = null;
+			ApplyStyle (e.Attributes().ToDictionary(k => k.Name.LocalName, v => v.Value), ref pen, out hasPen, ref brush, out hasBrush);
+			var style = ReadString (e.Attribute("style"));
+			if (!string.IsNullOrWhiteSpace(style)) {
+				ApplyStyle(style, ref pen, out hasPen, ref brush, out hasBrush);
+			}
+			pen = hasPen ? pen : inheritPen;
+			brush = hasBrush ? brush : inheritBrush;
+		}
+
 		void AddElement (IList<Element> list, XElement e, Pen inheritPen, Brush inheritBrush)
 		{
 			//
 			// Style
 			//
 			Element r = null;
-			Pen pen = null;
-			Brush brush = null;
-			bool hasPen, hasBrush;
-			ApplyStyle (e.Attributes ().ToDictionary (k => k.Name.LocalName, v => v.Value), ref pen, out hasPen, ref brush, out hasBrush);
-			var style = ReadString (e.Attribute ("style"));
-			if (!string.IsNullOrWhiteSpace (style)) {
-				ApplyStyle (style, ref pen, out hasPen, ref brush, out hasBrush);
-			}
-			pen = hasPen ? pen : inheritPen;
-			brush = hasBrush ? brush : inheritBrush;
+			GetPenAndBrush (e, inheritPen, inheritBrush, out var pen, out var brush);
 			//var id = ReadString (e.Attribute ("id"));
 
 			//
@@ -121,7 +126,7 @@ namespace NGraphics
 						font.Size = fontSize;
 					TextAlignment textAlignment = ReadTextAlignment(e);
 					var txt = new Text (new Rect (new Point (x, y), new Size (double.MaxValue, double.MaxValue)), font, textAlignment, pen, brush);
-					ReadTextSpans (txt, e);
+					ReadTextSpans (txt, e, pen, brush);
 					r = txt;
 				}
 				break;
@@ -533,15 +538,19 @@ namespace NGraphics
 			return t;
 		}
 
-		void ReadTextSpans (Text txt, XElement e)
+		void ReadTextSpans (Text txt, XElement e, Pen inheritPen, Brush inheritBrush)
 		{
 			foreach (XNode c in e.Nodes ()) {
 				if (c.NodeType == XmlNodeType.Text) {
-					txt.Spans.Add (new TextSpan (((XText)c).Value));
+					txt.Spans.Add (new TextSpan (((XText)c).Value) {
+						Pen = inheritPen,
+						Brush = inheritBrush
+					});
 				} else if (c.NodeType == XmlNodeType.Element) {
 					var ce = (XElement)c;
 					if (ce.Name.LocalName == "tspan") {
 						var tspan = new TextSpan (ce.Value);
+						GetPenAndBrush (ce, inheritPen, inheritBrush, out tspan.Pen, out tspan.Brush);
 						var x = ReadOptionalNumber (ce.Attribute ("x"));
 						var y = ReadOptionalNumber (ce.Attribute ("y"));
 						if (x.HasValue && y.HasValue) {
