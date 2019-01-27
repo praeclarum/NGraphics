@@ -16,6 +16,13 @@ namespace NGraphics.Test
 	public class SvgWriterTests : PlatformTest
 	{
 		[Test]
+		public void GetUtf8 ()
+		{
+			var svg = new GraphicCanvas ().Graphic.GetSvg ();
+			Assert.IsTrue (svg.Contains ("encoding=\"UTF-8\""));
+		}
+
+		[Test]
 		public void RoundedRect ()
 		{
 			var c = new GraphicCanvas ();
