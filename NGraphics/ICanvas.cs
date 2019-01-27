@@ -114,13 +114,25 @@ namespace NGraphics
 		{
 			canvas.DrawRectangle (frame, Size.Zero, new Pen (color, width), null);
 		}
+		public static void DrawRectangle (this ICanvas canvas, Rect frame, Size corner, Color color, double width = 1)
+		{
+			canvas.DrawRectangle (frame, corner, new Pen (color, width), null);
+		}
 		public static void DrawRectangle (this ICanvas canvas, Rect frame, Pen pen = null, Brush brush = null)
 		{
 			canvas.DrawRectangle (frame, Size.Zero, pen, brush);
 		}
 		public static void DrawRectangle (this ICanvas canvas, double x, double y, double width, double height, Pen pen = null, Brush brush = null)
 		{
-			canvas.DrawRectangle (new Rect (x, y, width, height), pen, brush);
+			canvas.DrawRectangle (new Rect (x, y, width, height), Size.Zero, pen, brush);
+		}
+		public static void DrawRectangle (this ICanvas canvas, double x, double y, double width, double height, double rx, double ry, Pen pen = null, Brush brush = null)
+		{
+			canvas.DrawRectangle (new Rect (x, y, width, height), new Size (rx, ry), pen, brush);
+		}
+		public static void DrawRectangle (this ICanvas canvas, double x, double y, double width, double height, double rx, double ry, Color color, double penWidth = 1)
+		{
+			canvas.DrawRectangle (new Rect (x, y, width, height), new Size (rx, ry), pen: new Pen (color, penWidth));
 		}
 		public static void DrawRectangle (this ICanvas canvas, Point position, Size size, Pen pen = null, Brush brush = null)
 		{
@@ -130,9 +142,17 @@ namespace NGraphics
 		{
 			canvas.DrawRectangle (frame, brush: new SolidBrush (color));
 		}
+		public static void FillRectangle (this ICanvas canvas, Rect frame, Size corner, Color color)
+		{
+			canvas.DrawRectangle (frame, corner, brush: new SolidBrush (color));
+		}
 		public static void FillRectangle (this ICanvas canvas, double x, double y, double width, double height, Color color)
 		{
 			canvas.DrawRectangle (new Rect (x, y, width, height), brush: new SolidBrush (color));
+		}
+		public static void FillRectangle (this ICanvas canvas, double x, double y, double width, double height, double rx, double ry, Color color)
+		{
+			canvas.DrawRectangle (new Rect (x, y, width, height), new Size (rx, ry), brush: new SolidBrush (color));
 		}
 		public static void FillRectangle (this ICanvas canvas, double x, double y, double width, double height, Brush brush)
 		{
@@ -142,9 +162,9 @@ namespace NGraphics
 		{
 			canvas.DrawRectangle (frame, brush: brush);
 		}
-		public static void StrokeRectangle (this ICanvas canvas, Rect frame, Color color, double width = 1.0)
+		public static void FillRectangle (this ICanvas canvas, Rect frame, Size corner, Brush brush)
 		{
-			canvas.DrawRectangle (frame, pen: new Pen (color, width));
+			canvas.DrawRectangle (frame, corner, brush: brush);
 		}
 
 		public static void DrawEllipse (this ICanvas canvas, Rect frame, Color color, double width = 1)
