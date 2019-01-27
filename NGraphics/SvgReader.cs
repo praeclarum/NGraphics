@@ -16,6 +16,8 @@ namespace NGraphics
 		public double PixelsPerInch { get; private set; }
 		public Graphic Graphic { get; private set; }
 
+		public List<Exception> Errors { get; } = new List<Exception> ();
+
 		readonly Dictionary<string, XElement> defs = new Dictionary<string, XElement> ();
 //		readonly XNamespace ns;
 
@@ -168,7 +170,12 @@ namespace NGraphics
 					var dA = e.Attribute ("d");
 					if (dA != null && !string.IsNullOrWhiteSpace (dA.Value)) {
 						var p = new Path (pen, brush);
-						ReadPath (p, dA.Value);
+						try {
+							ReadPath (p, dA.Value);
+						}
+						catch (Exception ex) {
+							Errors.Add (ex);
+						}
 						r = p;
 					}
 				}
@@ -607,7 +614,7 @@ namespace NGraphics
 					p.Close ();
 				} else {
 					// make sure negative numbers are split properly
-					match = negativeNumberRe.Replace(match.Substring(1), " -");
+					match = negativeNumberRe.Replace (match.Substring(1), " -");
 					match = floatingPointRe.Replace (match, " .");
 					var args = match.Split(WSC, StringSplitOptions.RemoveEmptyEntries);
 

@@ -19,6 +19,8 @@ namespace NGraphics.Test
 		{
 			using (var s = OpenResource (path)) {
 				var r = new SvgReader (new StreamReader (s), defaultBrush: defaultBrush);
+				if (r.Errors.Count > 0)
+					throw new Exception ("Error while reading", r.Errors[0]);
 				Assert.IsTrue (r.Graphic.Children.Count >= 0);
 				Assert.IsTrue (r.Graphic.Size.Width > 1);
 				Assert.IsTrue (r.Graphic.Size.Height > 1);
@@ -30,6 +32,11 @@ namespace NGraphics.Test
 		{
 			var r = new SvgReader (svg, defaultBrush: defaultBrush);
 			Assert.IsTrue (r.Graphic.Children.Count >= 0);
+			if (r.Errors.Count > 0)
+				throw new Exception ("Error while reading", r.Errors[0]);
+			Assert.IsTrue (r.Graphic.Children.Count >= 0);
+			Assert.IsTrue (r.Graphic.Size.Width > 1);
+			Assert.IsTrue (r.Graphic.Size.Height > 1);
 			return r.Graphic;
 		}
 
@@ -52,7 +59,7 @@ namespace NGraphics.Test
 		[Test]
 		public void RelativeMoveAfterClose ()
 		{
-			var g = ReadString ("<svg><path d=\"M1,2L3,4zm100,100\"/></svg>");
+			var g = ReadString ("<svg width=\"100\" height=\"100\"><path d=\"M1,2L3,4zm100,100\"/></svg>");
 			var p = (Path)g.Children[0];
 			Assert.AreEqual (4, p.Operations.Count);
 			var m = p.Operations[3];
