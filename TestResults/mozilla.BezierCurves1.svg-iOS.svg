@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="190px" height="160px" viewBox="0 0 190 160" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title></title>
-    <description></description>
     <defs>
     </defs>
     <path stroke-width="1" stroke="#000000" fill="#000000" fill-opacity="0" d="M10,10 C20,20 40,20 50,10 " />

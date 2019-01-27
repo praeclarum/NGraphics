@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Text;
 
 namespace NGraphics
 {
@@ -43,7 +45,12 @@ namespace NGraphics
 
 		public Transform Transform {
 			get {
-				return Transform.StretchFillRect (ViewBox, new Rect (Point.Zero, Size));
+				if (Size.Width > 0 && Size.Height > 0) {
+					return Transform.StretchFillRect (ViewBox, new Rect (Point.Zero, Size));
+				}
+				else {
+					return Transform.Identity;
+				}
 			}
 		}
 
@@ -84,6 +91,24 @@ namespace NGraphics
 		{
 			var w = new SvgWriter (this, writer);
 			w.Write ();
+		}
+
+		public string GetSvg ()
+		{
+			using (var tw = new StringWriterWithEncoding (Encoding.UTF8)) {
+				WriteSvg (tw);
+				return tw.ToString ();
+			}
+		}
+
+		class StringWriterWithEncoding : StringWriter
+		{
+			readonly Encoding encoding;
+			public StringWriterWithEncoding (Encoding encoding)
+			{
+				this.encoding = encoding;
+			}
+			public override Encoding Encoding => encoding;
 		}
 
 		public override string ToString ()

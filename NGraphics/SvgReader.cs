@@ -21,8 +21,8 @@ namespace NGraphics
 
 		public SvgReader (System.IO.TextReader reader, double pixelsPerInch = 160.0, Brush defaultBrush = null)
 		{
-            defaultBrush = defaultBrush ?? Brushes.Black;
-            PixelsPerInch = pixelsPerInch;
+			defaultBrush = defaultBrush ?? Brushes.Black;
+			PixelsPerInch = pixelsPerInch;
 			Read (XDocument.Load (reader), defaultBrush);
 		}
 

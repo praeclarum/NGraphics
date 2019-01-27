@@ -36,8 +36,12 @@ namespace NGraphics
 				Graphic.ViewBox.X, Graphic.ViewBox.Y,
 				Graphic.ViewBox.Width, Graphic.ViewBox.Height);
 			w.Indent ();
-			w.WriteLine ("<title>{0}</title>", Escape (Graphic.Title));
-			w.WriteLine ("<description>{0}</description>", Escape (Graphic.Description));
+			if (!string.IsNullOrEmpty (Graphic.Title)) {
+				w.WriteLine ("<title>{0}</title>", Escape (Graphic.Title));
+			}
+			if (!string.IsNullOrEmpty (Graphic.Description)) {
+				w.WriteLine ("<description>{0}</description>", Escape (Graphic.Description));
+			}
 			w.WriteLine ("<defs>");
 			w.Indent ();
 			var dw = new DefsWriter { w = w, defs = defs };
@@ -170,6 +174,11 @@ namespace NGraphics
 			w.Write (" x=\"{0}\" y=\"{1}\" width=\"{2}\" height=\"{3}\"",
 				rectangle.Frame.X, rectangle.Frame.Y,
 				rectangle.Frame.Width, rectangle.Frame.Height);
+
+			if (rectangle.Corner.Width > 0 || rectangle.Corner.Height > 0) {
+				w.Write (" rx=\"{0}\" ry=\"{1}\"",
+					rectangle.Corner.Width, rectangle.Corner.Height);
+			}
 		}
 
 		public void EndVisit (Rectangle rectangle)

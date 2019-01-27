@@ -11,6 +11,11 @@ namespace NGraphics
 
 		public Graphic Graphic { get; private set; }
 
+		public GraphicCanvas ()
+			: this (new Size (0, 0), textPlatform: null)
+		{
+		}
+
 		public GraphicCanvas (Size size, IPlatform textPlatform = null)
 		{
 			states.Push (NGraphics.Transform.Identity);
