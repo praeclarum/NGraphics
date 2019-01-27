@@ -91,6 +91,48 @@ namespace NGraphics.Test
 
 			}, new Size (256), "TextTests.Descents");
 		}
+
+		[Test]
+		public void NullMeasure20 ()
+		{
+			var text = "Hello World!";
+			var font = new Font ("Helvetica", 20);
+
+			var nm = NullPlatform.GlobalMeasureText (text, font);
+			var pm = Platform.MeasureText (text, font);
+
+			Assert.AreEqual (pm.Ascent, nm.Ascent, 1.0e-2);
+			Assert.AreEqual (pm.Descent, nm.Descent, 1.0e-2);
+			Assert.AreEqual (pm.Width, nm.Width, pm.Width * 0.01);
+		}
+
+		[Test]
+		public void NullMeasure20Newlines ()
+		{
+			var text = "Hello World!\nBye\nbye\n";
+			var font = new Font ("Helvetica", 20);
+
+			var nm = NullPlatform.GlobalMeasureText (text, font);
+			var pm = Platform.MeasureText (text, font);
+
+			Assert.AreEqual (pm.Ascent, nm.Ascent, 1.0e-2);
+			Assert.AreEqual (pm.Descent, nm.Descent, 1.0e-2);
+			Assert.AreEqual (pm.Width, nm.Width, pm.Width * 0.01);
+		}
+
+		[Test]
+		public void NullMeasure8 ()
+		{
+			var text = "Hello World!";
+			var font = new Font ("Helvetica", 8);
+
+			var nm = NullPlatform.GlobalMeasureText (text, font);
+			var pm = Platform.MeasureText (text, font);
+
+			Assert.AreEqual (pm.Ascent, nm.Ascent, 0.01);
+			Assert.AreEqual (pm.Descent, nm.Descent, 0.01);
+			Assert.AreEqual (pm.Width, nm.Width, pm.Width * 0.01);
+		}
 	}
 }
 
