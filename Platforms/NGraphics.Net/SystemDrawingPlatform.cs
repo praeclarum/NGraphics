@@ -224,13 +224,34 @@ namespace NGraphics
                         bb.Add (p);
                         continue;
 					}
-                    var at = op as ArcTo;
+					var at = op as ArcTo;
                     if (at != null) {
-                        var p = at.Point;
-                        path.AddLine (Conversions.GetPointF (position), Conversions.GetPointF (p));
-                        position = p;
-                        bb.Add (p);
-                        continue;
+						var p = at.Point;
+
+						Point c1, c2;
+						at.GetCircles (position, out c1, out c2);
+
+						var circleCenter = (at.LargeArc ^ at.SweepClockwise) ? c1 : c2;
+						var rect = new Rect (circleCenter - at.Radius, at.Radius * 2);
+
+						var startAngle = Conversions.RadToDeg ((float)Math.Atan2 (position.Y - circleCenter.Y, position.X - circleCenter.X));
+						var endAngle = Conversions.RadToDeg ((float)Math.Atan2 (p.Y - circleCenter.Y, p.X - circleCenter.X));
+
+						var sweepAngle = endAngle - startAngle;
+
+						if (at.SweepClockwise && sweepAngle < 0) {
+							// If we want to go CW, sweepAngle needs to be positive
+							sweepAngle += 360.0f;
+						}
+						else if (!at.SweepClockwise && sweepAngle > 0) {
+							// If we want to go CCW, sweepAngle needs to be negative
+							sweepAngle -= 360.0f;
+						}
+						
+						path.AddArc (Conversions.GetRectangleF(rect), startAngle, sweepAngle);
+						position = p;
+						bb.Add (p);
+						continue;
                     }
                     var ct = op as CurveTo;
                     if (ct != null) {
@@ -455,6 +476,11 @@ namespace NGraphics
 		public static System.Drawing.Rectangle GetRectangle (this Rect frame)
 		{
 			return new System.Drawing.Rectangle ((int)frame.X, (int)frame.Y, (int)frame.Width, (int)frame.Height);
+		}
+		
+		public static float RadToDeg (float rad)
+		{
+			return rad * (float) (180.0 / Math.PI);
 		}
 	}
 }
