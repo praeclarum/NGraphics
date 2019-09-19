@@ -53,6 +53,15 @@ jobs:
       run: |
         msbuild /p:Configuration=Release Platforms/NGraphics.Android/NGraphics.Android.csproj
       
+    - name: Package
+      run: |
+        mkdir PackageOut
+        nuget pack NGraphics.nuspec -OutputDirectory PackageOut
+      
+    - uses: actions/upload-artifact@master
+      with:
+        name: Package
+        path: PackageOut
         
   windows-build:
 
