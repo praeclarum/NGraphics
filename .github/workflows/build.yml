@@ -24,5 +24,9 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
+    - name: Set environment
+      run: |
+        set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\15.0\Bin;%PATH%
+        echo %PATH%
     - name: Build
       run: msbuild NGraphics.sln
