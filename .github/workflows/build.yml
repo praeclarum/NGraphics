@@ -23,7 +23,9 @@ jobs:
     runs-on: windows-latest
     
     steps:
+    
     - uses: actions/checkout@v1
+    
     - name: Build
       run: |
         rem "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
@@ -31,3 +33,13 @@ jobs:
         msbuild /p:Configuration=Release /t:Restore NGraphics\NGraphics.csproj
         msbuild /p:Configuration=Release NGraphics\NGraphics.csproj
         msbuild /p:Configuration=Release Platforms\NGraphics.Net\NGraphics.Net.csproj
+    
+    - uses: actions/upload-artifact@master
+      with:
+        name: NGraphics
+        path: NGraphics\bin\Release\netstandard1.0
+
+    - uses: actions/upload-artifact@master
+      with:
+        name: NGraphics.Net
+        path: NGraphics\Platforms\NGraphics.Net\bin\Release
