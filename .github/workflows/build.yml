@@ -47,3 +47,13 @@ jobs:
       with:
         name: NGraphics.Net
         path: Platforms\NGraphics.Net\bin\Release
+        
+    - name: Build NGraphics.UWP
+      run: |
+        set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin;%PATH%
+        msbuild /p:Configuration=Release Platforms\NGraphics.UWP\NGraphics.UWP.csproj
+    
+    - uses: actions/upload-artifact@master
+      with:
+        name: NGraphics.UWP
+        path: Platforms\NGraphics.UWP\bin\Release
