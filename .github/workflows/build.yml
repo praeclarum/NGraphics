@@ -31,4 +31,6 @@ jobs:
         dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin"
         "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat"
     - name: Build
-      run: msbuild NGraphics.sln
+      run: |
+        echo %PATH%
+        msbuild NGraphics.sln
