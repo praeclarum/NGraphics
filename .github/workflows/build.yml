@@ -1,26 +1,62 @@
 name: CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   mac-build:
 
-    runs-on: macOS-latest
+    runs-on: macOS-10.14
     
     needs: windows-build
     
     steps:
+    
     - uses: actions/checkout@v1
-    - name: Run a one-line script
-      run: echo Hello, world!
-    - name: Run a multi-line script
+    
+    - uses: actions/download-artifact@master
+      with:
+        name: NGraphics
+        path: Build/NGraphics
+        
+    - uses: actions/download-artifact@master
+      with:
+        name: NGraphics.Net
+        path: Build/NGraphics.Net
+        
+    - uses: actions/download-artifact@master
+      with:
+        name: NGraphics.UWP
+        path: Build/NGraphics.UWP
+        
+    - name: Build NGraphics
       run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+        msbuild /p:Configuration=Release /t:Restore NGraphics/NGraphics.csproj
+        msbuild /p:Configuration=Release NGraphics/NGraphics.csproj
+      
+    - name: Build NGraphics.Mac
+      run: |
+        msbuild /p:Configuration=Release Platforms/NGraphics.Mac/NGraphics.Mac.csproj
+      
+    - name: Build NGraphics.iOS
+      run: |
+        msbuild /p:Configuration=Release Platforms/NGraphics.iOS/NGraphics.iOS.csproj
+      
+    - name: Build NGraphics.Watch
+      run: |
+        msbuild /p:Configuration=Release Platforms/NGraphics.Watch/NGraphics.Watch.csproj
+      
+    - name: Build NGraphics.TV
+      run: |
+        msbuild /p:Configuration=Release Platforms/NGraphics.TV/NGraphics.TV.csproj
+      
+    - name: Build NGraphics.Android
+      run: |
+        msbuild /p:Configuration=Release Platforms/NGraphics.Android/NGraphics.Android.csproj
+      
         
   windows-build:
 
-    runs-on: windows-latest
+    runs-on: windows-2019
     
     steps:
     
