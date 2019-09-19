@@ -7,6 +7,8 @@ jobs:
 
     runs-on: macOS-latest
     
+    needs: windows-build
+    
     steps:
     - uses: actions/checkout@v1
     - name: Run a one-line script
@@ -21,10 +23,38 @@ jobs:
     runs-on: windows-latest
     
     steps:
+    
     - uses: actions/checkout@v1
-    - name: Run a one-line script
-      run: echo Hello, world!
-    - name: Run a multi-line script
+    
+    - name: Build NGraphics
       run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+        rem "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin;%PATH%
+        msbuild /p:Configuration=Release /t:Restore NGraphics\NGraphics.csproj
+        msbuild /p:Configuration=Release NGraphics\NGraphics.csproj
+    
+    - uses: actions/upload-artifact@master
+      with:
+        name: NGraphics
+        path: NGraphics\bin\Release\netstandard1.0
+
+    - name: Build NGraphics.Net
+      run: |
+        set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin;%PATH%
+        msbuild /p:Configuration=Release Platforms\NGraphics.Net\NGraphics.Net.csproj
+    
+    - uses: actions/upload-artifact@master
+      with:
+        name: NGraphics.Net
+        path: Platforms\NGraphics.Net\bin\Release
+        
+    - name: Build NGraphics.UWP
+      run: |
+        set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin;%PATH%
+        msbuild /p:Configuration=Release /t:Restore Platforms\NGraphics.UWP\NGraphics.UWP.csproj
+        msbuild /p:Configuration=Release Platforms\NGraphics.UWP\NGraphics.UWP.csproj
+    
+    - uses: actions/upload-artifact@master
+      with:
+        name: NGraphics.UWP
+        path: Platforms\NGraphics.UWP\bin\Release
