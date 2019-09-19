@@ -1,18 +1,36 @@
 name: CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   mac-build:
 
-    runs-on: macOS-latest
+    runs-on: macOS-10.14
     
     needs: windows-build
     
     steps:
+    
     - uses: actions/checkout@v1
+    
+    - uses: actions/download-artifact@master
+      with:
+        name: NGraphics
+        path: Build\NGraphics
+        
+    - uses: actions/download-artifact@master
+      with:
+        name: NGraphics.Net
+        path: Build\NGraphics.Net
+        
+    - uses: actions/download-artifact@master
+      with:
+        name: NGraphics.UWP
+        path: Build\NGraphics.UWP
+        
     - name: Run a one-line script
       run: echo Hello, world!
+      
     - name: Run a multi-line script
       run: |
         echo Add other actions to build,
@@ -20,7 +38,7 @@ jobs:
         
   windows-build:
 
-    runs-on: windows-latest
+    runs-on: windows-2019
     
     steps:
     
