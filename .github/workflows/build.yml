@@ -28,6 +28,6 @@ jobs:
       run: |
         set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\15.0\Bin;%PATH%        
         echo %PATH%
-        dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild"
+        dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\15.0\Bin"
     - name: Build
       run: msbuild NGraphics.sln
