@@ -26,20 +26,24 @@ jobs:
     
     - uses: actions/checkout@v1
     
-    - name: Build
+    - name: Build NGraphics
       run: |
         rem "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin;%PATH%
         msbuild /p:Configuration=Release /t:Restore NGraphics\NGraphics.csproj
         msbuild /p:Configuration=Release NGraphics\NGraphics.csproj
-        msbuild /p:Configuration=Release Platforms\NGraphics.Net\NGraphics.Net.csproj
     
     - uses: actions/upload-artifact@master
       with:
         name: NGraphics
         path: NGraphics\bin\Release\netstandard1.0
 
+    - name: Build NGraphics.Net
+      run: |
+        set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin;%PATH%
+        msbuild /p:Configuration=Release Platforms\NGraphics.Net\NGraphics.Net.csproj
+    
     - uses: actions/upload-artifact@master
       with:
         name: NGraphics.Net
-        path: NGraphics\Platforms\NGraphics.Net\bin\Release
+        path: Platforms\NGraphics.Net\bin\Release
