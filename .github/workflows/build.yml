@@ -28,8 +28,6 @@ jobs:
       run: |
         rem "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin;%PATH%
-        rem echo %PATH%
-        rem msbuild NGraphics.sln
-        msbuild /t:Restore NGraphics\NGraphics.csproj
-        msbuild NGraphics\NGraphics.csproj
-        msbuild Platforms\NGraphics.Net\NGraphics.Net.csproj
+        msbuild /p:Configuration=Release /t:Restore NGraphics\NGraphics.csproj
+        msbuild /p:Configuration=Release NGraphics\NGraphics.csproj
+        msbuild /p:Configuration=Release Platforms\NGraphics.Net\NGraphics.Net.csproj
