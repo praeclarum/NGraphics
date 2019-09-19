@@ -480,7 +480,7 @@ namespace NGraphics
 		
 		public static float RadToDeg (float rad)
 		{
-			return rad * (float) (180.0 / Math.PI);
+			return rad * (float)(180.0 / Math.PI);
 		}
 	}
 }
