@@ -40,6 +40,26 @@ namespace NGraphics.Test
 
 			await SaveImage (canvas, "TransformTranslateRotate.png");
 		}
+
+		[Test]
+		public void VectorOnTheRight ()
+		{
+			var t = Transform.Rotate (45) * Transform.Translate(9, 0);
+			var p0 = new Point (1, 0);
+			var yp0 = t.TransformPoint (p0);
+			Assert.AreEqual (7.071, yp0.X, 0.001);
+			Assert.AreEqual (7.071, yp0.Y, 0.001);
+		}
+
+		[Test]
+		public void VectorOnTheRight2 ()
+		{
+			var t = Transform.Translate (9, 0) * Transform.Rotate (45);
+			var p0 = new Point (1, 0);
+			var yp0 = t.TransformPoint (p0);
+			Assert.AreEqual (9.7071, yp0.X, 0.001);
+			Assert.AreEqual (0.7071, yp0.Y, 0.001);
+		}
 	}
 }
 
