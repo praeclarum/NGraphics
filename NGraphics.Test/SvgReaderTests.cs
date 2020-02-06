@@ -9,6 +9,7 @@ using System.IO;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace NGraphics.Test
 {
@@ -43,6 +44,13 @@ namespace NGraphics.Test
 		async Task ReadAndDraw (string path, Brush defaultBrush = null)
 		{
 			var g = Read (path, defaultBrush);
+
+			await Draw (g, path);
+		}
+
+		async Task ParseAndDraw (string svg, Brush defaultBrush = null, [CallerMemberName] string path = "")
+		{
+			var g = ReadString (svg, defaultBrush);
 
 			await Draw (g, path);
 		}
@@ -217,6 +225,29 @@ namespace NGraphics.Test
 			await ReadAndDraw ("svg.breadboard.case_fan_b91be6f230a6ad10b8c5448478f5b4dc_1_breadboard.svg");
 		}
 
+		[Test]
+		public async Task Issue103 ()
+		{
+			await ParseAndDraw (@"<svg xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 160 160"">
+	<path d=""M152.042,146.481c3.63,0,5.7-4.131,4.148-7.229L84.114,15.324a4.865,4.865,0,0,0-8.3,0L3.742,139.25c-2.074,3.1.519,7.229,4.148,7.229Z"" stroke=""#F00"" fill=""#FCC""/>
+</svg>");
+		}
+
+		[Test]
+		public async Task Issue103Bad ()
+		{
+			await ParseAndDraw (@"<svg xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 160 160"">
+	<path d=""M26.56, 80L80, 26.56L133.44, 80l - 9.69, 9.38L86.56, 52.19v81.25H73.44V52.19l - 37.5, 37.19L26.56, 80z"" stroke=""#F00"" fill=""#FCC""/>
+</svg>");
+		}
+
+		[Test]
+		public async Task Issue103Good ()
+		{
+			await ParseAndDraw (@"<svg xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 160 160"">
+	<path d=""M26.56,80,80,26.56,133.44,80l-9.69,9.37L86.56,52.19v81.25H73.44V52.19L35.94,89.38Z"" stroke=""#F00"" fill=""#FCC""/>
+</svg>");
+		}
 	}
 }
 

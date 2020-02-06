@@ -638,19 +638,38 @@ namespace NGraphics
 							var gotDot = false;
 							var gotE = 0;
 							var s = i;
-							i++;
+							var negate = false;
+							if (p[i] == '-') {
+								negate = true;
+								i++;
+								while (i < n && char.IsWhiteSpace (p[i]))
+									i++;
+								s = i;
+							}
+							else if (p[i] == '+') {
+								i++;
+								while (i < n && char.IsWhiteSpace (p[i]))
+									i++;
+								s = i;
+							}
+							else {
+								i++;
+							}
 							while (i < n && (
 								char.IsDigit (p[i]) ||
 								(!gotDot && p[i] == '.') ||
 								(gotE == 0 && char.ToLowerInvariant (p[i]) == 'e') ||
 								(gotE == i - 1 && (p[i] == '+' || p[i] == '-')))) {
-								gotDot = p[i] == '.';
+								gotDot = gotDot || (p[i] == '.');
 								if (char.ToLowerInvariant (p[i]) == 'e')
 									gotE = i;
 								i++;
 							}
 							var str = p.Substring (s, i - s);
-							tokens.Add (new PathToken { IsNumber = true, Value = ReadNumber (str) });
+							var val = ReadNumber (str);
+							if (negate)
+								val = -val;
+							tokens.Add (new PathToken { IsNumber = true, Value = val });
 						}
 						break;
 					case ',':
@@ -787,8 +806,9 @@ namespace NGraphics
 					while (i < argsLength) {
 						var previousY = previousPoint.Y;
 						var x = Arg (i);
-						if (op == 'h')
+						if (op == 'h') {
 							x += previousPoint.X;
+						}
 						var pt = new Point (x, previousY);
 						p.LineTo (pt);
 						previousPoint = pt;
