@@ -107,16 +107,17 @@ namespace NGraphics
 
 		void GetPenAndBrush (XElement e, Pen inheritPen, Brush inheritBrush, out Pen pen, out Brush brush)
 		{
-			bool hasPen, hasBrush;
 			pen = null;
 			brush = null;
-			ApplyStyle (e.Attributes().ToDictionary(k => k.Name.LocalName, v => v.Value), ref pen, out hasPen, ref brush, out hasBrush);
+			ApplyStyle (e.Attributes().ToDictionary(k => k.Name.LocalName, v => v.Value), ref pen, out var hasPenDirect, ref brush, out var hasBrushDirect);
 			var style = ReadString (e.Attribute("style"));
+			var hasBrushStyle = false;
+			var hasPenStyle = false;
 			if (!string.IsNullOrWhiteSpace(style)) {
-				ApplyStyle(style, ref pen, out hasPen, ref brush, out hasBrush);
+				ApplyStyle(style, ref pen, out hasPenStyle, ref brush, out hasBrushStyle);
 			}
-			pen = hasPen ? pen : inheritPen;
-			brush = hasBrush ? brush : inheritBrush;
+			pen = (hasPenDirect || hasPenStyle) ? pen : inheritPen;
+			brush = (hasBrushDirect || hasBrushStyle) ? brush : inheritBrush;
 		}
 
 		void AddElement (IList<Element> list, XElement e, Pen inheritPen, Brush inheritBrush)
@@ -357,7 +358,7 @@ namespace NGraphics
 			return defaultValue;
 		}
 
-		Regex fillUrlRe = new Regex (@"url\s*\(\s*#([^\)]+)\)");
+		static readonly Regex fillUrlRe = new Regex (@"url\s*\(\s*#([^\)]+)\)");
 
 		void ApplyStyle (Dictionary<string, string> style, ref Pen pen, out bool hasPen, ref Brush brush, out bool hasBrush)
 		{
@@ -611,18 +612,12 @@ namespace NGraphics
 			txt.Trim ();
 		}
 
-		static readonly char[] WSC = new char[] { ',', ' ', '\t', '\n', '\r' };
-
-		static readonly Regex pathRegex = new Regex(@"[MLHVCSQTAZmlhvcsqtaz][^MLHVCSQTAZmlhvcsqtaz]*", RegexOptions.Singleline);
-		static readonly Regex negativeNumberRe = new Regex("(?<=[0-9])-");
-		static readonly Regex floatingPointRe = new Regex ("(?<=\\.[0-9]+)\\.");
-
 		struct PathToken
 		{
 			public double Value;
 			public bool IsNumber;
 			public char Operator;
-			public override string ToString () => IsNumber ? Value.ToString ("#.00") : Operator.ToString ();
+			public override string ToString () => IsNumber ? Value.ToString ("0.00") : Operator.ToString ();
 		}
 
 		List<PathToken> LexPath (string p)
