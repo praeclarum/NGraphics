@@ -44,6 +44,11 @@ namespace NGraphics.Test
 		{
 			var g = Read (path, defaultBrush);
 
+			await Draw (g, path);
+		}
+
+		async Task Draw (Graphic g, string path)
+		{
 			//
 			// Draw Image
 			//
@@ -191,7 +196,7 @@ namespace NGraphics.Test
 			var g = ReadString (svg);
 			Assert.AreEqual (1, g.Children.Count);
 			Assert.IsTrue (g.Children[0] is Path);
-			Assert.AreEqual (16, ((Path)g.Children[0]).Operations.Count);
+			Assert.AreEqual (14, ((Path)g.Children[0]).Operations.Count);
 		}
 
 		[Test]

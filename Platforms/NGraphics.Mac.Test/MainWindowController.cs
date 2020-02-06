@@ -47,7 +47,7 @@ namespace NGraphics.Mac.Test
 			var types = typeof (DrawingTest).Assembly.GetTypes ();
 			var tfts = types.Where (t => t.GetCustomAttributes (tfat, false).Length > 0);
 
-			foreach (var t in tfts.AsParallel ()) {
+			foreach (var t in tfts) {
 				var test = Activator.CreateInstance (t);
 				var ms = t.GetMethods ().Where (m => m.GetCustomAttributes (tat, true).Length > 0);
 				foreach (var m in ms) {

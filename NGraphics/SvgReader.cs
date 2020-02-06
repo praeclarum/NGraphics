@@ -617,95 +617,196 @@ namespace NGraphics
 		static readonly Regex negativeNumberRe = new Regex("(?<=[0-9])-");
 		static readonly Regex floatingPointRe = new Regex ("(?<=\\.[0-9]+)\\.");
 
+		struct PathToken
+		{
+			public double Value;
+			public bool IsNumber;
+			public char Operator;
+			public override string ToString () => IsNumber ? Value.ToString ("#.00") : Operator.ToString ();
+		}
+
+		List<PathToken> LexPath (string p)
+		{
+			var i = 0;
+			var n = p.Length;
+			var tokens = new List<PathToken> ();
+			while (i < n) {
+				while (i < n && char.IsWhiteSpace (p[i]))
+					i++;
+				if (i >= n)
+					break;
+				switch (p[i]) {
+					case '.':
+					case '-':
+					case '+':
+					case var d when char.IsDigit (d): {
+							var gotDot = false;
+							var gotE = 0;
+							var s = i;
+							i++;
+							while (i < n && (
+								char.IsDigit (p[i]) ||
+								(!gotDot && p[i] == '.') ||
+								(gotE == 0 && char.ToLowerInvariant (p[i]) == 'e') ||
+								(gotE == i - 1 && (p[i] == '+' || p[i] == '-')))) {
+								gotDot = p[i] == '.';
+								if (char.ToLowerInvariant (p[i]) == 'e')
+									gotE = i;
+								i++;
+							}
+							var str = p.Substring (s, i - s);
+							tokens.Add (new PathToken { IsNumber = true, Value = ReadNumber (str) });
+						}
+						break;
+					case ',':
+						i++;
+						break;
+					default:
+						tokens.Add (new PathToken { Operator = p[i] });
+						i++;
+						break;
+				}
+			}
+			return tokens;
+		}
+
 		void ReadPath (Path p, string pathDescriptor)
 		{
-			Match m = pathRegex.Match(pathDescriptor);
             Point previousPoint = new Point();
-			while(m.Success)
+			var tokens = LexPath (pathDescriptor);
+			var ntokens = tokens.Count;
+			var it = 0;
+			var argsLength = 0;
+			var argsStartIndex = 0;
+			double Arg (int index) => tokens[argsStartIndex + index].Value;
+
+			while (it < ntokens)
 			{
-				var match = m.Value.TrimStart ();
-				var op = match[0];
+				while (it < ntokens && tokens[it].IsNumber)
+					it++;
+				if (it >= ntokens)
+					break;
+
+				var op = tokens[it].Operator;
+
+				var itEnd = it + 1;
+				while (itEnd < ntokens && tokens[itEnd].IsNumber)
+					itEnd++;
+				argsStartIndex = it + 1;
+				argsLength = itEnd - argsStartIndex;
 
 				if (op == 'z' || op == 'Z') {
 					p.Close ();
-				} else {
-					// make sure negative numbers are split properly
-					match = negativeNumberRe.Replace (match.Substring(1), " -");
-					match = floatingPointRe.Replace (match, " .");
-					var args = match.Split(WSC, StringSplitOptions.RemoveEmptyEntries);
-
-					int index = 0;
-					while(index < args.Length)
-					{
-						if ((op == 'M' || op == 'm') && args.Length >= index+2) {
-							var point = new Point (ReadNumber (args [index]), ReadNumber (args [index+1]));
-							if (op == 'm')
-								point += previousPoint;
-							p.MoveTo (point);
-							index += 2;
-						} else if ((op == 'L' || op == 'l') && args.Length >= index+2) {
-							var point = new Point (ReadNumber (args [index]), ReadNumber (args [index+1]));
-							if (op == 'l')
-								point += previousPoint;
-							p.LineTo (point);
-							index += 2;
-						} else if ((op == 'C' || op == 'c') && args.Length >= index+6) {
-							var c1 = new Point (ReadNumber (args [index]), ReadNumber (args [index+1]));
-							var c2 = new Point (ReadNumber (args [index+2]), ReadNumber (args [index+3]));
-							var pt = new Point (ReadNumber (args [index+4]), ReadNumber (args [index+5]));
-							if (op == 'c')
-							{
-								c1 += previousPoint;
-								c2 += previousPoint;
-								pt += previousPoint;
-							}
-							p.CurveTo (c1, c2, pt);
-							index += 6;
-						} else if ((op == 'S' || op == 's') && args.Length >= index+4) {
-							var c  = new Point (ReadNumber (args [index]), ReadNumber (args [index+1]));
-							var pt = new Point (ReadNumber (args [index+2]), ReadNumber (args [index+3]));
-							if (op == 's')
-							{
-								c += previousPoint;
-								pt += previousPoint;
-							}
-							p.ContinueCurveTo (c, pt);
-							index += 4;
-						} else if ((op == 'A' || op == 'a') && args.Length >= index+7) {
-							var r = new Size (ReadNumber (args [index]), ReadNumber (args [index+1]));
-	//                                     var xr = ReadNumber (args [i + 2]);
-							var laf = ReadNumber (args [index+3]) != 0;
-							var swf = ReadNumber (args [index+4]) != 0;
-							var pt = new Point (ReadNumber (args [index+5]), ReadNumber (args [index+6]));
-							if (op == 'a')
-								pt += previousPoint;
-							p.ArcTo (r, laf, swf, pt);
-							index += 7;
-						} else if ((op == 'V' || op == 'v') && args.Length >= index+1 && p.Operations.Count > 0) {
-							var previousX = previousPoint.X;
-							var y = ReadNumber(args[index]);
-							if (op == 'v')
-								y += previousPoint.Y;
-							var point = new Point(previousX, y);
-							p.LineTo(point);
-							index += 1;
-						} else if ((op == 'H' || op == 'h') && args.Length >= index+1 && p.Operations.Count > 0) {
-							var previousY = previousPoint.Y;
-							var x = ReadNumber(args[index]);
-							if (op == 'h')
-								x += previousPoint.X;
-							var point = new Point(x, previousY);
-							p.LineTo(point);
-							index += 1;
-						} else {
-							throw new NotSupportedException ("Path Operation " + op);
+				}
+				else if (op == 'M' || op == 'm') {
+					var i = 0;
+					while (i + 1 < argsLength) {
+						var point = new Point (Arg (i), Arg (i + 1));
+						if (op == 'm') {
+							point += previousPoint;
 						}
-
-                        previousPoint = p.Operations.Last().EndPoint;
+						if (i == 0) {
+							p.MoveTo (point);
+						}
+						else {
+							p.LineTo (point);
+						}
+						previousPoint = point;
+						i += 2;
 					}
 				}
-				m = m.NextMatch();
+				else if (op == 'L' || op == 'l') {
+					var i = 0;
+					while (i + 1 < argsLength) {
+						var point = new Point (Arg (i), Arg (i + 1));
+						if (op == 'l') {
+							point += previousPoint;
+						}
+						p.LineTo (point);
+						previousPoint = point;
+						i += 2;
+					}
+				}
+				else if (op == 'C' || op == 'c') {
+					var i = 0;
+					while (i + 5 < argsLength) {
+						var c1 = new Point (Arg (i + 0), Arg (i + 1));
+						var c2 = new Point (Arg (i + 2), Arg (i + 3));
+						var pt = new Point (Arg (i + 4), Arg (i + 5));
+						if (op == 'c') {
+							c1 += previousPoint;
+							c2 += previousPoint;
+							pt += previousPoint;
+						}
+						p.CurveTo (c1, c2, pt);
+						previousPoint = pt;
+						i += 6;
+					}
+				}
+				else if (op == 'S' || op == 's') {
+					var i = 0;
+					while (i + 3 < argsLength) {
+						var c = new Point (Arg (i + 0), Arg (i + 1));
+						var pt = new Point (Arg (i + 2), Arg (i + 3));
+						if (op == 's') {
+							c += previousPoint;
+							pt += previousPoint;
+						}
+						p.ContinueCurveTo (c, pt);
+						previousPoint = pt;
+						i += 4;
+					}
+				}
+				else if (op == 'A' || op == 'a') {
+					var i = 0;
+					while (i + 6 < argsLength) {
+						var r = new Size (Arg (i + 0), Arg (i + 1));
+						//var xr = Arg (i + 2);
+						var laf = Arg (i + 3) != 0;
+						var swf = Arg (i + 4) != 0;
+						var pt = new Point (Arg (i + 5), Arg (i + 6));
+						if (op == 'a') {
+							pt += previousPoint;
+						}
+						p.ArcTo (r, laf, swf, pt);
+						previousPoint = pt;
+						i += 7;
+					}
+				}
+				else if (op == 'V' || op == 'v') {
+					var i = 0;
+					while (i < argsLength) {
+						var previousX = previousPoint.X;
+						var y = Arg (i);
+						if (op == 'v') {
+							y += previousPoint.Y;
+						}
+						var pt = new Point (previousX, y);
+						p.LineTo (pt);
+						previousPoint = pt;
+						i += 1;
+					}
+				}
+				else if (op == 'H' || op == 'h') {
+					var i = 0;
+					while (i < argsLength) {
+						var previousY = previousPoint.Y;
+						var x = Arg (i);
+						if (op == 'h')
+							x += previousPoint.X;
+						var pt = new Point (x, previousY);
+						p.LineTo (pt);
+						previousPoint = pt;
+						i += 1;
+					}
+				}
+				else {
+					throw new NotSupportedException ("Path Operation " + op);
+				}
+
+				it = itEnd;
 			}
+			
 		}
 
 		void ReadPoints (Path p, string pathDescriptor, bool closePath)
