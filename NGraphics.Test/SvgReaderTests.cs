@@ -193,6 +193,25 @@ namespace NGraphics.Test
 			Assert.IsTrue (g.Children[0] is Path);
 			Assert.AreEqual (16, ((Path)g.Children[0]).Operations.Count);
 		}
+
+		[Test]
+		public async Task Meadow ()
+		{
+			await ReadAndDraw ("svg.breadboard.Meadow_F7_1_breadboard.svg");
+		}
+
+		[Test]
+		public async Task Esp8266 ()
+		{
+			await ReadAndDraw ("svg.breadboard.ESP8266_module_13fc2bf6ea91d25866a134b8e6233ba0_3_breadboard.svg");
+		}
+
+		[Test]
+		public async Task Motor ()
+		{
+			await ReadAndDraw ("svg.breadboard.case_fan_b91be6f230a6ad10b8c5448478f5b4dc_1_breadboard.svg");
+		}
+
 	}
 }
 

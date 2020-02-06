@@ -41,6 +41,9 @@
     <None Remove="Inputs\SunAtNight.sketch\QuickLook\Preview.png" />
     <None Remove="Inputs\SunAtNight.sketch\QuickLook\Thumbnail.png" />
     <None Remove="Inputs\Smile.sketch\QuickLook\Preview.png" />
+    <None Remove="Inputs\svg.breadboard.ESP8266_module_13fc2bf6ea91d25866a134b8e6233ba0_3_breadboard.svg" />
+    <None Remove="Inputs\svg.breadboard.Meadow_F7_1_breadboard.svg" />
+    <None Remove="Inputs\svg.breadboard.case_fan_b91be6f230a6ad10b8c5448478f5b4dc_1_breadboard.svg" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Inputs\cat.png" />
@@ -63,5 +66,8 @@
     <EmbeddedResource Include="Inputs\mozilla\ellipse.svg" />
     <EmbeddedResource Include="Inputs\mozilla\path.svg" />
     <EmbeddedResource Include="Inputs\mozilla\transform.svg" />
+    <EmbeddedResource Include="Inputs\svg.breadboard.ESP8266_module_13fc2bf6ea91d25866a134b8e6233ba0_3_breadboard.svg" />
+    <EmbeddedResource Include="Inputs\svg.breadboard.Meadow_F7_1_breadboard.svg" />
+    <EmbeddedResource Include="Inputs\svg.breadboard.case_fan_b91be6f230a6ad10b8c5448478f5b4dc_1_breadboard.svg" />
   </ItemGroup>
 </Project>
