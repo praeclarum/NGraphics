@@ -117,7 +117,7 @@ namespace NGraphics.Test
 
 			Assert.AreEqual (pm.Ascent, nm.Ascent, 1.0e-2);
 			Assert.AreEqual (pm.Descent, nm.Descent, 1.0e-2);
-			Assert.AreEqual (pm.Width, nm.Width, pm.Width * 0.01);
+			Assert.AreEqual (pm.Width, nm.Width, pm.Width * 0.2);
 		}
 
 		[Test]
