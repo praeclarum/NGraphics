@@ -2,6 +2,7 @@
 .com.apple.timemachine.supported
 /.vs
 /Releases
+.ionide
 
 bin
 obj

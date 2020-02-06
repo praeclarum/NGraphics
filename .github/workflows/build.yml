@@ -72,9 +72,11 @@ jobs:
     - uses: actions/checkout@v1
     
     - name: Build NGraphics
+      shell: cmd
       run: |
         rem "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin;%PATH%
+        set PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin";%PATH%
+        $env:Path = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin" + $env:Path
         msbuild /p:Configuration=Release /t:Restore NGraphics\NGraphics.csproj
         msbuild /p:Configuration=Release NGraphics\NGraphics.csproj
     
@@ -84,6 +86,7 @@ jobs:
         path: NGraphics\bin\Release\netstandard1.0
 
     - name: Build NGraphics.Net
+      shell: cmd
       run: |
         set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin;%PATH%
         msbuild /p:Configuration=Release Platforms\NGraphics.Net\NGraphics.Net.csproj
@@ -94,6 +97,7 @@ jobs:
         path: Platforms\NGraphics.Net\bin\Release
         
     - name: Build NGraphics.UWP
+      shell: cmd
       run: |
         set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin;%PATH%
         msbuild /p:Configuration=Release /t:Restore Platforms\NGraphics.UWP\NGraphics.UWP.csproj
