@@ -19,13 +19,29 @@ namespace NGraphics
 		public List<Exception> Errors { get; } = new List<Exception> ();
 
 		readonly Dictionary<string, XElement> defs = new Dictionary<string, XElement> ();
-//		readonly XNamespace ns;
+		//		readonly XNamespace ns;
 
-		public SvgReader (System.IO.TextReader reader, double pixelsPerInch = 160.0, Brush defaultBrush = null)
+		static readonly XmlReaderSettings readerSettings = new XmlReaderSettings {
+			DtdProcessing = DtdProcessing.Ignore,
+		};
+
+		public const double DefaultPixelsPerInch = 160.0;
+
+		public SvgReader (System.IO.TextReader textReader, double pixelsPerInch = DefaultPixelsPerInch, Brush defaultBrush = null)
+			: this (XmlReader.Create (textReader, readerSettings), pixelsPerInch, defaultBrush)
+		{
+		}
+
+		//public SvgReader (System.IO.Stream stream, double pixelsPerInch = DefaultPixelsPerInch, Brush defaultBrush = null)
+		//	: this (XmlReader.Create (stream, readerSettings), pixelsPerInch, defaultBrush)
+		//{
+		//}
+
+		SvgReader (System.Xml.XmlReader xmlReader, double pixelsPerInch = DefaultPixelsPerInch, Brush defaultBrush = null)
 		{
 			defaultBrush = defaultBrush ?? Brushes.Black;
 			PixelsPerInch = pixelsPerInch;
-			Read (XDocument.Load (reader), defaultBrush);
+			Read (XDocument.Load (xmlReader), defaultBrush);
 		}
 
 		public SvgReader (string svgString, double pixelsPerInch = 160.0, Brush defaultBrush = null)
