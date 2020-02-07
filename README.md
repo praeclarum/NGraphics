@@ -1,6 +1,6 @@
 # NGraphics
 
-[![NuGet Package](https://img.shields.io/nuget/v/NGraphics.svg)](https://www.nuget.org/packages/NGraphics) [Build Status](https://github.com/praeclarum/NGraphics/actions)
+[![NuGet Package](https://img.shields.io/nuget/v/NGraphics.svg)](https://www.nuget.org/packages/NGraphics) ![Build](https://github.com/praeclarum/NGraphics/workflows/Build/badge.svg?branch=master)
 
 <img src="TestResults/Icon-Mac.png" width="64" height="64" /> 
 
