@@ -16,10 +16,10 @@ namespace NGraphics.Test
 	[TestFixture]
 	public class SvgReaderTests : PlatformTest
 	{
-		Graphic Read (string path, Brush defaultBrush = null)
+		Graphic Read (string path, Brush defaultBrush = null, Font defaultFont = null)
 		{
 			using (var s = OpenResource (path)) {
-				var r = new SvgReader (new StreamReader (s), defaultBrush: defaultBrush);
+				var r = new SvgReader (new StreamReader (s), defaultBrush: defaultBrush, defaultFont: defaultFont);
 				if (r.Errors.Count > 0)
 					throw new Exception ("Error while reading", r.Errors[0]);
 				Assert.IsTrue (r.Graphic.Children.Count >= 0);
@@ -29,9 +29,9 @@ namespace NGraphics.Test
 			}
 		}
 
-		Graphic ReadString (string svg, Brush defaultBrush = null)
+		Graphic ReadString (string svg, Brush defaultBrush = null, Font defaultFont = null)
 		{
-			var r = new SvgReader (svg, defaultBrush: defaultBrush);
+			var r = new SvgReader (svg, defaultBrush: defaultBrush, defaultFont: defaultFont);
 			Assert.IsTrue (r.Graphic.Children.Count >= 0);
 			if (r.Errors.Count > 0)
 				throw new Exception ("Error while reading", r.Errors[0]);
@@ -247,6 +247,48 @@ namespace NGraphics.Test
 			await ParseAndDraw (@"<svg xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 160 160"">
 	<path d=""M26.56,80,80,26.56,133.44,80l-9.69,9.37L86.56,52.19v81.25H73.44V52.19L35.94,89.38Z"" stroke=""#F00"" fill=""#FCC""/>
 </svg>");
+		}
+
+		[Test]
+		public void OverrideFont ()
+		{
+			var newFont = new Font ("Crazy Font", 42);
+			var dg = ReadString (@"<svg viewBox=""0 0 160 160""><text>Hello</text></svg>");
+			var og = ReadString (@"<svg viewBox=""0 0 160 160""><text>Hello</text></svg>", defaultFont: newFont);
+			var dt = (Text)dg.Children[0];
+			var ot = (Text)og.Children[0];
+			Assert.AreEqual (new Font().Family, dt.Font.Family);
+			Assert.AreEqual (new Font ().Size, dt.Font.Size);
+			Assert.AreEqual (newFont.Family, ot.Font.Family);
+			Assert.AreEqual (newFont.Size, ot.Font.Size);
+		}
+
+		[Test]
+		public void OverrideFontFromGraphic ()
+		{
+			var newFont = new Font ("Crazy Font", 42);
+			var dg = Graphic.ParseSvg (@"<svg viewBox=""0 0 160 160""><text>Hello</text></svg>");
+			var og = Graphic.ParseSvg (@"<svg viewBox=""0 0 160 160""><text>Hello</text></svg>", defaultFont: newFont);
+			var dt = (Text)dg.Children[0];
+			var ot = (Text)og.Children[0];
+			Assert.AreEqual (new Font ().Family, dt.Font.Family);
+			Assert.AreEqual (new Font ().Size, dt.Font.Size);
+			Assert.AreEqual (newFont.Family, ot.Font.Family);
+			Assert.AreEqual (newFont.Size, ot.Font.Size);
+		}
+
+		[Test]
+		public void PartialOverrideFontFromGraphic ()
+		{
+			var newFont = new Font ("Crazy Font", 42);
+			var dg = Graphic.ParseSvg (@"<svg viewBox=""0 0 160 160""><text font-family=""FooFam"">Hello</text></svg>");
+			var og = Graphic.ParseSvg (@"<svg viewBox=""0 0 160 160""><text font-family=""FooFam"">Hello</text></svg>", defaultFont: newFont);
+			var dt = (Text)dg.Children[0];
+			var ot = (Text)og.Children[0];
+			Assert.AreEqual ("FooFam", dt.Font.Family);
+			Assert.AreEqual (new Font ().Size, dt.Font.Size);
+			Assert.AreEqual ("FooFam", ot.Font.Family);
+			Assert.AreEqual (newFont.Size, ot.Font.Size);
 		}
 	}
 }

@@ -81,9 +81,15 @@ namespace NGraphics
 			canvas.RestoreState ();
 		}
 
-		public static Graphic LoadSvg (System.IO.TextReader reader, Brush defaultBrush = null)
+		public static Graphic LoadSvg (System.IO.TextReader reader, double pixelsPerInch = SvgReader.DefaultPixelsPerInch, Brush defaultBrush = null, Font defaultFont = null)
 		{
-            var svgr = new SvgReader (reader, defaultBrush: defaultBrush);
+            var svgr = new SvgReader (reader, pixelsPerInch: pixelsPerInch, defaultBrush: defaultBrush, defaultFont: defaultFont);
+			return svgr.Graphic;
+		}
+
+		public static Graphic ParseSvg (string svg, double pixelsPerInch = SvgReader.DefaultPixelsPerInch, Brush defaultBrush = null, Font defaultFont = null)
+		{			
+			var svgr = new SvgReader (svg, pixelsPerInch: pixelsPerInch, defaultBrush: defaultBrush, defaultFont: defaultFont);
 			return svgr.Graphic;
 		}
 

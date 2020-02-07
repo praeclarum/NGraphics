@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using System.Globalization;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace NGraphics
 {
@@ -27,30 +28,29 @@ namespace NGraphics
 
 		public const double DefaultPixelsPerInch = 160.0;
 
-		public SvgReader (System.IO.TextReader textReader, double pixelsPerInch = DefaultPixelsPerInch, Brush defaultBrush = null)
-			: this (XmlReader.Create (textReader, readerSettings), pixelsPerInch, defaultBrush)
+		public SvgReader (System.IO.TextReader textReader, double pixelsPerInch = DefaultPixelsPerInch, Brush defaultBrush = null, Font defaultFont = null)
+			: this (XmlReader.Create (textReader, readerSettings), pixelsPerInch, defaultBrush, defaultFont)
 		{
 		}
 
-		//public SvgReader (System.IO.Stream stream, double pixelsPerInch = DefaultPixelsPerInch, Brush defaultBrush = null)
-		//	: this (XmlReader.Create (stream, readerSettings), pixelsPerInch, defaultBrush)
-		//{
-		//}
+		public SvgReader (string svgString, double pixelsPerInch = DefaultPixelsPerInch, Brush defaultBrush = null, Font defaultFont = null)
+			: this (XmlReader.Create (new StringReader (svgString), readerSettings), pixelsPerInch, defaultBrush, defaultFont)
+		{
+		}
 
-		SvgReader (System.Xml.XmlReader xmlReader, double pixelsPerInch = DefaultPixelsPerInch, Brush defaultBrush = null)
+		public SvgReader (System.IO.Stream stream, double pixelsPerInch = DefaultPixelsPerInch, Brush defaultBrush = null, Font defaultFont = null)
+			: this (XmlReader.Create (stream, readerSettings), pixelsPerInch, defaultBrush, defaultFont)
+		{
+		}
+
+		SvgReader (System.Xml.XmlReader xmlReader, double pixelsPerInch, Brush defaultBrush, Font defaultFont)
 		{
 			defaultBrush = defaultBrush ?? Brushes.Black;
 			PixelsPerInch = pixelsPerInch;
-			Read (XDocument.Load (xmlReader), defaultBrush);
+			Read (XDocument.Load (xmlReader), defaultBrush, defaultFont);
 		}
 
-		public SvgReader (string svgString, double pixelsPerInch = 160.0, Brush defaultBrush = null)
-		{
-			PixelsPerInch = pixelsPerInch;
-			Read (XDocument.Parse(svgString), defaultBrush);
-		}
-
-		void Read (XDocument doc, Brush defaultBrush)
+		void Read (XDocument doc, Brush defaultBrush, Font defaultFont)
 		{
 			var svg = doc.Root;
 			var ns = svg.Name.Namespace;
@@ -96,13 +96,13 @@ namespace NGraphics
 			//
 			Graphic = new Graphic (size, viewBox);
 
-			AddElements (Graphic.Children, svg.Elements (), null, defaultBrush);
+			AddElements (Graphic.Children, svg.Elements (), null, defaultBrush, defaultFont);
 		}
 
-		void AddElements (IList<Element> list, IEnumerable<XElement> es, Pen inheritPen, Brush inheritBrush)
+		void AddElements (IList<Element> list, IEnumerable<XElement> es, Pen inheritPen, Brush inheritBrush, Font inheritFont)
 		{
 			foreach (var e in es)
-				AddElement (list, e, inheritPen, inheritBrush);
+				AddElement (list, e, inheritPen, inheritBrush, inheritFont);
 		}
 
 		void GetPenAndBrush (XElement e, Pen inheritPen, Brush inheritBrush, out Pen pen, out Brush brush)
@@ -120,7 +120,7 @@ namespace NGraphics
 			brush = (hasBrushDirect || hasBrushStyle) ? brush : inheritBrush;
 		}
 
-		void AddElement (IList<Element> list, XElement e, Pen inheritPen, Brush inheritBrush)
+		void AddElement (IList<Element> list, XElement e, Pen inheritPen, Brush inheritBrush, Font inheritFont)
 		{
 			//
 			// Style
@@ -137,7 +137,7 @@ namespace NGraphics
 				{
 					var x = ReadNumber (e.Attribute ("x"));
 					var y = ReadNumber (e.Attribute ("y"));
-					var font = new Font ();
+					var font = inheritFont?.Clone () ?? new Font ();
 					var fontFamily = ReadTextFontFamily(e);
 					if (!string.IsNullOrEmpty(fontFamily))
 						font.Family = fontFamily;
@@ -228,7 +228,7 @@ namespace NGraphics
 					if (groupOpacity != null && !string.IsNullOrEmpty (groupOpacity.Value)) 
 						g.Opacity = ReadNumber (groupOpacity);
 
-					AddElements (g.Children, e.Elements (), pen, brush);
+					AddElements (g.Children, e.Elements (), pen, brush, inheritFont);
 
 					r = g;
 				}
@@ -240,7 +240,7 @@ namespace NGraphics
 						XElement useE;
 						if (defs.TryGetValue (href.Trim ().Replace ("#", ""), out useE)) {
 							var useList = new List<Element> ();
-							AddElement (useList, useE, pen, brush);
+							AddElement (useList, useE, pen, brush, inheritFont);
 							r = useList.FirstOrDefault ();
 						}
 					}
@@ -302,7 +302,7 @@ namespace NGraphics
 						var systemLanguage = ee.Attribute("systemLanguage");
 						// currently no support for any of these restrictions
 						if (requiredFeatures == null && requiredExtensions == null && systemLanguage == null)
-							AddElement (list, ee, pen, brush);
+							AddElement (list, ee, pen, brush, inheritFont);
 					}
 				}
 				break;

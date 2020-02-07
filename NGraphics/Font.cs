@@ -17,6 +17,11 @@ namespace NGraphics
 			this.Size = size;
 		}
 
+		public Font Clone ()
+		{
+			return new Font (name, Size);
+		}
+
 		public override bool Equals (object obj)
 		{
 			var o = obj as Font;
