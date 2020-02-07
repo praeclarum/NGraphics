@@ -51,13 +51,17 @@ namespace NGraphics
 
 		public override Element TransformGeometry (Transform transform)
 		{
-			throw new NotImplementedException ();
+			return new Text (Frame, Font, Alignment, Pen, Brush) {
+				Transform = transform * Transform,
+			};
 		}
 
 		public override bool Contains (Point localPoint)
 		{
-			throw new NotImplementedException ();
+			return Frame.Contains (localPoint);
 		}
+
+		public override Rect? BoundingBox => Frame;
 
 		protected override void DrawElement (ICanvas canvas)
 		{

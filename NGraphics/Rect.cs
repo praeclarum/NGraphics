@@ -152,6 +152,15 @@ namespace NGraphics
 			return new Rect (x, y, r - x, b - y);
 		}
 
+		public static Rect Union (Rect p, Rect o)
+		{
+			var x = Math.Min (p.X, o.X);
+			var y = Math.Min (p.Y, o.Y);
+			var r = Math.Max (p.Right, o.Right);
+			var b = Math.Max (p.Bottom, o.Bottom);
+			return new Rect (x, y, r - x, b - y);
+		}
+
 		public static Rect Union (IEnumerable<Rect> rects)
 		{
 			var res = new Rect ();
@@ -207,6 +216,7 @@ namespace NGraphics
 		Rect bb;
 		int nbb = 0;
 		public Rect BoundingBox { get { return bb; } }
+		public int Count => nbb;
 		public void Add (Point point)
 		{
 			if (nbb == 0) {

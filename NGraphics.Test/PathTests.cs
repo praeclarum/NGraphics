@@ -38,6 +38,42 @@ namespace NGraphics.Test
 			p.LineTo (new Point (100, 300));
 			p.Close ();
 		}
+
+		[Test]
+		public void LinesBoundingBox ()
+		{
+			var p = new Path ();
+			p.MoveTo (new Point (100, 200));
+			p.LineTo (new Point (200, 250));
+			p.LineTo (new Point (100, 300));
+			p.Close ();
+			var bb = p.BoundingBox;
+			Assert.AreEqual (100, bb.Value.X);
+			Assert.AreEqual (200, bb.Value.Right);
+			Assert.AreEqual (200, bb.Value.Y);
+			Assert.AreEqual (300, bb.Value.Bottom);
+		}
+
+		[Test]
+		public void EmptyBoundingBox ()
+		{
+			var p = new Path ();
+			p.Close ();
+			var bb = p.BoundingBox;
+			Assert.IsFalse (bb.HasValue);
+		}
+
+		[Test]
+		public void OnlyMoveBoundingBox ()
+		{
+			var p = new Path ();
+			p.MoveTo (new Point (100, 200));
+			var bb = p.BoundingBox;
+			Assert.AreEqual (100, bb.Value.X);
+			Assert.AreEqual (100, bb.Value.Right);
+			Assert.AreEqual (200, bb.Value.Y);
+			Assert.AreEqual (200, bb.Value.Bottom);
+		}
 	}
 }
 

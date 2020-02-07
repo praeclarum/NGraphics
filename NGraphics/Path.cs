@@ -427,6 +427,22 @@ namespace NGraphics
 			return c;
 		}
 
+		public override Rect? BoundingBox {
+			get {
+				var po = new Point (0, 0);
+				var bb = new BoundingBoxBuilder ();
+				foreach (var o in Operations) {
+					if (o is ClosePath)
+						break;
+					po = o.GetEndPoint (po);
+					bb.Add (po);
+				}
+				if (bb.Count == 0)
+					return null;
+				return bb.BoundingBox;
+			}
+		}
+
 		public double DistanceToLocal (Point localPoint)
 		{
 			var startPoint = Point.Zero;

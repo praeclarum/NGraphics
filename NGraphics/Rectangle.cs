@@ -82,6 +82,8 @@ namespace NGraphics
 			return frame.Contains (localPoint);
 		}
 
+		public override Rect? BoundingBox => frame;
+
 		#region ISampleable implementation
 
 		public override EdgeSamples[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)

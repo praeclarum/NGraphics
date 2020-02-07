@@ -40,6 +40,12 @@ namespace NGraphics
 
 		public abstract bool Contains (Point localPoint);
 
+		[System.Runtime.Serialization.IgnoreDataMember]
+		public abstract Rect? BoundingBox {
+			get;
+		}
+
+
 		#region IDrawable implementation
 
 		public void Draw (ICanvas canvas)

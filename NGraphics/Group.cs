@@ -114,6 +114,27 @@ namespace NGraphics
 			return false;
 		}
 
+		public override Rect? BoundingBox {
+			get {
+				if (Children.Count == 0)
+					return null;
+				Rect? bb = null;
+				foreach (var c in Children) {
+					var cbb = c.BoundingBox;
+					if (cbb.HasValue) {
+						var tcbb = c.Transform.TransformRect (cbb.Value);
+						if (bb == null) {
+							bb = tcbb;
+						}
+						else {
+							bb = Rect.Union (bb.Value, tcbb);
+						}
+					}
+				}
+				return bb;
+			}
+		}
+
 		#region ISampleable implementation
 
 		public override EdgeSamples[] GetEdgeSamples (double tolerance, int minSamples, int maxSamples)

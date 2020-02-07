@@ -65,6 +65,8 @@ namespace NGraphics
 			return d <= 1;
 		}
 
+		public override Rect? BoundingBox => frame;
+
 		public override Rect SampleableBox {
 			get {
 				return Transform.TransformRect (frame);

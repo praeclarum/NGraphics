@@ -31,6 +31,8 @@ namespace NGraphics
 			return new ForeignObject (tframe.TopLeft, tframe.Size);
 		}
 
+		public override Rect? BoundingBox => new Rect (pos, size);
+
 		public override bool Contains (Point localPoint)
 		{
 			var frame = new Rect (pos, size);
