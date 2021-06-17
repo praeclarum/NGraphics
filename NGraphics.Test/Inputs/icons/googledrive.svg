@@ -1,0 +1,18 @@
+<svg xmlns = "http://www.w3.org/2000/svg" width="24" height="20" viewBox="0 0 139 120.4">
+  <radialGradient id = "a" cx="-254.82" cy="705.836" r="82.978" gradientTransform="rotate(30 3834.991 3156.642) scale(3.2644)" gradientUnits="userSpaceOnUse">
+    <stop offset = "0" stop-color="#4387fd"/>
+    <stop offset = ".65" stop-color="#3078f0"/>
+    <stop offset = ".91" stop-color="#2b72ea"/>
+    <stop offset = "1" stop-color="#286ee6"/>
+  </radialGradient>
+  <radialGradient id = "b" cx="-254.817" cy="705.837" r="82.973" gradientTransform="rotate(30 3834.991 3156.642) scale(3.2644)" gradientUnits="userSpaceOnUse">
+    <stop offset = "0" stop-color="#ffd24d"/>
+    <stop offset = "1" stop-color="#f6c338"/>
+  </radialGradient>
+  <path fill = "#0da960" d="M24.2 120.4L0 78.5 45.3 0l24.2 41.9z"/>
+  <path fill = "url(#a)" d="M24.2 120.4l24.2-41.9H139l-24.2 41.9z"/>
+  <path fill = "url(#b)" d="M139 78.5H90.6L45.3 0h48.4z"/>
+  <path fill = "#2d6fdd" d="M69.5 78.5H48.4l10.5-18.3-34.7 60.2z"/>
+  <path fill = "#e5b93c" d="M90.6 78.5H139L80.1 60.2z"/>
+  <path fill = "#0c9b57" d="M58.9 60.2l10.6-18.3L45.3 0z"/>
+</svg>
