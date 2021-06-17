@@ -310,6 +310,7 @@ namespace NGraphics
 
 				// color definition that can be referred to by other elements
 				case "linearGradient":
+				case "radialGradient":
 				break;
 
 
@@ -635,7 +636,7 @@ namespace NGraphics
 					case '-':
 					case '+':
 					case var d when char.IsDigit (d): {
-							var gotDot = false;
+							var gotDot = p[i] == '.';
 							var gotE = 0;
 							var s = i;
 							var negate = false;
