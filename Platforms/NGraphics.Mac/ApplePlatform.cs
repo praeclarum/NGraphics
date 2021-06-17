@@ -400,7 +400,7 @@ namespace NGraphics
 						var endAngle = (float)Math.Atan2 (p.Y - circleCenter.Y, p.X - circleCenter.X);
 
 						if (!IsValid (circleCenter.X) || !IsValid (circleCenter.Y) || !IsValid (startAngle) || !IsValid (endAngle)) {
-							context.MoveTo ((nfloat)p.X, (nfloat)p.Y);
+							context.AddLineToPoint ((nfloat)p.X, (nfloat)p.Y);
 							continue;
 						}
 
