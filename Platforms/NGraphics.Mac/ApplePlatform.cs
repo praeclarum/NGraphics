@@ -3,6 +3,7 @@ using CoreGraphics;
 using CoreText;
 using ImageIO;
 using Foundation;
+using ObjCRuntime;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
