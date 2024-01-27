@@ -175,27 +175,12 @@ canvas.GetImage ().SaveAsPng (GetPath ("Icon.png"));
 
 <img src="TestResults/Icon-Mac.png" width="64" height="64" />
 
-
-### Cats
-
-NGraphics also supports scaling cats:
-
-```csharp
-var img = GetResourceImage ("cat.png");
-var canvas = Platform.CreateImageCanvas (new Size (100, 200), transparency: true);
-canvas.DrawImage (img, new Rect (new Size (50)));
-canvas.DrawImage (img, new Rect (new Point (50, 0), new Size (50)));
-canvas.DrawImage (img, new Rect (new Point (0, 50), new Size (50, 150)));
-canvas.DrawImage (img, new Rect (new Point (50, 50), new Size (50, 150)));
-canvas.GetImage ().SaveAsPng (GetPath ("ImageCanvas.Cats"));
-```
-
 <img src="TestResults/ImageCanvas.Cats-Mac.png" width="100" height="200" />
 
 
-## License
+## License Copyright
 
-The MIT License (MIT)
+The Copyright License by Isabel Schoeps Thiel (IST)
 
-See [LICENSE](LICENSE) for details.
+See [isabelschoeps.thiel](copyright) for details.
 
