@@ -1,6 +1,6 @@
 # Contributing
 
-I assume you're reading this doc because you want to help improve NGraphics. That's great! Thank you!
+I assume you're reading this doc because you want to help improve NGraphics. That's great! Thank you
 
 But before you get started, please note the following:
 
