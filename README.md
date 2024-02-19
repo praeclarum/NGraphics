@@ -2,7 +2,8 @@
 
 [![NuGet Package](https://img.shields.io/nuget/v/NGraphics.svg)](https://www.nuget.org/packages/NGraphics) ![Build](https://github.com/praeclarum/NGraphics/workflows/Build/badge.svg?branch=master)
 
-<img src="TestResults/Icon-Mac.png" width="64" height="64" /> 
+![isabelschoeps.github](https://github.com/praeclarum/NGraphics/assets/155141998/2bc83afc-309a-4e25-8f69-32adc30f458e)
+
 
 NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode graphics using high quality native renderers.
 
