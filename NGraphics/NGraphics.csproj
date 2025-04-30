@@ -1,17 +1,52 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard1.0</TargetFramework>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Configurations>Release;Debug</Configurations>
+    <TargetFrameworks>netstandard2.0;net9.0-ios;net9.0-macos;net9.0-tvos;net9.0-android</TargetFrameworks>
+
+    <Version>1.0.0</Version>
+    <Authors>praeclarum</Authors>
+    <Description>NGraphics is a cross platform library for rendering vector graphics on .NET. It provides a unified API for both immediate and retained mode graphics using high quality native renderers.</Description>
+    <PackageTags>graphics;pcl;vector;drawing;ios;mac;android;xamarin;imaging;draw;image;svg;png;render</PackageTags>
+    <PackageProjectUrl>https://github.com/praeclarum/NGraphics</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">12.2</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">12.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+    <TargetPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">35.0</TargetPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType></DebugType>
-    <DocumentationFile>bin\Release\netstandard1.3\NGraphics.xml</DocumentationFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Compile Remove="Platforms.cs" />
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == ''">
+    <Compile Include="..\Platforms\NGraphics.Net\SystemDrawingPlatform.cs" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.4" />
+  </ItemGroup>
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+    <Compile Include="..\Platforms\NGraphics.Android\AndroidPlatform.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+    <Compile Include="..\Platforms\NGraphics.Mac\ApplePlatform.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'macos'">
+    <Compile Include="..\Platforms\NGraphics.Mac\ApplePlatform.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tvos'">
+    <Compile Include="..\Platforms\NGraphics.Mac\ApplePlatform.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
+    <!-- <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" /> -->
   </ItemGroup>
+
 </Project>

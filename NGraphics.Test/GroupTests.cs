@@ -4,6 +4,7 @@ using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramewo
 using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.AppContainer.UITestMethodAttribute;
 #else
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 #endif
 using System.IO;
 using System;
@@ -19,7 +20,7 @@ namespace NGraphics.Test
 		{
 			var g = new Group ();
 			var bb = g.BoundingBox;
-			Assert.IsFalse (bb.HasValue);
+			ClassicAssert.IsFalse (bb.HasValue);
 		}
 
 		[Test]
@@ -29,10 +30,10 @@ namespace NGraphics.Test
 			var c0 = new Rectangle (new Rect (-10, -20, 100, 200));
 			g.Children.Add (c0);
 			var bb = g.BoundingBox;
-			Assert.AreEqual (-10, bb.Value.X);
-			Assert.AreEqual (90, bb.Value.Right);
-			Assert.AreEqual (-20, bb.Value.Y);
-			Assert.AreEqual (180, bb.Value.Bottom);
+			ClassicAssert.AreEqual (-10, bb.Value.X);
+			ClassicAssert.AreEqual (90, bb.Value.Right);
+			ClassicAssert.AreEqual (-20, bb.Value.Y);
+			ClassicAssert.AreEqual (180, bb.Value.Bottom);
 		}
 
 		[Test]
@@ -43,10 +44,10 @@ namespace NGraphics.Test
 			c0.Transform = Transform.Translate (500, 0);
 			g.Children.Add (c0);
 			var bb = g.BoundingBox;
-			Assert.AreEqual (500-10, bb.Value.X);
-			Assert.AreEqual (500+90, bb.Value.Right);
-			Assert.AreEqual (-20, bb.Value.Y);
-			Assert.AreEqual (180, bb.Value.Bottom);
+			ClassicAssert.AreEqual (500-10, bb.Value.X);
+			ClassicAssert.AreEqual (500+90, bb.Value.Right);
+			ClassicAssert.AreEqual (-20, bb.Value.Y);
+			ClassicAssert.AreEqual (180, bb.Value.Bottom);
 		}
 	}
 }

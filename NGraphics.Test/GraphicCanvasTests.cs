@@ -4,6 +4,7 @@ using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramewo
 using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.AppContainer.UITestMethodAttribute;
 #else
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 #endif
 using System;
 
@@ -17,7 +18,7 @@ namespace NGraphics.Test
 		{
 			var d = new GraphicCanvas (new Size (50, 50), Platform);
 			d.DrawEllipse (new Point (10, 20), new Size (30, 40), Pens.Black);
-			Assert.AreEqual (1f, d.Graphic.Children.Count);
+			ClassicAssert.AreEqual (1f, d.Graphic.Children.Count);
 		}
 	}
 }

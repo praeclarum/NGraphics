@@ -167,7 +167,9 @@ namespace NGraphics
 
 		public void SaveState ()
 		{
+			#pragma warning disable CA1422 // This call site is reachable on: 'Android' 21.0 and later. 'Canvas.Save(SaveFlags)' is obsoleted on: 'Android' 26.0 and later.
 			graphics.Save (SaveFlags.Matrix|SaveFlags.Clip);
+			#pragma warning restore CA1422
 		}
 		public void Transform (Transform transform)
 		{			

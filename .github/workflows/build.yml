@@ -5,67 +5,65 @@ on: [push, pull_request]
 jobs:
   mac-build:
 
-    runs-on: macOS-10.14
+    runs-on: macOS-15
     
-    needs: windows-build
+#    needs: windows-build
     
     steps:
     
-    - uses: actions/checkout@v1
-    
-    - uses: actions/download-artifact@master
+    - uses: actions/checkout@v4
+    - name: Update Versions
+      env:
+        VERSION_PREFIX: '0.9'
+        VERSION_SUFFIX: ${{github.run_number}}
+      run: |
+        VERSION=$VERSION_PREFIX.$VERSION_SUFFIX
+        sed -i bak "s:<Version>1.0.0</Version>:<Version>$VERSION</Version>:g" NGraphics/NGraphics.csproj
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
       with:
-        name: NGraphics
-        path: Build/NGraphics
-        
-    - uses: actions/download-artifact@master
+        xcode-version: 16.3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
       with:
-        name: NGraphics.Net
-        path: Build/NGraphics.Net
+        global-json-file: global.json
         
-    - uses: actions/download-artifact@master
-      with:
-        name: NGraphics.UWP
-        path: Build/NGraphics.UWP
+    # - uses: actions/download-artifact@master
+    #   with:
+    #     name: NGraphics
+    #     path: Build/NGraphics
         
-    - name: Build NGraphics
+    # - uses: actions/download-artifact@master
+    #   with:
+    #     name: NGraphics.Net
+    #     path: Build/NGraphics.Net
+        
+    # - uses: actions/download-artifact@master
+    #   with:
+    #     name: NGraphics.UWP
+    #     path: Build/NGraphics.UWP
+        
+    - name: Build
       run: |
-        msbuild /p:Configuration=Release /t:Restore NGraphics/NGraphics.csproj
-        msbuild /p:Configuration=Release NGraphics/NGraphics.csproj
+        dotnet build -c Release NGraphics/NGraphics.csproj
       
-    - name: Build NGraphics.Mac
+    - name: Test
       run: |
-        msbuild /p:Configuration=Release Platforms/NGraphics.Mac/NGraphics.Mac.csproj
-      
-    - name: Build NGraphics.iOS
-      run: |
-        msbuild /p:Configuration=Release Platforms/NGraphics.iOS/NGraphics.iOS.csproj
-      
-    - name: Build NGraphics.Watch
-      run: |
-        msbuild /p:Configuration=Release Platforms/NGraphics.Watch/NGraphics.Watch.csproj
-      
-    - name: Build NGraphics.TV
-      run: |
-        msbuild /p:Configuration=Release Platforms/NGraphics.TV/NGraphics.TV.csproj
-      
-    - name: Build NGraphics.Android
-      run: |
-        msbuild /p:Configuration=Release Platforms/NGraphics.Android/NGraphics.Android.csproj
+        dotnet test -c Release NGraphics.Test/NGraphics.Test.csproj
       
     - name: Package
       run: |
-        mkdir PackageOut
-        nuget pack NGraphics.nuspec -OutputDirectory PackageOut
+        dotnet pack -o PackageOut NGraphics/NGraphics.csproj
       
     - uses: actions/upload-artifact@master
       with:
-        name: Package
+        name: NGraphicsPackage
         path: PackageOut
         
   windows-build:
 
     runs-on: windows-2019
+    if: false
     
     steps:
     
