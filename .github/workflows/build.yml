@@ -27,17 +27,9 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         global-json-file: global.json
-        
-    # - uses: actions/download-artifact@master
-    #   with:
-    #     name: NGraphics
-    #     path: Build/NGraphics
-        
-    # - uses: actions/download-artifact@master
-    #   with:
-    #     name: NGraphics.Net
-    #     path: Build/NGraphics.Net
-        
+    - name: Restore Workloads
+      run: sudo dotnet workload restore
+          
     # - uses: actions/download-artifact@master
     #   with:
     #     name: NGraphics.UWP
