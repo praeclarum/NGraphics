@@ -4,6 +4,7 @@ using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramewo
 using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.AppContainer.UITestMethodAttribute;
 #else
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 #endif
 using System.IO;
 using System;
@@ -19,7 +20,7 @@ namespace NGraphics.Test
 		public void GetUtf8 ()
 		{
 			var svg = new GraphicCanvas ().Graphic.GetSvg ();
-			Assert.IsTrue (svg.Contains ("encoding=\"UTF-8\""));
+			ClassicAssert.IsTrue (svg.Contains ("encoding=\"UTF-8\""));
 		}
 
 		[Test]
@@ -28,8 +29,8 @@ namespace NGraphics.Test
 			var c = new GraphicCanvas ();
 			c.DrawRectangle (new Rect (0, 0, 40, 20), new Size (3, 3), null, new SolidBrush ("#333"));
 			var svg = c.Graphic.GetSvg ();
-			Assert.IsTrue (svg.Contains ("rx=\"3\""));
-			Assert.IsTrue (svg.Contains ("ry=\"3\""));
+			ClassicAssert.IsTrue (svg.Contains ("rx=\"3\""));
+			ClassicAssert.IsTrue (svg.Contains ("ry=\"3\""));
 		}
 
 		[Test]
@@ -38,8 +39,8 @@ namespace NGraphics.Test
 			var c = new GraphicCanvas ();
 			c.DrawRectangle (new Rect (0, 0, 40, 20), new Size (0, 0), null, new SolidBrush ("#333"));
 			var svg = c.Graphic.GetSvg ();
-			Assert.IsTrue (!svg.Contains ("rx="));
-			Assert.IsTrue (!svg.Contains ("ry="));
+			ClassicAssert.IsTrue (!svg.Contains ("rx="));
+			ClassicAssert.IsTrue (!svg.Contains ("ry="));
 		}
 
 		//[Test]
@@ -48,7 +49,7 @@ namespace NGraphics.Test
 			var c = new GraphicCanvas ();
 			c.DrawRectangle (new Rect (0, 0, 40, 20), new Size (3, 3), null, new SolidBrush ("#333"));
 			var svg = c.Graphic.GetSvg ();
-			Assert.IsTrue (svg.Contains("svg width=\"40\""));
+			ClassicAssert.IsTrue (svg.Contains("svg width=\"40\""));
 
 		}
 
@@ -58,8 +59,8 @@ namespace NGraphics.Test
 			var c = new GraphicCanvas ();
 			c.DrawRectangle (new Rect (0, 0, 40, 20), new Size (3, 3), null, new SolidBrush ("#333"));
 			var svg = c.Graphic.GetSvg ();
-			Assert.IsTrue (!svg.Contains ("<title>"));
-			Assert.IsTrue (!svg.Contains ("<description>"));
+			ClassicAssert.IsTrue (!svg.Contains ("<title>"));
+			ClassicAssert.IsTrue (!svg.Contains ("<description>"));
 		}
 	}
 }

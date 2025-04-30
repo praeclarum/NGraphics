@@ -1,13 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TargetFramework>net9.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <NoWarn>NUnit2005</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="NUnit" Version="3.10.1" />
+    <ProjectReference Include="..\NGraphics\NGraphics.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NGraphics\NGraphics.csproj" />
+    <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="NUnit" Version="4.2.2" />
+    <PackageReference Include="NUnit.Analyzers" Version="4.4.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="NUnit.Framework" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Inputs\TextVariations.sketch" />

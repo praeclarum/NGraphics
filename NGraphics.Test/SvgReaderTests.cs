@@ -4,6 +4,7 @@ using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramewo
 using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.AppContainer.UITestMethodAttribute;
 #else
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 #endif
 using System.IO;
 using System;
@@ -22,9 +23,9 @@ namespace NGraphics.Test
 				var r = new SvgReader (new StreamReader (s), defaultBrush: defaultBrush, defaultFont: defaultFont);
 				if (r.Errors.Count > 0)
 					throw new Exception ("Error while reading", r.Errors[0]);
-				Assert.IsTrue (r.Graphic.Children.Count >= 0);
-				Assert.IsTrue (r.Graphic.Size.Width > 1);
-				Assert.IsTrue (r.Graphic.Size.Height > 1);
+				ClassicAssert.IsTrue (r.Graphic.Children.Count >= 0);
+				ClassicAssert.IsTrue (r.Graphic.Size.Width > 1);
+				ClassicAssert.IsTrue (r.Graphic.Size.Height > 1);
 				return r.Graphic;
 			}
 		}
@@ -32,12 +33,12 @@ namespace NGraphics.Test
 		Graphic ReadString (string svg, Brush defaultBrush = null, Font defaultFont = null)
 		{
 			var r = new SvgReader (svg, defaultBrush: defaultBrush, defaultFont: defaultFont);
-			Assert.IsTrue (r.Graphic.Children.Count >= 0);
+			ClassicAssert.IsTrue (r.Graphic.Children.Count >= 0);
 			if (r.Errors.Count > 0)
 				throw new Exception ("Error while reading", r.Errors[0]);
-			Assert.IsTrue (r.Graphic.Children.Count >= 0);
-			Assert.IsTrue (r.Graphic.Size.Width > 1);
-			Assert.IsTrue (r.Graphic.Size.Height > 1);
+			ClassicAssert.IsTrue (r.Graphic.Children.Count >= 0);
+			ClassicAssert.IsTrue (r.Graphic.Size.Width > 1);
+			ClassicAssert.IsTrue (r.Graphic.Size.Height > 1);
 			return r.Graphic;
 		}
 
@@ -74,9 +75,9 @@ namespace NGraphics.Test
 		{
 			var g = ReadString ("<svg width=\"100\" height=\"100\"><path d=\"M1,2L3,4zm100,100\"/></svg>");
 			var p = (Path)g.Children[0];
-			Assert.AreEqual (4, p.Operations.Count);
+			ClassicAssert.AreEqual (4, p.Operations.Count);
 			var m = p.Operations[3];
-			Assert.AreEqual (new Point (103, 104), m.EndPoint);
+			ClassicAssert.AreEqual (new Point (103, 104), m.EndPoint);
 		}
 
 		[Test]
@@ -202,9 +203,9 @@ namespace NGraphics.Test
 	<path d=""M13.25 21.59c2.88 5.66 7.51 10.29 13.18 13.17l4.4-4.41c.55-.55 1.34-.71 2.03-.49C35.1 30.6 37.51 31 40 31c1.11 0 2 .89 2 2v7c0 1.11-.89 2-2 2C21.22 42 6 26.78 6 8c0-1.11.9-2 2-2h7c1.11 0 2 .89 2 2 0 2.49.4 4.9 1.14 7.14.22.69.06 1.48-.49 2.03l-4.4 4.42z"" fill=""#000000"" fill-opacity=""0.54"" />
 </svg>";
 			var g = ReadString (svg);
-			Assert.AreEqual (1, g.Children.Count);
-			Assert.IsTrue (g.Children[0] is Path);
-			Assert.AreEqual (15, ((Path)g.Children[0]).Operations.Count);
+			ClassicAssert.AreEqual (1, g.Children.Count);
+			ClassicAssert.IsTrue (g.Children[0] is Path);
+			ClassicAssert.AreEqual (15, ((Path)g.Children[0]).Operations.Count);
 		}
 
 		[Test]
@@ -257,10 +258,10 @@ namespace NGraphics.Test
 			var og = ReadString (@"<svg viewBox=""0 0 160 160""><text>Hello</text></svg>", defaultFont: newFont);
 			var dt = (Text)dg.Children[0];
 			var ot = (Text)og.Children[0];
-			Assert.AreEqual (new Font().Family, dt.Font.Family);
-			Assert.AreEqual (new Font ().Size, dt.Font.Size);
-			Assert.AreEqual (newFont.Family, ot.Font.Family);
-			Assert.AreEqual (newFont.Size, ot.Font.Size);
+			ClassicAssert.AreEqual (new Font().Family, dt.Font.Family);
+			ClassicAssert.AreEqual (new Font ().Size, dt.Font.Size);
+			ClassicAssert.AreEqual (newFont.Family, ot.Font.Family);
+			ClassicAssert.AreEqual (newFont.Size, ot.Font.Size);
 		}
 
 		[Test]
@@ -271,10 +272,10 @@ namespace NGraphics.Test
 			var og = Graphic.ParseSvg (@"<svg viewBox=""0 0 160 160""><text>Hello</text></svg>", defaultFont: newFont);
 			var dt = (Text)dg.Children[0];
 			var ot = (Text)og.Children[0];
-			Assert.AreEqual (new Font ().Family, dt.Font.Family);
-			Assert.AreEqual (new Font ().Size, dt.Font.Size);
-			Assert.AreEqual (newFont.Family, ot.Font.Family);
-			Assert.AreEqual (newFont.Size, ot.Font.Size);
+			ClassicAssert.AreEqual (new Font ().Family, dt.Font.Family);
+			ClassicAssert.AreEqual (new Font ().Size, dt.Font.Size);
+			ClassicAssert.AreEqual (newFont.Family, ot.Font.Family);
+			ClassicAssert.AreEqual (newFont.Size, ot.Font.Size);
 		}
 
 		[Test]
@@ -285,10 +286,10 @@ namespace NGraphics.Test
 			var og = Graphic.ParseSvg (@"<svg viewBox=""0 0 160 160""><text font-family=""FooFam"">Hello</text></svg>", defaultFont: newFont);
 			var dt = (Text)dg.Children[0];
 			var ot = (Text)og.Children[0];
-			Assert.AreEqual ("FooFam", dt.Font.Family);
-			Assert.AreEqual (new Font ().Size, dt.Font.Size);
-			Assert.AreEqual ("FooFam", ot.Font.Family);
-			Assert.AreEqual (newFont.Size, ot.Font.Size);
+			ClassicAssert.AreEqual ("FooFam", dt.Font.Family);
+			ClassicAssert.AreEqual (new Font ().Size, dt.Font.Size);
+			ClassicAssert.AreEqual ("FooFam", ot.Font.Family);
+			ClassicAssert.AreEqual (newFont.Size, ot.Font.Size);
 		}
 	}
 }

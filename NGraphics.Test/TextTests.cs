@@ -4,6 +4,7 @@ using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramewo
 using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.AppContainer.UITestMethodAttribute;
 #else
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 #endif
 using System.IO;
 using System;
@@ -101,9 +102,9 @@ namespace NGraphics.Test
 			var nm = NullPlatform.GlobalMeasureText (text, font);
 			var pm = Platform.MeasureText (text, font);
 
-			Assert.AreEqual (pm.Ascent, nm.Ascent, 1.0e-2);
-			Assert.AreEqual (pm.Descent, nm.Descent, 1.0e-2);
-			Assert.AreEqual (pm.Width, nm.Width, pm.Width * 0.01);
+			ClassicAssert.AreEqual (pm.Ascent, nm.Ascent, 1.0e-2);
+			ClassicAssert.AreEqual (pm.Descent, nm.Descent, 1.0e-2);
+			ClassicAssert.AreEqual (pm.Width, nm.Width, pm.Width * 0.01);
 		}
 
 		[Test]
@@ -115,9 +116,9 @@ namespace NGraphics.Test
 			var nm = NullPlatform.GlobalMeasureText (text, font);
 			var pm = Platform.MeasureText (text, font);
 
-			Assert.AreEqual (pm.Ascent, nm.Ascent, 1.0e-2);
-			Assert.AreEqual (pm.Descent, nm.Descent, 1.0e-2);
-			Assert.AreEqual (pm.Width, nm.Width, pm.Width * 0.2);
+			ClassicAssert.AreEqual (pm.Ascent, nm.Ascent, 1.0e-2);
+			ClassicAssert.AreEqual (pm.Descent, nm.Descent, 1.0e-2);
+			ClassicAssert.AreEqual (pm.Width, nm.Width, pm.Width * 0.2);
 		}
 
 		[Test]
@@ -129,9 +130,9 @@ namespace NGraphics.Test
 			var nm = NullPlatform.GlobalMeasureText (text, font);
 			var pm = Platform.MeasureText (text, font);
 
-			Assert.AreEqual (pm.Ascent, nm.Ascent, 0.01);
-			Assert.AreEqual (pm.Descent, nm.Descent, 0.01);
-			Assert.AreEqual (pm.Width, nm.Width, pm.Width * 0.01);
+			ClassicAssert.AreEqual (pm.Ascent, nm.Ascent, 0.01);
+			ClassicAssert.AreEqual (pm.Descent, nm.Descent, 0.01);
+			ClassicAssert.AreEqual (pm.Width, nm.Width, pm.Width * 0.01);
 		}
 	}
 }

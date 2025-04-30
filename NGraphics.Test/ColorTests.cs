@@ -4,6 +4,7 @@ using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramewo
 using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.AppContainer.UITestMethodAttribute;
 #else
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 #endif
 using System.IO;
 using System;
@@ -58,8 +59,8 @@ namespace NGraphics.Test
 
 		static void AssertInRange (int x, int min, int max)
 		{
-			Assert.IsTrue (x >= min);
-			Assert.IsTrue (x <= max);
+			ClassicAssert.IsTrue (x >= min);
+			ClassicAssert.IsTrue (x <= max);
 		}
 
 		[Test]
@@ -106,41 +107,41 @@ namespace NGraphics.Test
 		[Test]
 		public void Parse000 ()
 		{
-			Assert.IsTrue (Colors.TryParse ("#000", out var c));
-			Assert.AreEqual (0, c.R);
-			Assert.AreEqual (0, c.G);
-			Assert.AreEqual (0, c.B);
-			Assert.AreEqual (255, c.A);
+			ClassicAssert.IsTrue (Colors.TryParse ("#000", out var c));
+			ClassicAssert.AreEqual (0, c.R);
+			ClassicAssert.AreEqual (0, c.G);
+			ClassicAssert.AreEqual (0, c.B);
+			ClassicAssert.AreEqual (255, c.A);
 		}
 
 		[Test]
 		public void Parse345 ()
 		{
-			Assert.IsTrue (Colors.TryParse ("#345", out var c));
-			Assert.AreEqual (0x33, c.R);
-			Assert.AreEqual (0x44, c.G);
-			Assert.AreEqual (0x55, c.B);
-			Assert.AreEqual (255, c.A);
+			ClassicAssert.IsTrue (Colors.TryParse ("#345", out var c));
+			ClassicAssert.AreEqual (0x33, c.R);
+			ClassicAssert.AreEqual (0x44, c.G);
+			ClassicAssert.AreEqual (0x55, c.B);
+			ClassicAssert.AreEqual (255, c.A);
 		}
 
 		[Test]
 		public void ParseF1a ()
 		{
-			Assert.IsTrue (Colors.TryParse ("#F1a", out var c));
-			Assert.AreEqual (0xFF, c.R);
-			Assert.AreEqual (0x11, c.G);
-			Assert.AreEqual (0xAA, c.B);
-			Assert.AreEqual (255, c.A);
+			ClassicAssert.IsTrue (Colors.TryParse ("#F1a", out var c));
+			ClassicAssert.AreEqual (0xFF, c.R);
+			ClassicAssert.AreEqual (0x11, c.G);
+			ClassicAssert.AreEqual (0xAA, c.B);
+			ClassicAssert.AreEqual (255, c.A);
 		}
 
 		[Test]
 		public void ImplicitCtor ()
 		{
 			var pen = new Pen ("red");
-			Assert.AreEqual (0xFF, pen.Color.R);
-			Assert.AreEqual (0x00, pen.Color.G);
-			Assert.AreEqual (0x00, pen.Color.B);
-			Assert.AreEqual (0xFF, pen.Color.A);
+			ClassicAssert.AreEqual (0xFF, pen.Color.R);
+			ClassicAssert.AreEqual (0x00, pen.Color.G);
+			ClassicAssert.AreEqual (0x00, pen.Color.B);
+			ClassicAssert.AreEqual (0xFF, pen.Color.A);
 		}
 	}
 }

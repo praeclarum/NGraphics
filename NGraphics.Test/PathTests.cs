@@ -4,6 +4,7 @@ using TestFixtureAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramewo
 using TestAttribute = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.AppContainer.UITestMethodAttribute;
 #else
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 #endif
 using System.IO;
 using System;
@@ -23,10 +24,10 @@ namespace NGraphics.Test
 			p.LineTo (new Point (100, 50));
 			p.Close ();
 
-			Assert.IsFalse (p.Contains (new Point (0, 1)));
-			Assert.IsTrue (p.Contains (new Point (0, 0)));
-			Assert.IsTrue (p.Contains (new Point (99, 49)));
-			Assert.IsFalse (p.Contains (new Point (50, 49)));
+			ClassicAssert.IsFalse (p.Contains (new Point (0, 1)));
+			ClassicAssert.IsTrue (p.Contains (new Point (0, 0)));
+			ClassicAssert.IsTrue (p.Contains (new Point (99, 49)));
+			ClassicAssert.IsFalse (p.Contains (new Point (50, 49)));
 		}
 
 		[Test]
@@ -48,10 +49,10 @@ namespace NGraphics.Test
 			p.LineTo (new Point (100, 300));
 			p.Close ();
 			var bb = p.BoundingBox;
-			Assert.AreEqual (100, bb.Value.X);
-			Assert.AreEqual (200, bb.Value.Right);
-			Assert.AreEqual (200, bb.Value.Y);
-			Assert.AreEqual (300, bb.Value.Bottom);
+			ClassicAssert.AreEqual (100, bb.Value.X);
+			ClassicAssert.AreEqual (200, bb.Value.Right);
+			ClassicAssert.AreEqual (200, bb.Value.Y);
+			ClassicAssert.AreEqual (300, bb.Value.Bottom);
 		}
 
 		[Test]
@@ -60,7 +61,7 @@ namespace NGraphics.Test
 			var p = new Path ();
 			p.Close ();
 			var bb = p.BoundingBox;
-			Assert.IsFalse (bb.HasValue);
+			ClassicAssert.IsFalse (bb.HasValue);
 		}
 
 		[Test]
@@ -69,10 +70,10 @@ namespace NGraphics.Test
 			var p = new Path ();
 			p.MoveTo (new Point (100, 200));
 			var bb = p.BoundingBox;
-			Assert.AreEqual (100, bb.Value.X);
-			Assert.AreEqual (100, bb.Value.Right);
-			Assert.AreEqual (200, bb.Value.Y);
-			Assert.AreEqual (200, bb.Value.Bottom);
+			ClassicAssert.AreEqual (100, bb.Value.X);
+			ClassicAssert.AreEqual (100, bb.Value.Right);
+			ClassicAssert.AreEqual (200, bb.Value.Y);
+			ClassicAssert.AreEqual (200, bb.Value.Bottom);
 		}
 	}
 }
