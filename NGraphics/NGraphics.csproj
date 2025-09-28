@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net9.0-ios;net9.0-maccatalyst;net9.0-macos;net9.0-tvos;net9.0-android</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net9.0-ios26.0;net9.0-maccatalyst26.0;net9.0-macos26.0;net9.0-tvos26.0;net9.0-android</TargetFrameworks>
 
     <Version>1.0.0</Version>
     <Authors>praeclarum</Authors>
@@ -23,6 +23,8 @@
     <TargetPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">35.0</TargetPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+
+    <NoWarn>$(NoWarn);XCODE_26_0_PREVIEW</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
